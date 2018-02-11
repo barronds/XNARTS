@@ -9,6 +9,7 @@ namespace XNARTS
     /// </summary>
     public class Game1 : Game
     {
+        // test comment.
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
