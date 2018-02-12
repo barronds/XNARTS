@@ -107,8 +107,11 @@ namespace XNARTS
         /// <param name="game_time">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime game_time)
         {
-            // user controller app exit
-            if( GamePad.GetState( PlayerIndex.One ).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown( Keys.Escape ) )
+			float dx = mCamDrift * (game_time.TotalGameTime.Seconds + (game_time.TotalGameTime.Milliseconds) / 1000f);
+			mBasicEffect_World.View = Matrix.CreateLookAt( new Vector3( mCamStartX + dx, mCamStartY, 1f ), new Vector3( mCamStartX + dx, mCamStartY, 0f ), new Vector3( 0f, 1f, 0f ) );
+
+			// user controller app exit
+			if ( GamePad.GetState( PlayerIndex.One ).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown( Keys.Escape ) )
             {
                 Exit();
             }
@@ -129,7 +132,7 @@ namespace XNARTS
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw( GameTime game_time )
         {
             // A temporary array, with 12 items in it, because
             // the icosahedron has 12 distinct vertices
@@ -173,7 +176,44 @@ namespace XNARTS
                 GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.LineList, 0, 0, 20);
             }
 
-            base.Draw(gameTime);
+			// simple draw only clients
+			mMouse.RenderWorld( game_time );
+			mMouse.RenderScreen( game_time );
+
+			mBasicEffect_World.VertexColorEnabled = true;
+			EffectTechnique effectTechnique = mBasicEffect_World.Techniques[0];
+			EffectPassCollection effectPassCollection = effectTechnique.Passes;
+
+
+			foreach ( EffectPass pass in effectPassCollection )
+			{
+				// hopefully only one pass
+				pass.Apply();
+
+				// actually render simple draw stuff.  possible layers needed.
+				mSimpleDraw_World.DrawAllPrimitives();
+
+				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
+			}
+
+
+			// simple draw screen
+			mBasicEffect_Screen.VertexColorEnabled = true;
+			effectTechnique = mBasicEffect_Screen.Techniques[ 0 ];
+			effectPassCollection = effectTechnique.Passes;
+
+			foreach ( EffectPass pass in effectPassCollection )
+			{
+				// hopefully only one pass
+				pass.Apply();
+
+				// actually render simple draw stuff.  possible layers needed.
+				mSimpleDraw_Screen.DrawAllPrimitives();
+
+				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
+			}
+
+			base.Draw( game_time );
         }
     }
 }
