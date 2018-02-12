@@ -22,29 +22,36 @@ namespace XNARTS
         GraphicsDeviceManager mGraphics;
 
         BasicEffect basicEffect;
-        SimpleDraw  mSimpleDraw_World;
+		BasicEffect mBasicEffect_World;
+		BasicEffect mBasicEffect_Screen;
+		SimpleDraw  mSimpleDraw_World;
         SimpleDraw  mSimpleDraw_Screen;
 
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
         Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 3), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.01f, 100f);
         double angle = 0;
+		float mCamDrift, mCamStartX, mCamStartY;
 
-        XNARTSMouse mMouse;
+		XNARTSMouse mMouse;
 
         public Game1()
         {
             mGraphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-        }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
+			mCamDrift = 0.1f;
+			mCamStartX = 6.0f;
+			mCamStartY = 4.0f;
+		}
+
+		/// <summary>
+		/// Allows the game to perform any initialization it needs to before starting to run.
+		/// This is where it can query for any required services and load any non-graphic
+		/// related content.  Calling base.Initialize will enumerate through any components
+		/// and initialize them as well.
+		/// </summary>
+		protected override void Initialize()
         {
             base.Initialize();
 
@@ -68,7 +75,21 @@ namespace XNARTS
         /// </summary>
         protected override void LoadContent()
         {
-            basicEffect = new BasicEffect(GraphicsDevice);
+			// world space rendering setup
+			mBasicEffect_World = new BasicEffect( GraphicsDevice );
+			mBasicEffect_World.World = Matrix.Identity;
+			mBasicEffect_World.View = Matrix.CreateLookAt( new Vector3( mCamStartX, mCamStartY, 1f ), new Vector3( mCamStartX, mCamStartY, 0f ), new Vector3( 0f, 1f, 0f ) );
+			float aspect = (float)(mGraphics.PreferredBackBufferHeight) / mGraphics.PreferredBackBufferWidth;
+			float viewport_scale = 10f;
+			mBasicEffect_World.Projection = Matrix.CreateOrthographicOffCenter( -viewport_scale, viewport_scale, -viewport_scale * aspect, viewport_scale * aspect, 0f, 2f );
+
+			// screen space rendering setup
+			mBasicEffect_Screen = new BasicEffect( GraphicsDevice );
+			mBasicEffect_Screen.World = Matrix.Identity;
+			mBasicEffect_Screen.View = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
+			mBasicEffect_Screen.Projection = Matrix.CreateOrthographicOffCenter( 0, mGraphics.PreferredBackBufferWidth, mGraphics.PreferredBackBufferHeight, 0, 0f, 2f );
+
+			basicEffect = new BasicEffect(GraphicsDevice);
         }
 
         /// <summary>
