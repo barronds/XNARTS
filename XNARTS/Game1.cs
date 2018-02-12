@@ -8,6 +8,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using XNARTS.Controls;
+using XNARTS.RTSMath;
+using XNARTS.Render;
+
 namespace XNARTS
 {
     /// <summary>
@@ -15,17 +19,22 @@ namespace XNARTS
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        GraphicsDeviceManager mGraphics;
 
         BasicEffect basicEffect;
+        SimpleDraw  mSimpleDraw_World;
+        SimpleDraw  mSimpleDraw_Screen;
+
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
         Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 3), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.01f, 100f);
         double angle = 0;
 
+        XNARTSMouse mMouse;
+
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            mGraphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -38,6 +47,19 @@ namespace XNARTS
         protected override void Initialize()
         {
             base.Initialize();
+
+            var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+            tCoord native_dim = new tCoord( current_display_mode.Width, current_display_mode.Height );
+
+            mGraphics.IsFullScreen = false;
+            mGraphics.PreferredBackBufferWidth = native_dim.x;
+            mGraphics.PreferredBackBufferHeight = native_dim.y;
+            mGraphics.ApplyChanges();
+
+			mSimpleDraw_World = new SimpleDraw( GraphicsDevice );
+			mSimpleDraw_Screen = new SimpleDraw( GraphicsDevice );
+
+			mMouse = new XNARTSMouse( native_dim, mSimpleDraw_World, mSimpleDraw_Screen );
         }
 
         /// <summary>
@@ -61,11 +83,17 @@ namespace XNARTS
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
+        /// <param name="game_time">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime game_time)
         {
-            if ( GamePad.GetState( PlayerIndex.One ).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown( Keys.Escape ) )
+            // user controller app exit
+            if( GamePad.GetState( PlayerIndex.One ).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown( Keys.Escape ) )
+            {
                 Exit();
+            }
+
+            // TODO: Add your update logic here
+            mMouse.Update( game_time );
 
             angle += 0.01f;
             view = Matrix.CreateLookAt(
@@ -73,7 +101,7 @@ namespace XNARTS
                 new Vector3(0, 0, 0),
                 Vector3.UnitY);
 
-            base.Update(gameTime);
+            base.Update(game_time);
         }
 
         /// <summary>
@@ -99,7 +127,7 @@ namespace XNARTS
             indices[2] = 2;
             indices[3] = 3;
 
-            var indexBuffer = new IndexBuffer(graphics.GraphicsDevice, typeof(short), indices.Length, BufferUsage.WriteOnly);
+            var indexBuffer = new IndexBuffer(mGraphics.GraphicsDevice, typeof(short), indices.Length, BufferUsage.WriteOnly);
             indexBuffer.SetData(indices);
 
 
