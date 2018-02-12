@@ -14,7 +14,9 @@ namespace XNARTS
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            UnitTests.Framework.RunUnitTests();
+
+            using ( var game = new Game1())
                 game.Run();
         }
     }
