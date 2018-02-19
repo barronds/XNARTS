@@ -208,7 +208,8 @@ namespace XNARTS
 			EffectPassCollection effectPassCollection = effectTechnique.Passes;
 
 
-			foreach ( EffectPass pass in effectPassCollection )
+			//foreach ( EffectPass pass in effectPassCollection )
+			foreach ( EffectPass pass in mBasicEffect_World.CurrentTechnique.Passes )
 			{
 				// hopefully only one pass
 				pass.Apply();
@@ -225,7 +226,8 @@ namespace XNARTS
 			effectTechnique = mBasicEffect_Screen.Techniques[ 0 ];
 			effectPassCollection = effectTechnique.Passes;
 
-			foreach ( EffectPass pass in effectPassCollection )
+			//foreach ( EffectPass pass in effectPassCollection )
+			foreach( EffectPass pass in mBasicEffect_Screen.CurrentTechnique.Passes )
 			{
 				// hopefully only one pass
 				pass.Apply();

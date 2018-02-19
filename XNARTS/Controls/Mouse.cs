@@ -49,10 +49,9 @@ namespace XNARTS.Controls
 		{
 			Vector3 start = new Vector3( 0f, 0f, 0f );
 			Vector3 end = new Vector3( 1920f, 1080f, 0f );
-			Color color = Color.Black;
-			mSimpleDrawScreen.DrawLine( start, end, color, color );
+			mSimpleDrawScreen.DrawLine( start, end, Color.Black, Color.White );
 
-			mSimpleDrawScreen.DrawLine( new Vector3( 10f, 10f, 0f ), new Vector3( 100f, 10f, 0f ), Color.Black , Color.Black );
+			mSimpleDrawScreen.DrawLine( new Vector3( 10f, 10f, 0f ), new Vector3( 100f, 10f, 0f ), Color.Black , Color.White );
 		}
 	}
 }
