@@ -22,6 +22,7 @@ namespace XNARTS
         GraphicsDeviceManager mGraphics;
 
         BasicEffect basicEffect;
+		BasicEffect basicEffect2;
 		BasicEffect mBasicEffect_World;
 		BasicEffect mBasicEffect_Screen;
 		SimpleDraw  mSimpleDraw_World;
@@ -90,13 +91,14 @@ namespace XNARTS
 			mBasicEffect_Screen.Projection = Matrix.CreateOrthographicOffCenter( 0, mGraphics.PreferredBackBufferWidth, mGraphics.PreferredBackBufferHeight, 0, 0f, 2f );
 
 			basicEffect = new BasicEffect(GraphicsDevice);
-        }
+			basicEffect2 = new BasicEffect( GraphicsDevice );
+		}
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
-        protected override void UnloadContent()
+		/// <summary>
+		/// UnloadContent will be called once per game and is the place to unload
+		/// all content.
+		/// </summary>
+		protected override void UnloadContent()
         {
         }
 
@@ -137,15 +139,22 @@ namespace XNARTS
             // A temporary array, with 12 items in it, because
             // the icosahedron has 12 distinct vertices
             VertexPositionColor[] vertices = new VertexPositionColor[2];
+			VertexPositionColor[] vertices2 = new VertexPositionColor[2];
 
-            // vertex position and color information for icosahedron
-            vertices[0] = new VertexPositionColor(new Vector3(-0.26286500f, 0.0000000f, 0.42532500f), Color.Red);
+			// vertex position and color information for icosahedron
+			vertices[ 0] = new VertexPositionColor(new Vector3(-0.26286500f, 0.0000000f, 0.42532500f), Color.Red);
             vertices[1] = new VertexPositionColor(new Vector3(0.26286500f, 0.0000000f, 0.42532500f), Color.Orange);
 
-            var vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 2, BufferUsage.WriteOnly);
+			vertices2[ 0 ] = new VertexPositionColor( new Vector3( -0.3f, 0.0000000f, 0.4f ), Color.Blue );
+			vertices2[ 1 ] = new VertexPositionColor( new Vector3( 0.23f, 0.0000000f, 0.41f ), Color.Green );
+
+			var vertexBuffer = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 2, BufferUsage.WriteOnly);
             vertexBuffer.SetData<VertexPositionColor>(vertices);
 
-            short[] indices = new short[4];
+			var vertexBuffer2 = new VertexBuffer(GraphicsDevice, typeof(VertexPositionColor), 2, BufferUsage.WriteOnly);
+			vertexBuffer2.SetData<VertexPositionColor>( vertices2 );
+
+			short[] indices = new short[4];
             indices[0] = 0;
             indices[1] = 1;
             indices[2] = 2;
@@ -162,7 +171,12 @@ namespace XNARTS
             basicEffect.Projection = projection;
             basicEffect.VertexColorEnabled = true;
 
-            GraphicsDevice.SetVertexBuffer(vertexBuffer);
+			basicEffect2.World = world;
+			basicEffect2.View = view;
+			basicEffect2.Projection = projection;
+			basicEffect2.VertexColorEnabled = true;
+
+			GraphicsDevice.SetVertexBuffer(vertexBuffer);
             GraphicsDevice.Indices = indexBuffer;
 
             RasterizerState rasterizerState = new RasterizerState();
@@ -175,6 +189,15 @@ namespace XNARTS
                 // GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 20);
                 GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.LineList, 0, 0, 20);
             }
+
+			GraphicsDevice.SetVertexBuffer( vertexBuffer2 );
+
+			foreach( EffectPass pass in basicEffect2.CurrentTechnique.Passes )
+			{
+				pass.Apply();
+				// GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 20);
+				GraphicsDevice.DrawIndexedPrimitives( PrimitiveType.LineList, 0, 0, 20 );
+			}
 
 			// simple draw only clients
 			mMouse.RenderWorld( game_time );
