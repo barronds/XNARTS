@@ -13,10 +13,11 @@ using XNARTS.Controls;
 
 namespace XNARTS.Render
 {
-	public class RenderManager
+	public class RenderManager : Singleton< RenderManager >
 	{
-		GraphicsDeviceManager	mGraphics;
-		Game1					mOwner;
+		GraphicsDeviceManager	mGraphicsDeviceManager;
+		GraphicsDevice			mGraphicsDevice;
+
 		BasicEffect				mBasicEffect_World;
 		BasicEffect				mBasicEffect_Screen;
 
@@ -25,54 +26,54 @@ namespace XNARTS.Render
 		public tCoord			mScreenDim;
 
 
-		public RenderManager( Game1 owner )
+		private RenderManager()
 		{
-			mOwner = owner;
-			mGraphics = new GraphicsDeviceManager( owner );
-			owner.Content.RootDirectory = "Content";
 		}
 
 
-		public void Initialize()
+		public void Initialize( GraphicsDevice graphics_device, GraphicsDeviceManager graphics_device_manager )
 		{
+			mGraphicsDeviceManager = graphics_device_manager;
+			mGraphicsDevice = graphics_device;
+
 			var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 			mScreenDim = new tCoord( current_display_mode.Width, current_display_mode.Height );
 
-			mGraphics.IsFullScreen = false;
-			mGraphics.PreferredBackBufferWidth = mScreenDim.x;
-			mGraphics.PreferredBackBufferHeight = mScreenDim.y;
-			mGraphics.ApplyChanges();
+			mGraphicsDeviceManager.IsFullScreen = false;
+			mGraphicsDeviceManager.PreferredBackBufferWidth = mScreenDim.x;
+			mGraphicsDeviceManager.PreferredBackBufferHeight = mScreenDim.y;
+			mGraphicsDeviceManager.ApplyChanges();
 
-			mSimpleDraw_World = new SimpleDraw( mOwner.GraphicsDevice );
-			mSimpleDraw_Screen = new SimpleDraw( mOwner.GraphicsDevice );
+			mSimpleDraw_World = new SimpleDraw( mGraphicsDevice );
+			mSimpleDraw_Screen = new SimpleDraw( mGraphicsDevice );
 		}
 
 
 		public void LoadContent()
 		{
 			// world space rendering setup
-			mBasicEffect_World = new BasicEffect( mOwner.GraphicsDevice );
+			mBasicEffect_World = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_World.World = Matrix.Identity;
 			mBasicEffect_World.View = Matrix.CreateLookAt( new Vector3( 6, 4, 1f ), new Vector3( 6, 4, 0f ), new Vector3( 0f, 1f, 0f ) );
-			float aspect = (float)(mGraphics.PreferredBackBufferHeight) / mGraphics.PreferredBackBufferWidth;
+			float aspect = (float)(mGraphicsDeviceManager.PreferredBackBufferHeight) / mGraphicsDeviceManager.PreferredBackBufferWidth;
 			float viewport_scale = 10f;
 			mBasicEffect_World.Projection = Matrix.CreateOrthographicOffCenter( -viewport_scale, viewport_scale, -viewport_scale * aspect, viewport_scale * aspect, 0f, 2f );
 
 			// screen space rendering setup
-			mBasicEffect_Screen = new BasicEffect( mOwner.GraphicsDevice );
+			mBasicEffect_Screen = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_Screen.World = Matrix.Identity;
 			mBasicEffect_Screen.View = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
-			mBasicEffect_Screen.Projection = Matrix.CreateOrthographicOffCenter( 0, mGraphics.PreferredBackBufferWidth, mGraphics.PreferredBackBufferHeight, 0, 0f, 2f );
+			mBasicEffect_Screen.Projection = Matrix.CreateOrthographicOffCenter( 0, mGraphicsDeviceManager.PreferredBackBufferWidth, mGraphicsDeviceManager.PreferredBackBufferHeight, 0, 0f, 2f );
 		}
 
 
 		public void Draw( GameTime game_time )
 		{
-			mOwner.GraphicsDevice.Clear( Color.CornflowerBlue );
+			mGraphicsDevice.Clear( Color.CornflowerBlue );
 
 			RasterizerState rasterizerState = new RasterizerState();
 			rasterizerState.CullMode = CullMode.None;
-			mOwner.GraphicsDevice.RasterizerState = rasterizerState;
+			mGraphicsDevice.RasterizerState = rasterizerState;
 
 			// simple draw only clients
 			XNARTSMouse mouse = XNARTSMouse.Instance();

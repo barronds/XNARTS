@@ -19,12 +19,14 @@ namespace XNARTS
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-		RenderManager mRenderManager;
+		GraphicsDeviceManager mGraphicsDeviceManager;
 
 
-        public Game1()
+		public Game1()
         {
-			mRenderManager = new RenderManager( this );
+			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
+			Content.RootDirectory = "Content";
+			RenderManager.InstantiateSingleton();
 		}
 		
 
@@ -36,9 +38,9 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
-            base.Initialize();
-			mRenderManager.Initialize();
-			XNARTSMouse.InstantiateSingleton().Init( mRenderManager );
+			RenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
+			XNARTSMouse.InstantiateSingleton().Init();
+			base.Initialize();
         }
 
 		
@@ -48,7 +50,7 @@ namespace XNARTS
         /// </summary>
         protected override void LoadContent()
         {
-			mRenderManager.LoadContent();
+			RenderManager.Instance().LoadContent();
 		}
 
 
@@ -87,7 +89,7 @@ namespace XNARTS
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw( GameTime game_time )
         {
-			mRenderManager.Draw( game_time );
+			RenderManager.Instance().Draw( game_time );
 			base.Draw( game_time );
 		}
     }

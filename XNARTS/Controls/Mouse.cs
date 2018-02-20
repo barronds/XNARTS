@@ -25,8 +25,9 @@ namespace XNARTS.Controls
 		}
 
 		
-		public void Init( RenderManager render_manager )
+		public void Init()
 		{
+			RenderManager render_manager = RenderManager.Instance();
 			mScreenDim = render_manager.mScreenDim;
 			mSimpleDrawWorld = render_manager.mSimpleDraw_World;
 			mSimpleDrawScreen = render_manager.mSimpleDraw_Screen;
