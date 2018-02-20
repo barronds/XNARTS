@@ -8,10 +8,12 @@ using Microsoft.Xna.Framework.Input;
 
 using XNARTS.RTSMath;
 using XNARTS.Render;
+using XNARTS;
+
 
 namespace XNARTS.Controls
 {
-    public class XNARTSMouse
+    public class XNARTSMouse : Singleton< XNARTSMouse >
     {
         tCoord mScreenDim;
 		SimpleDraw mSimpleDrawWorld;
