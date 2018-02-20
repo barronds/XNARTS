@@ -48,6 +48,7 @@
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SimpleDraw.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
+    <Compile Include="Utils\Assert.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

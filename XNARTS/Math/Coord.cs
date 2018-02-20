@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using XNARTS.UnitTests;
 
+
 namespace XNARTS.RTSMath
 {
     public struct tCoord
@@ -32,7 +33,8 @@ namespace XNARTS.RTSMath
 
         public tCoord clamp( tCoord min, tCoord max )
         {
-            Debug.Assert( !(min.x > max.x || min.y > max.y) );
+			
+            Utils.Assert( !(min.x > max.x || min.y > max.y) );
             int clamped_x = System.Math.Max( System.Math.Min( max.x, this.x ), min.x );
             int clamped_y = System.Math.Max( System.Math.Min( max.y, this.y ), min.y );
             return new tCoord( clamped_x, clamped_y );
@@ -90,28 +92,28 @@ namespace XNARTS.RTSMath
 
         public static void unitTest()
         {
-            //Framework.Assert( false, "hello" );
+            //Utils.Assert( false, "hello" );
             tCoord a = new tCoord();
-            Framework.Assert( a.x == 0 );
-            Framework.Assert( a.y == 0 );
+            Utils.Assert( a.x == 0 );
+			Utils.Assert( a.y == 0 );
 
             tCoord b = a;
-            Framework.Assert( b.x == 0 );
-            Framework.Assert( b.y == 0 );
+			Utils.Assert( b.x == 0 );
+			Utils.Assert( b.y == 0 );
 
             tCoord c = new tCoord( -10, 20.0f );
-            Framework.Assert( c.x == -10 );
-            Framework.Assert( c.y == 20 );
+            Utils.Assert( c.x == -10 );
+            Utils.Assert( c.y == 20 );
 
             tCoord d = 5 * c;
             tCoord e = new tCoord( -50, 100 );
-            Framework.Assert( d == e );
-            Framework.Assert( d != b );
-            Framework.Assert( d.Equals( e ) );
-            Framework.Assert( !d.Equals( a ) );
+            Utils.Assert( d == e );
+            Utils.Assert( d != b );
+            Utils.Assert( d.Equals( e ) );
+            Utils.Assert( !d.Equals( a ) );
 
 #pragma warning disable CS1718
-            Framework.Assert( d == d );
+            Utils.Assert( d == d );
 #pragma warning restore CS1718
 
             tCoord f = new tCoord( 2, 6 );
@@ -120,36 +122,36 @@ namespace XNARTS.RTSMath
             tCoord i = f - g;
             tCoord j = f - f;
             tCoord k = g - g - g;
-            Framework.Assert( h == new tCoord( -9, 39 ) );
-            Framework.Assert( i == new tCoord( 13, -27 ) );
-            Framework.Assert( j == new tCoord() );
-            Framework.Assert( k == -g );
+            Utils.Assert( h == new tCoord( -9, 39 ) );
+            Utils.Assert( i == new tCoord( 13, -27 ) );
+            Utils.Assert( j == new tCoord() );
+            Utils.Assert( k == -g );
 
             tCoord l = new tCoord( 2, -5 );
             tCoord m = 4 * l;
             tCoord n = -3.5f * l;
             tCoord o = l * 4;
-            Framework.Assert( m == new tCoord( 8, -20 ) );
-            Framework.Assert( n == new tCoord( -7, 17 ) );
-            Framework.Assert( o == m );
+            Utils.Assert( m == new tCoord( 8, -20 ) );
+            Utils.Assert( n == new tCoord( -7, 17 ) );
+            Utils.Assert( o == m );
 
             tCoord p = new tCoord( 11.4, -55.6 );
             tCoord q = new tCoord( 11.6, -55.4 );
-            Framework.Assert( p == new tCoord( 11, -55 ) );
-            Framework.Assert( p == new tCoord( 11, -55 ) );
+            Utils.Assert( p == new tCoord( 11, -55 ) );
+            Utils.Assert( p == new tCoord( 11, -55 ) );
 
-            Framework.AssertVal( a.getLength(), 0, 0.0001 );
-            Framework.AssertVal( f.getLength(), Math.Sqrt( 40 ), 0.0001 );
-            Framework.AssertVal( g.getLength(), Math.Sqrt( 33 * 33 + 11 * 11 ), 0.001 );
+			Utils.AssertVal( a.getLength(), 0, 0.0001 );
+			Utils.AssertVal( f.getLength(), Math.Sqrt( 40 ), 0.0001 );
+			Utils.AssertVal( g.getLength(), Math.Sqrt( 33 * 33 + 11 * 11 ), 0.001 );
 
             tCoord r = g.clamp( new tCoord( 0, 0 ), new tCoord( 100, 100 ) );
             tCoord s = g.clamp( new tCoord( -30, -10 ), new tCoord( 0, -1 ) );
             tCoord t = g.clamp( new tCoord( -1000, -1000 ), new tCoord( 1000, 1000 ) );
             tCoord u = g.clamp( new tCoord(), new tCoord() );
-            Framework.Assert( r == new tCoord( 0, 33 ) );
-            Framework.Assert( s == new tCoord( -11, -1 ) );
-            Framework.Assert( t == g );
-            Framework.Assert( u == new tCoord( 0, 0 ) );
+            Utils.Assert( r == new tCoord( 0, 33 ) );
+            Utils.Assert( s == new tCoord( -11, -1 ) );
+            Utils.Assert( t == g );
+            Utils.Assert( u == new tCoord( 0, 0 ) );
         }
     }
 }
