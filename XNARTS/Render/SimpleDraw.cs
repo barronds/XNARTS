@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNARTS.Render
 {
-    class SimpleDraw
+    public class SimpleDraw
     {
         public struct tBatchId
         {

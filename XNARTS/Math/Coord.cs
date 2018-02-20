@@ -8,7 +8,7 @@ using XNARTS.UnitTests;
 
 namespace XNARTS.RTSMath
 {
-    struct tCoord
+    public struct tCoord
     {
         public int x { get; set; }
         public int y { get; set; }

@@ -45,6 +45,7 @@
     <Compile Include="Math\Coord.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SimpleDraw.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
   </ItemGroup>

@@ -11,17 +11,19 @@ using XNARTS.Render;
 
 namespace XNARTS.Controls
 {
-    class XNARTSMouse
+    public class XNARTSMouse
     {
         tCoord mScreenDim;
 		SimpleDraw mSimpleDrawWorld;
 		SimpleDraw mSimpleDrawScreen;
 
-        public XNARTSMouse( tCoord screen_dim, SimpleDraw simple_draw_world, SimpleDraw simple_draw_screen )
-        {
-			mScreenDim = screen_dim;
-			mSimpleDrawWorld = simple_draw_world;
-			mSimpleDrawScreen = simple_draw_screen;
+       // public XNARTSMouse( tCoord screen_dim, SimpleDraw simple_draw_world, SimpleDraw simple_draw_screen )
+
+		public XNARTSMouse( RenderManager render_manager )
+		{
+			mScreenDim = render_manager.mScreenDim;
+			mSimpleDrawWorld = render_manager.mSimpleDraw_World;
+			mSimpleDrawScreen = render_manager.mSimpleDraw_Screen;
 		}
 
         public void Update( GameTime game_time )
