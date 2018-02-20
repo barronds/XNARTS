@@ -21,14 +21,14 @@ namespace XNARTS
 		}
 
 
-		private static void InstantiateSingleton()
+		public static T InstantiateSingleton()
 		{
 			lock( sInitLock )
 			{
 				if( sInstance != null )
 				{
 					Utils.Assert( false, "instance already exists" );
-					return;
+					return sInstance;
 				}
 
 				Type t = typeof( T );
@@ -42,6 +42,7 @@ namespace XNARTS
 
 				// Create an instance via the private constructor
 				sInstance = (T)Activator.CreateInstance( t, true );
+				return sInstance;
 			}
 		}
 	}

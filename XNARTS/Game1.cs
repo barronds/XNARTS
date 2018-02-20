@@ -20,20 +20,13 @@ namespace XNARTS
     public class Game1 : Microsoft.Xna.Framework.Game
     {
 		RenderManager mRenderManager;
-		public XNARTSMouse mMouse;
 
 
         public Game1()
         {
 			mRenderManager = new RenderManager( this );
 		}
-
-
-		public XNARTSMouse GetMouse()
-		{
-			return mMouse;
-		}
-
+		
 
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -45,7 +38,7 @@ namespace XNARTS
         {
             base.Initialize();
 			mRenderManager.Initialize();
-			mMouse = new XNARTSMouse( mRenderManager );
+			XNARTSMouse.InstantiateSingleton().Init( mRenderManager );
         }
 
 		
@@ -81,8 +74,8 @@ namespace XNARTS
                 Exit();
             }
 
-            // TODO: Add your update logic here
-            mMouse.Update( game_time );
+			// TODO: Add your update logic here
+			XNARTSMouse.Instance().Update( game_time );
 
             base.Update(game_time);
         }

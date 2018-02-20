@@ -75,7 +75,7 @@ namespace XNARTS.Render
 			mOwner.GraphicsDevice.RasterizerState = rasterizerState;
 
 			// simple draw only clients
-			XNARTSMouse mouse = mOwner.GetMouse();
+			XNARTSMouse mouse = XNARTSMouse.Instance();
 			mouse.RenderWorld( game_time );
 			mouse.RenderScreen( game_time );
 
