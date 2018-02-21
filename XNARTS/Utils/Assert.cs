@@ -16,7 +16,7 @@ namespace XNARTS
 
 		public static void AssertVal( double test, double target, double tol, string msg = null )
 		{
-			if( Math.Abs( test - target ) > tol )
+			if( System.Math.Abs( test - target ) > tol )
 			{
 				Breakpoint( msg );
 			}

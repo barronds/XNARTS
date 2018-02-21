@@ -141,8 +141,8 @@ namespace XNARTS.RTSMath
             Utils.Assert( p == new tCoord( 11, -55 ) );
 
 			Utils.AssertVal( a.getLength(), 0, 0.0001 );
-			Utils.AssertVal( f.getLength(), Math.Sqrt( 40 ), 0.0001 );
-			Utils.AssertVal( g.getLength(), Math.Sqrt( 33 * 33 + 11 * 11 ), 0.001 );
+			Utils.AssertVal( f.getLength(), System.Math.Sqrt( 40 ), 0.0001 );
+			Utils.AssertVal( g.getLength(), System.Math.Sqrt( 33 * 33 + 11 * 11 ), 0.001 );
 
             tCoord r = g.clamp( new tCoord( 0, 0 ), new tCoord( 100, 100 ) );
             tCoord s = g.clamp( new tCoord( -30, -10 ), new tCoord( 0, -1 ) );
