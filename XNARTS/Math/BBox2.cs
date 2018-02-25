@@ -9,7 +9,7 @@ using XNARTS;
 using XNARTS.Math;
 
 
-namespace XNARTS.Math
+namespace XNARTS.RTSMath
 {
 	public struct AABB2
 	{
@@ -209,6 +209,57 @@ namespace XNARTS.Math
 		private static void Validate( Vector2 min, Vector2 max )
 		{
 			Utils.Assert( max.X >= min.X && max.Y >= min.Y );
+		}
+
+
+		public static void unitTest()
+		{
+			AABB2 aabb1 = new AABB2();
+			Utils.Assert( aabb1.mIsValid == false );
+
+			AABB2 aabb2 = new AABB2( Vector2.Zero );
+			AABB2 aabb3 = new AABB2( Vector2.Zero, 1f );
+			AABB2 aabb4 = new AABB2( Vector2.Zero, Vector2.Zero );
+			Utils.Assert( aabb2.IsValid() && aabb3.IsValid() && aabb4.IsValid() );
+
+			aabb2.Reset();
+			Utils.Assert( !aabb2.IsValid() );
+
+			Vector2 oneTwo = new Vector2( 1f, 2f );
+			Vector2 negTwoFour = -2f * oneTwo;
+			Vector2 TwentyTen = new Vector2( 20f, 10f );
+			const float kTol = 0.001f;
+
+			aabb2.Set( oneTwo );
+			Utils.AssertVal( aabb2.mMin, oneTwo, kTol );
+			Utils.AssertVal( aabb2.mMax, oneTwo, kTol );
+			Utils.Assert( aabb2.IsValid() );
+
+			//aabb2.Set( oneTwo, negTwoFour ); inside out, asserts, good
+			aabb2.Set( negTwoFour, oneTwo );
+			Utils.Assert( aabb2.Contains( Vector2.Zero ) );
+			Utils.Assert( !aabb2.Contains( TwentyTen ) );
+			Utils.Assert( aabb2.Contains( negTwoFour ) );
+			Utils.Assert( aabb2.Contains( oneTwo ) );
+			Utils.Assert( !aabb2.Contains( -TwentyTen ) );
+
+			//aabb2.Set( oneTwo, -3f ); asserts on negative radius, good
+			Vector2 fiveFive = new Vector2( 5f, 5f );
+			Vector2 sixSeven = oneTwo + fiveFive;
+			Vector2 negFourThree = new Vector2( -4f, -3f );
+			Vector2 epsilon = new Vector2( 0.001f, 0.001f );
+
+			aabb2.Set( oneTwo, 5f );
+			Utils.Assert( aabb2.Contains( oneTwo ) );
+			Utils.Assert( aabb2.Contains( fiveFive ) );
+			Utils.Assert( aabb2.Contains( negFourThree ) );
+			Utils.Assert( !aabb2.Contains( TwentyTen ) );
+			Utils.Assert( !aabb2.Contains( -TwentyTen ) );
+			Utils.Assert( aabb2.Contains( Vector2.Zero ) );
+			Utils.Assert( aabb2.Contains( negFourThree + epsilon ) );
+			Utils.Assert( !aabb2.Contains( negFourThree - epsilon ) );
+			Utils.Assert( aabb2.Contains( sixSeven - epsilon ) );
+			Utils.Assert( !aabb2.Contains( sixSeven + epsilon ) );
 		}
 	}
 }

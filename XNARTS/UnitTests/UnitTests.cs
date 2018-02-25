@@ -18,6 +18,7 @@ namespace XNARTS.UnitTests
         private static void ExecuteTests()
         {
             tCoord.unitTest();
+			AABB2.unitTest();
         }
 
 
