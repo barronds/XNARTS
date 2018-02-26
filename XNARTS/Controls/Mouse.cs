@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using XNARTS.XNARTSMath;
-using XNARTS.Render;
 using XNARTS;
+using XNARTS.Render;
 
 
 namespace XNARTS.Controls

@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using XNARTS;
 
 
-namespace XNARTS.XNARTSMath
+namespace XNARTS
 {
 	public struct AABB2
 	{

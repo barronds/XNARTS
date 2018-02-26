@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
-using XNARTS.XNARTSMath;
+using XNARTS;
 
 
 namespace XNARTS
@@ -37,7 +37,7 @@ namespace XNARTS
 
 		private static void AssertValTol( float val, float tol, string msg )
 		{
-			if( Helpers.Abs( val ) > tol )
+			if( XMath.Abs( val ) > tol )
 			{
 				Breakpoint( msg );
 			}

@@ -7,7 +7,7 @@ using System.Diagnostics;
 using XNARTS.UnitTests;
 
 
-namespace XNARTS.XNARTSMath
+namespace XNARTS
 {
     public struct tCoord
     {
