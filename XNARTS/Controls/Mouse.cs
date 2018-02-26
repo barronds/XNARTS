@@ -10,16 +10,16 @@ using XNARTS;
 using XNARTS.Render;
 
 
-namespace XNARTS.Controls
+namespace XNARTS
 {
-    public class XNARTSMouse : Singleton< XNARTSMouse >
+    public class XMouse : Singleton< XMouse >
     {
         tCoord mScreenDim;
 		SimpleDraw mSimpleDrawWorld;
 		SimpleDraw mSimpleDrawScreen;
 
 
-		private XNARTSMouse()
+		private XMouse()
 		{
 		}
 

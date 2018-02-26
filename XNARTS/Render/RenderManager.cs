@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using XNARTS;
-using XNARTS.Controls;
 
 
 namespace XNARTS.Render
@@ -76,7 +75,7 @@ namespace XNARTS.Render
 			mGraphicsDevice.RasterizerState = rasterizerState;
 
 			// simple draw only clients
-			XNARTSMouse mouse = XNARTSMouse.Instance();
+			XMouse mouse = XMouse.Instance();
 			mouse.RenderWorld( game_time );
 			mouse.RenderScreen( game_time );
 

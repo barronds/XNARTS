@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using XNARTS;
-using XNARTS.Controls;
 using XNARTS.Render;
 
 namespace XNARTS
@@ -39,7 +38,7 @@ namespace XNARTS
 		protected override void Initialize()
         {
 			RenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
-			XNARTSMouse.InstantiateSingleton().Init();
+			XMouse.InstantiateSingleton().Init();
 			base.Initialize();
         }
 
@@ -77,7 +76,7 @@ namespace XNARTS
             }
 
 			// TODO: Add your update logic here
-			XNARTSMouse.Instance().Update( game_time );
+			XMouse.Instance().Update( game_time );
 
             base.Update(game_time);
         }
