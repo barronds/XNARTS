@@ -143,6 +143,13 @@ namespace XNARTS.RTSMath
 		}
 
 
+		public float GetArea()
+		{
+			Utils.Assert( mIsValid );
+			return (mMax.X - mMin.X) * (mMax.Y - mMin.Y);
+		}
+
+
 		public bool Contains( Vector2 point )
 		{
 			Utils.Assert( mIsValid );
@@ -152,14 +159,14 @@ namespace XNARTS.RTSMath
 
 		public void	ScaleWorld( float f )
 		{
-			Utils.Assert( mIsValid );
+			Utils.Assert( mIsValid && f >= 0f );
 			mMin *= f; mMax *= f;
 		}
 
 
 		public void	ScaleLocal( float f )
 		{
-			Utils.Assert( mIsValid );
+			Utils.Assert( mIsValid && f >= 0f );
 			Vector2 new_radius = f * GetRadius();
 			Vector2 center = GetCenter();
 			Set( center - new_radius, center + new_radius );
@@ -247,7 +254,7 @@ namespace XNARTS.RTSMath
 			Vector2 fiveFive = new Vector2( 5f, 5f );
 			Vector2 sixSeven = oneTwo + fiveFive;
 			Vector2 negFourThree = new Vector2( -4f, -3f );
-			Vector2 epsilon = new Vector2( 0.001f, 0.001f );
+			Vector2 epsilon = new Vector2( kTol, kTol );
 
 			aabb2.Set( oneTwo, 5f );
 			Utils.Assert( aabb2.Contains( oneTwo ) );
@@ -260,6 +267,60 @@ namespace XNARTS.RTSMath
 			Utils.Assert( !aabb2.Contains( negFourThree - epsilon ) );
 			Utils.Assert( aabb2.Contains( sixSeven - epsilon ) );
 			Utils.Assert( !aabb2.Contains( sixSeven + epsilon ) );
+
+			aabb2.Set( Vector2.Zero );
+			Utils.Assert( !aabb2.IsNonDegenerate() );
+
+			aabb2.Add( Vector2.UnitX );
+			Utils.Assert( !aabb2.IsNonDegenerate() );
+			Utils.Assert( aabb2.Contains( new Vector2( 0.5f, 0f ) ) );
+
+			aabb2.Add( oneTwo );
+			Utils.Assert( aabb2.IsNonDegenerate() );
+			Utils.Assert( aabb2.Contains( new Vector2( 0.5f, 1f ) ) );
+
+			aabb2.Reset();
+			aabb2.Add( Vector2.Zero );
+			Utils.Assert( aabb2.IsValid() );
+
+			aabb2.Reset();
+			aabb2.Add( -fiveFive );
+			aabb2.Add( TwentyTen );
+			Utils.AssertVal( aabb2.GetMin(), -fiveFive, kTol );
+			Utils.AssertVal( aabb2.GetMax(), TwentyTen, kTol );
+			Utils.AssertVal( aabb2.GetCenter(), new Vector2( 7.5f, 2.5f ), kTol );
+			Utils.AssertVal( aabb2.GetRadius(), new Vector2( 12.5f, 7.5f ), kTol );
+			Utils.AssertVal( aabb2.GetSize(), new Vector2( 25f, 15f ), kTol );
+			Utils.AssertVal( aabb2.GetArea(), 375f, kTol );
+
+			aabb2.Reset();
+			aabb2.Add( Vector2.Zero );
+			aabb2.Add( oneTwo );
+			aabb2.ScaleWorld( 4f );
+			Utils.AssertVal( aabb2.GetArea(), 32f, kTol );
+
+			aabb2.Translate( fiveFive );
+			Vector2 center2 = new Vector2( 7f, 9f );
+			Utils.AssertVal( aabb2.GetArea(), 32f, kTol );
+			Utils.AssertVal( aabb2.GetCenter(), center2, kTol );
+			Utils.Assert( !aabb2.Contains( oneTwo ) );
+			Utils.Assert( aabb2.Contains( new Vector2( 6f, 8f ) ) );
+
+			//aabb2.ScaleWorld( -1f ); asserts negative scalar, good
+			//aabb2.ScaleLocal( -50f ); asserts negative scalar, good
+			aabb2.ScaleLocal( 0.25f );
+			Utils.AssertVal( aabb2.GetCenter(), center2, kTol );
+			Utils.AssertVal( aabb2.GetArea(), 2f, kTol );
+			Utils.Assert( !aabb2.Contains( new Vector2( 6f, 8f ) ) );
+			Utils.Assert( aabb2.Contains( center2 ) );
+
+			aabb2.Reset();
+			aabb2.Add( Vector2.Zero );
+			aabb2.Add( oneTwo );
+			aabb2.Resize( new Vector2( 0.1f, -0.3f ) );
+			Utils.AssertVal( aabb2.GetArea(), 1.68f, kTol );
+			Utils.Assert( !aabb2.Contains( Vector2.Zero ) );
+			Utils.Assert( aabb2.Contains( new Vector2( -0.05f, 1.4f ) ) );
 		}
 	}
 }
