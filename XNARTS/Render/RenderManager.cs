@@ -10,9 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using XNARTS;
 
 
-namespace XNARTS.Render
+namespace XNARTS
 {
-	public class RenderManager : Singleton< RenderManager >
+	public class XRenderManager : Singleton< XRenderManager >
 	{
 		GraphicsDeviceManager	mGraphicsDeviceManager;
 		GraphicsDevice			mGraphicsDevice;
@@ -25,7 +25,7 @@ namespace XNARTS.Render
 		public tCoord			mScreenDim;
 
 
-		private RenderManager()
+		private XRenderManager()
 		{
 		}
 

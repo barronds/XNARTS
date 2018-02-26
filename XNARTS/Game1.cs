@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using XNARTS;
-using XNARTS.Render;
+
 
 namespace XNARTS
 {
@@ -25,7 +25,7 @@ namespace XNARTS
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
 			Content.RootDirectory = "Content";
-			RenderManager.InstantiateSingleton();
+			XRenderManager.InstantiateSingleton();
 		}
 		
 
@@ -37,7 +37,7 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
-			RenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
+			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
 			XMouse.InstantiateSingleton().Init();
 			base.Initialize();
         }
@@ -49,7 +49,7 @@ namespace XNARTS
         /// </summary>
         protected override void LoadContent()
         {
-			RenderManager.Instance().LoadContent();
+			XRenderManager.Instance().LoadContent();
 		}
 
 
@@ -88,7 +88,7 @@ namespace XNARTS
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw( GameTime game_time )
         {
-			RenderManager.Instance().Draw( game_time );
+			XRenderManager.Instance().Draw( game_time );
 			base.Draw( game_time );
 		}
     }

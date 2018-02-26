@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace XNARTS.Render
+namespace XNARTS
 {
     public class SimpleDraw
     {

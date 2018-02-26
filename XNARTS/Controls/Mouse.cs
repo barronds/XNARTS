@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 using XNARTS;
-using XNARTS.Render;
 
 
 namespace XNARTS
@@ -26,7 +25,7 @@ namespace XNARTS
 		
 		public void Init()
 		{
-			RenderManager render_manager = RenderManager.Instance();
+			XRenderManager render_manager = XRenderManager.Instance();
 			mScreenDim = render_manager.mScreenDim;
 			mSimpleDrawWorld = render_manager.mSimpleDraw_World;
 			mSimpleDrawScreen = render_manager.mSimpleDraw_Screen;
