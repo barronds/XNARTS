@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XNARTS.Math
+namespace XNARTS.XNARTSMath
 {
 	public class Helpers
 	{
-		//public static float Abs( float f )
-		//{
-		//	return f > 0f ? f : -f;
-		//}
+		public static float Abs( float f )
+		{
+			return f > 0f ? f : -f;
+		}
 	}
 }

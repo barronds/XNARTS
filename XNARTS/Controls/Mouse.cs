@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-using XNARTS.RTSMath;
+using XNARTS.XNARTSMath;
 using XNARTS.Render;
 using XNARTS;
 

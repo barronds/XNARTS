@@ -1,2 +1,1 @@
-﻿- unit tests for AABB2
-- reconcile namspace naming convention for Math, Utils, etc.
+﻿- reconcile namspace naming convention for Math, Utils, etc.

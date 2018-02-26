@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using XNARTS.Controls;
-using XNARTS.RTSMath;
+using XNARTS.XNARTSMath;
 using XNARTS.Render;
 
 namespace XNARTS

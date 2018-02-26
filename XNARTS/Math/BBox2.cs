@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 using XNARTS;
-using XNARTS.Math;
 
 
-namespace XNARTS.RTSMath
+namespace XNARTS.XNARTSMath
 {
 	public struct AABB2
 	{
