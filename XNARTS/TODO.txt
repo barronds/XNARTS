@@ -1,1 +1,1 @@
-﻿- reconcile namspace naming convention for Math, Utils, etc.
+﻿- get to work on camera class (2d orthographic)
