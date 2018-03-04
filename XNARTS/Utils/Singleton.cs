@@ -4,6 +4,13 @@ using System.Reflection;
 
 namespace XNARTS
 {
+	// Singleton<T> usage:
+	// inherit like this: public class Foo : Singleton< T >
+	// then make a private empty constructor in Foo.
+	// at some point, call InstantiateSingleton() and anytime afterwards Instance()
+	// Foo will probably need an Init() function to replace the work of a constructor, to be called shortly or right after InstantiateSingleton()
+	// the usage of sInitLock, the constructors check, and Activator came from the almighty internet. 
+
 	public class Singleton<T> where T : class
 	{
 		private static T		sInstance;
