@@ -3,53 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
- 
+using Microsoft.Xna.Framework;
+
 
 namespace XNARTS
 {
 	public interface ICamera
 	{
-		AABB2 GetAABB2();
+		Matrix CalcViewMatrix();
+		Matrix CalcProjectionMatrix();
 	}
 
 
 	public class Camera : ICamera
 	{
-		private AABB2 mBox;
+		private tCoord mScreenDim;
 
 
-		public Camera()
+		public Camera( tCoord screen_dim )
 		{
-			mBox = new AABB2();
+			mScreenDim = screen_dim;
 		}
 
 
-		AABB2 ICamera.GetAABB2()
+		Matrix ICamera.CalcViewMatrix()
 		{
-			return mBox;
-		}
-	}
-
-
-	public class MainGameCam : Singleton< MainGameCam >, ICamera
-	{
-		private ICamera mCamera;
-
-
-		private MainGameCam()
-		{
+			return Matrix.CreateLookAt( new Vector3( 6, 4, 1f ), new Vector3( 6, 4, 0f ), new Vector3( 0f, 1f, 0f ) );
 		}
 
 
-		public void Initialize()
+		Matrix ICamera.CalcProjectionMatrix()
 		{
-			mCamera = new Camera();
-		}
-
-
-		AABB2 ICamera.GetAABB2()
-		{
-			return mCamera.GetAABB2();
+			float viewport_scale = 10f;
+			float aspect = ((float)(mScreenDim.y)) / mScreenDim.x;
+			return Matrix.CreateOrthographicOffCenter( -viewport_scale, viewport_scale, -viewport_scale * aspect, viewport_scale * aspect, 0f, 2f );
 		}
 	}
 }
