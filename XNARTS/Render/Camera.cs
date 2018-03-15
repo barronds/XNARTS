@@ -10,33 +10,74 @@ namespace XNARTS
 {
 	public interface ICamera
 	{
-		Matrix CalcViewMatrix();
-		Matrix CalcProjectionMatrix();
+		Matrix	GetViewMatrix		();
+		Matrix	GetProjectionMatrix	();
+		void	Update				( GameTime dt );
 	}
 
 
-	public class Camera : ICamera
+	public class WorldCam : ICamera
 	{
-		private tCoord mScreenDim;
+		private float mAspect;
+		private Matrix mView;
+		private Matrix mProjection;
 
 
-		public Camera( tCoord screen_dim )
+		public WorldCam( tCoord screen_dim )
 		{
-			mScreenDim = screen_dim;
-		}
+			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
 
-
-		Matrix ICamera.CalcViewMatrix()
-		{
-			return Matrix.CreateLookAt( new Vector3( 6, 4, 1f ), new Vector3( 6, 4, 0f ), new Vector3( 0f, 1f, 0f ) );
-		}
-
-
-		Matrix ICamera.CalcProjectionMatrix()
-		{
+			// temporary
 			float viewport_scale = 10f;
-			float aspect = ((float)(mScreenDim.y)) / mScreenDim.x;
-			return Matrix.CreateOrthographicOffCenter( -viewport_scale, viewport_scale, -viewport_scale * aspect, viewport_scale * aspect, 0f, 2f );
+			mView = Matrix.CreateLookAt( new Vector3( 6, 4, 1f ), new Vector3( 6, 4, 0f ), new Vector3( 0f, 1f, 0f ) );
+			mProjection = Matrix.CreateOrthographicOffCenter( -viewport_scale, viewport_scale, -viewport_scale * mAspect, viewport_scale * mAspect, 0f, 2f );
 		}
+
+
+		Matrix ICamera.GetViewMatrix()
+		{
+			return mView;
+		}
+
+
+		Matrix ICamera.GetProjectionMatrix()
+		{
+			return mProjection;
+		}
+
+
+		void ICamera.Update( GameTime dt )
+		{
+			// move with controls
+		}
+	}
+
+
+	public class ScreenCam : ICamera
+	{
+		private Matrix mView;
+		private Matrix mProjection;
+
+
+		public ScreenCam( tCoord screen_dim )
+		{
+			mView = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
+			mProjection = Matrix.CreateOrthographicOffCenter( 0, screen_dim.x, screen_dim.y, 0, 0f, 2f );
+		}
+
+
+		Matrix ICamera.GetViewMatrix()
+		{
+			return mView;
+		}
+
+
+		Matrix ICamera.GetProjectionMatrix()
+		{
+			return mProjection;
+		}
+
+
+		void ICamera.Update( GameTime dt ) {}
 	}
 }

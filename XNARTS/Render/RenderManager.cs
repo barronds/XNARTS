@@ -23,7 +23,8 @@ namespace XNARTS
 		public SimpleDraw		mSimpleDraw_World;
 		public SimpleDraw		mSimpleDraw_Screen;
 		public tCoord			mScreenDim;
-		private ICamera         mMainWorldCam;
+		private ICamera			mMainWorldCam;
+		private ICamera			mScreenCam;
 
 
 		private XRenderManager()
@@ -47,7 +48,8 @@ namespace XNARTS
 			mSimpleDraw_World = new SimpleDraw( mGraphicsDevice );
 			mSimpleDraw_Screen = new SimpleDraw( mGraphicsDevice );
 
-			mMainWorldCam = new Camera( mScreenDim );
+			mMainWorldCam = new WorldCam( mScreenDim );
+			mScreenCam = new ScreenCam( mScreenDim );
 		}
 
 
@@ -56,14 +58,14 @@ namespace XNARTS
 			// world space rendering setup
 			mBasicEffect_World = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_World.World = Matrix.Identity;
-			mBasicEffect_World.View = mMainWorldCam.CalcViewMatrix();
-			mBasicEffect_World.Projection = mMainWorldCam.CalcProjectionMatrix();
+			mBasicEffect_World.View = mMainWorldCam.GetViewMatrix();
+			mBasicEffect_World.Projection = mMainWorldCam.GetProjectionMatrix();
 
 			// screen space rendering setup
 			mBasicEffect_Screen = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_Screen.World = Matrix.Identity;
-			mBasicEffect_Screen.View = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
-			mBasicEffect_Screen.Projection = Matrix.CreateOrthographicOffCenter( 0, mGraphicsDeviceManager.PreferredBackBufferWidth, mGraphicsDeviceManager.PreferredBackBufferHeight, 0, 0f, 2f );
+			mBasicEffect_Screen.View = mScreenCam.GetViewMatrix();
+			mBasicEffect_Screen.Projection = mScreenCam.GetProjectionMatrix();
 		}
 
 
