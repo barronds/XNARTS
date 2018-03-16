@@ -46,7 +46,7 @@ namespace XNARTS
 		}
 
 
-		void ICamera.Update( GameTime dt )
+		void ICamera.Update( GameTime game_time )
 		{
 			// move with controls
 		}

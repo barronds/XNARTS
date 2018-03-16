@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
+    <Compile Include="Map\World.cs" />
     <Compile Include="Math\BBox2.cs" />
     <Compile Include="Math\Coord.cs" />
     <Compile Include="Math\Helpers.cs" />

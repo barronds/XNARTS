@@ -21,7 +21,7 @@ namespace XNARTS
             }
         }
 
-        const int               kMaxLines = 10;
+        const int               kMaxLines = 50;
         int                     mNumLines;
         VertexPositionColor []  mLines;
 
