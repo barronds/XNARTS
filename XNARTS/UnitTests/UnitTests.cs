@@ -7,9 +7,9 @@ using System.Diagnostics;
 using XNARTS;
 
 
-namespace XNARTS.XUnitTests
+namespace XNARTS
 {
-    public class Framework
+    public class XUnitTests
     {
         // toggle this to avoid unit tests
         private static bool sPerformUnitTests = true;
