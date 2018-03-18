@@ -4,14 +4,14 @@ using System.Reflection;
 
 namespace XNARTS
 {
-	// Singleton<T> usage:
-	// inherit like this: public class Foo : Singleton< T >
+	// XSingleton<T> usage:
+	// inherit like this: public class Foo : XSingleton< T >
 	// then make a private empty constructor in Foo.
 	// at some point, call InstantiateSingleton() and anytime afterwards Instance()
 	// Foo will probably need an Init() function to replace the work of a constructor, to be called shortly or right after InstantiateSingleton()
 	// the usage of sInitLock, the constructors check, and Activator came from the almighty internet. 
 
-	public class Singleton<T> where T : class
+	public class XSingleton<T> where T : class
 	{
 		private static T		sInstance;
 		private static object	sInitLock = new object();
@@ -21,7 +21,7 @@ namespace XNARTS
 		{
 			if( sInstance == null )
 			{
-				Utils.Assert( false, "instance doesn't exist" );
+				XUtils.Assert( false, "instance doesn't exist" );
 			}				
 
 			return sInstance;
@@ -34,7 +34,7 @@ namespace XNARTS
 			{
 				if( sInstance != null )
 				{
-					Utils.Assert( false, "instance already exists" );
+					XUtils.Assert( false, "instance already exists" );
 					return sInstance;
 				}
 

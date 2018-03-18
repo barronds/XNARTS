@@ -7,7 +7,7 @@ using System.Diagnostics;
 using XNARTS;
 
 
-namespace XNARTS.UnitTests
+namespace XNARTS.XUnitTests
 {
     public class Framework
     {
@@ -17,8 +17,8 @@ namespace XNARTS.UnitTests
 
         private static void ExecuteTests()
         {
-            tCoord.unitTest();
-			AABB2.unitTest();
+            xCoord.unitTest();
+			xAABB2.unitTest();
         }
 
 

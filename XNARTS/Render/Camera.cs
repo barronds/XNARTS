@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public interface ICamera
+	public interface XICamera
 	{
 		Matrix	GetViewMatrix		();
 		Matrix	GetProjectionMatrix	();
@@ -16,14 +16,14 @@ namespace XNARTS
 	}
 
 
-	public class WorldCam : ICamera
+	public class WorldCam : XICamera
 	{
 		private float mAspect;
 		private Matrix mView;
 		private Matrix mProjection;
 
 
-		public WorldCam( tCoord screen_dim )
+		public WorldCam( xCoord screen_dim )
 		{
 			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
 
@@ -34,50 +34,50 @@ namespace XNARTS
 		}
 
 
-		Matrix ICamera.GetViewMatrix()
+		Matrix XICamera.GetViewMatrix()
 		{
 			return mView;
 		}
 
 
-		Matrix ICamera.GetProjectionMatrix()
+		Matrix XICamera.GetProjectionMatrix()
 		{
 			return mProjection;
 		}
 
 
-		void ICamera.Update( GameTime game_time )
+		void XICamera.Update( GameTime game_time )
 		{
 			// move with controls
 		}
 	}
 
 
-	public class ScreenCam : ICamera
+	public class ScreenCam : XICamera
 	{
 		private Matrix mView;
 		private Matrix mProjection;
 
 
-		public ScreenCam( tCoord screen_dim )
+		public ScreenCam( xCoord screen_dim )
 		{
 			mView = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
 			mProjection = Matrix.CreateOrthographicOffCenter( 0, screen_dim.x, screen_dim.y, 0, 0f, 2f );
 		}
 
 
-		Matrix ICamera.GetViewMatrix()
+		Matrix XICamera.GetViewMatrix()
 		{
 			return mView;
 		}
 
 
-		Matrix ICamera.GetProjectionMatrix()
+		Matrix XICamera.GetProjectionMatrix()
 		{
 			return mProjection;
 		}
 
 
-		void ICamera.Update( GameTime dt ) {}
+		void XICamera.Update( GameTime dt ) {}
 	}
 }

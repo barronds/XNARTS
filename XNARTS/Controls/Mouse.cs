@@ -11,11 +11,11 @@ using XNARTS;
 
 namespace XNARTS
 {
-    public class XMouse : Singleton< XMouse >
+    public class XMouse : XSingleton< XMouse >
     {
-        tCoord mScreenDim;
-		SimpleDraw mSimpleDrawWorld;
-		SimpleDraw mSimpleDrawScreen;
+        xCoord mScreenDim;
+		XSimpleDraw mSimpleDrawWorld;
+		XSimpleDraw mSimpleDrawScreen;
 
 
 		private XMouse()

@@ -12,7 +12,7 @@ using XNARTS;
 
 namespace XNARTS
 {
-	public class XRenderManager : Singleton< XRenderManager >
+	public class XRenderManager : XSingleton< XRenderManager >
 	{
 		GraphicsDeviceManager	mGraphicsDeviceManager;
 		GraphicsDevice			mGraphicsDevice;
@@ -20,11 +20,11 @@ namespace XNARTS
 		BasicEffect				mBasicEffect_World;
 		BasicEffect				mBasicEffect_Screen;
 
-		public SimpleDraw		mSimpleDraw_World;
-		public SimpleDraw		mSimpleDraw_Screen;
-		public tCoord			mScreenDim;
-		private ICamera			mMainWorldCam;
-		private ICamera			mScreenCam;
+		public XSimpleDraw		mSimpleDraw_World;
+		public XSimpleDraw		mSimpleDraw_Screen;
+		public xCoord			mScreenDim;
+		private XICamera			mMainWorldCam;
+		private XICamera			mScreenCam;
 
 
 		private XRenderManager()
@@ -38,15 +38,15 @@ namespace XNARTS
 			mGraphicsDevice = graphics_device;
 
 			var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
-			mScreenDim = new tCoord( current_display_mode.Width, current_display_mode.Height );
+			mScreenDim = new xCoord( current_display_mode.Width, current_display_mode.Height );
 
 			mGraphicsDeviceManager.IsFullScreen = false;
 			mGraphicsDeviceManager.PreferredBackBufferWidth = mScreenDim.x;
 			mGraphicsDeviceManager.PreferredBackBufferHeight = mScreenDim.y;
 			mGraphicsDeviceManager.ApplyChanges();
 
-			mSimpleDraw_World = new SimpleDraw( mGraphicsDevice );
-			mSimpleDraw_Screen = new SimpleDraw( mGraphicsDevice );
+			mSimpleDraw_World = new XSimpleDraw( mGraphicsDevice );
+			mSimpleDraw_Screen = new XSimpleDraw( mGraphicsDevice );
 
 			mMainWorldCam = new WorldCam( mScreenDim );
 			mScreenCam = new ScreenCam( mScreenDim );

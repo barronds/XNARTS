@@ -7,7 +7,7 @@ using XNARTS;
 
 namespace XNARTS
 {
-	public partial class Utils
+	public partial class XUtils
 	{
 		public static void Assert( bool b, string msg = null )
 		{

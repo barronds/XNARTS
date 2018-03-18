@@ -4,23 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using XNARTS.UnitTests;
+using XNARTS.XUnitTests;
 
 
 namespace XNARTS
 {
-    public struct tCoord
+    public struct xCoord
     {
         public int x { get; set; }
         public int y { get; set; }
 
-        public tCoord( int x, int y )
+        public xCoord( int x, int y )
         {
             this.x = x;
             this.y = y;
         }
 
-        public tCoord( double x, double y )
+        public xCoord( double x, double y )
         {
             this.x = (int)x;
             this.y = (int)y;
@@ -31,55 +31,55 @@ namespace XNARTS
             return (float)System.Math.Sqrt( this.x * this.x + this.y * this.y );
         }
 
-        public tCoord clamp( tCoord min, tCoord max )
+        public xCoord clamp( xCoord min, xCoord max )
         {
 			
-            Utils.Assert( !(min.x > max.x || min.y > max.y) );
+            XUtils.Assert( !(min.x > max.x || min.y > max.y) );
             int clamped_x = System.Math.Max( System.Math.Min( max.x, this.x ), min.x );
             int clamped_y = System.Math.Max( System.Math.Min( max.y, this.y ), min.y );
-            return new tCoord( clamped_x, clamped_y );
+            return new xCoord( clamped_x, clamped_y );
         }
 
-        public static tCoord operator -( tCoord coord )
+        public static xCoord operator -( xCoord coord )
         {
-            return new tCoord( 0 - coord.x, 0 - coord.y );
+            return new xCoord( 0 - coord.x, 0 - coord.y );
         }
 
-        public static tCoord operator *( float s, tCoord coord )
+        public static xCoord operator *( float s, xCoord coord )
         {
-            return new tCoord( coord.x * s, coord.y * s );
+            return new xCoord( coord.x * s, coord.y * s );
         }
 
-        public static tCoord operator *( tCoord coord, float s )
+        public static xCoord operator *( xCoord coord, float s )
         {
             return s * coord;
         }
 
-        public static tCoord operator +( tCoord a, tCoord b )
+        public static xCoord operator +( xCoord a, xCoord b )
         {
-            return new tCoord( a.x + b.x, a.y + b.y );
+            return new xCoord( a.x + b.x, a.y + b.y );
         }
 
-        public static tCoord operator -( tCoord a, tCoord b )
+        public static xCoord operator -( xCoord a, xCoord b )
         {
-            return new tCoord( a.x - b.x, a.y - b.y );
+            return new xCoord( a.x - b.x, a.y - b.y );
         }
 
-        public static bool operator ==( tCoord a, tCoord b )
+        public static bool operator ==( xCoord a, xCoord b )
         {
             return a.x == b.x && a.y == b.y;
         }
 
-        public static bool operator !=( tCoord a, tCoord b )
+        public static bool operator !=( xCoord a, xCoord b )
         {
             return a.x != b.x || a.y != b.y;
         }
 
         public override bool Equals( Object obj )
         {
-            if ( obj is tCoord )
+            if ( obj is xCoord )
             {
-                return (tCoord)obj == this;
+                return (xCoord)obj == this;
             }
 
             return false;
@@ -92,66 +92,66 @@ namespace XNARTS
 
         public static void unitTest()
         {
-            //Utils.Assert( false, "hello" );
-            tCoord a = new tCoord();
-            Utils.Assert( a.x == 0 );
-			Utils.Assert( a.y == 0 );
+            //XUtils.Assert( false, "hello" );
+            xCoord a = new xCoord();
+            XUtils.Assert( a.x == 0 );
+			XUtils.Assert( a.y == 0 );
 
-            tCoord b = a;
-			Utils.Assert( b.x == 0 );
-			Utils.Assert( b.y == 0 );
+            xCoord b = a;
+			XUtils.Assert( b.x == 0 );
+			XUtils.Assert( b.y == 0 );
 
-            tCoord c = new tCoord( -10, 20.0f );
-            Utils.Assert( c.x == -10 );
-            Utils.Assert( c.y == 20 );
+            xCoord c = new xCoord( -10, 20.0f );
+            XUtils.Assert( c.x == -10 );
+            XUtils.Assert( c.y == 20 );
 
-            tCoord d = 5 * c;
-            tCoord e = new tCoord( -50, 100 );
-            Utils.Assert( d == e );
-            Utils.Assert( d != b );
-            Utils.Assert( d.Equals( e ) );
-            Utils.Assert( !d.Equals( a ) );
+            xCoord d = 5 * c;
+            xCoord e = new xCoord( -50, 100 );
+            XUtils.Assert( d == e );
+            XUtils.Assert( d != b );
+            XUtils.Assert( d.Equals( e ) );
+            XUtils.Assert( !d.Equals( a ) );
 
 #pragma warning disable CS1718
-            Utils.Assert( d == d );
+            XUtils.Assert( d == d );
 #pragma warning restore CS1718
 
-            tCoord f = new tCoord( 2, 6 );
-            tCoord g = new tCoord( -11, 33 );
-            tCoord h = f + g;
-            tCoord i = f - g;
-            tCoord j = f - f;
-            tCoord k = g - g - g;
-            Utils.Assert( h == new tCoord( -9, 39 ) );
-            Utils.Assert( i == new tCoord( 13, -27 ) );
-            Utils.Assert( j == new tCoord() );
-            Utils.Assert( k == -g );
+            xCoord f = new xCoord( 2, 6 );
+            xCoord g = new xCoord( -11, 33 );
+            xCoord h = f + g;
+            xCoord i = f - g;
+            xCoord j = f - f;
+            xCoord k = g - g - g;
+            XUtils.Assert( h == new xCoord( -9, 39 ) );
+            XUtils.Assert( i == new xCoord( 13, -27 ) );
+            XUtils.Assert( j == new xCoord() );
+            XUtils.Assert( k == -g );
 
-            tCoord l = new tCoord( 2, -5 );
-            tCoord m = 4 * l;
-            tCoord n = -3.5f * l;
-            tCoord o = l * 4;
-            Utils.Assert( m == new tCoord( 8, -20 ) );
-            Utils.Assert( n == new tCoord( -7, 17 ) );
-            Utils.Assert( o == m );
+            xCoord l = new xCoord( 2, -5 );
+            xCoord m = 4 * l;
+            xCoord n = -3.5f * l;
+            xCoord o = l * 4;
+            XUtils.Assert( m == new xCoord( 8, -20 ) );
+            XUtils.Assert( n == new xCoord( -7, 17 ) );
+            XUtils.Assert( o == m );
 
-            tCoord p = new tCoord( 11.4, -55.6 );
-            tCoord q = new tCoord( 11.6, -55.4 );
-            Utils.Assert( p == new tCoord( 11, -55 ) );
-            Utils.Assert( p == new tCoord( 11, -55 ) );
+            xCoord p = new xCoord( 11.4, -55.6 );
+            xCoord q = new xCoord( 11.6, -55.4 );
+            XUtils.Assert( p == new xCoord( 11, -55 ) );
+            XUtils.Assert( p == new xCoord( 11, -55 ) );
 
-			Utils.AssertVal( a.getLength(), 0, 0.0001 );
-			Utils.AssertVal( f.getLength(), System.Math.Sqrt( 40 ), 0.0001 );
-			Utils.AssertVal( g.getLength(), System.Math.Sqrt( 33 * 33 + 11 * 11 ), 0.001 );
+			XUtils.AssertVal( a.getLength(), 0, 0.0001 );
+			XUtils.AssertVal( f.getLength(), System.Math.Sqrt( 40 ), 0.0001 );
+			XUtils.AssertVal( g.getLength(), System.Math.Sqrt( 33 * 33 + 11 * 11 ), 0.001 );
 
-            tCoord r = g.clamp( new tCoord( 0, 0 ), new tCoord( 100, 100 ) );
-            tCoord s = g.clamp( new tCoord( -30, -10 ), new tCoord( 0, -1 ) );
-            tCoord t = g.clamp( new tCoord( -1000, -1000 ), new tCoord( 1000, 1000 ) );
-            tCoord u = g.clamp( new tCoord(), new tCoord() );
-            Utils.Assert( r == new tCoord( 0, 33 ) );
-            Utils.Assert( s == new tCoord( -11, -1 ) );
-            Utils.Assert( t == g );
-            Utils.Assert( u == new tCoord( 0, 0 ) );
+            xCoord r = g.clamp( new xCoord( 0, 0 ), new xCoord( 100, 100 ) );
+            xCoord s = g.clamp( new xCoord( -30, -10 ), new xCoord( 0, -1 ) );
+            xCoord t = g.clamp( new xCoord( -1000, -1000 ), new xCoord( 1000, 1000 ) );
+            xCoord u = g.clamp( new xCoord(), new xCoord() );
+            XUtils.Assert( r == new xCoord( 0, 33 ) );
+            XUtils.Assert( s == new xCoord( -11, -1 ) );
+            XUtils.Assert( t == g );
+            XUtils.Assert( u == new xCoord( 0, 0 ) );
         }
     }
 }

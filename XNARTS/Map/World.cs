@@ -8,19 +8,19 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public struct tMapCell
+	public struct xMapCell
 	{
 		public Color mColor;
 	}
 
 
-	public class World : Singleton< World >
+	public class World : XSingleton< World >
 	{
-		private tCoord			mMapSize;
-		private tMapCell [,]	mCells;
-		SimpleDraw				mSimpleDraw;
+		private xCoord			mMapSize;
+		private xMapCell [,]	mCells;
+		XSimpleDraw				mSimpleDraw;
 
-		// private constructor as per Singleton
+		// private constructor as per XSingleton
 		private World()
 		{}
 
@@ -28,8 +28,8 @@ namespace XNARTS
 		public void Init()
 		{
 			mSimpleDraw = XRenderManager.Instance().mSimpleDraw_World;
-			mMapSize = new tCoord( 16, 9 );
-			mCells = new tMapCell[ mMapSize.x, mMapSize.y ];
+			mMapSize = new xCoord( 16, 9 );
+			mCells = new xMapCell[ mMapSize.x, mMapSize.y ];
 			Random rand = new Random();
 
 			for( int x = 0; x < mMapSize.x; ++x )
@@ -42,15 +42,15 @@ namespace XNARTS
 		}
 
 
-		public tCoord GetMapSize()
+		public xCoord GetMapSize()
 		{
 			return mMapSize;
 		}
 
 
-		public tMapCell GetMapCell( tCoord coord )
+		public xMapCell GetMapCell( xCoord coord )
 		{
-			Utils.Assert( coord.x >= 0 && coord.y >= 0 && coord.x < mMapSize.x && coord.y < mMapSize.y );
+			XUtils.Assert( coord.x >= 0 && coord.y >= 0 && coord.x < mMapSize.x && coord.y < mMapSize.y );
 			return mCells[ coord.x, coord.y ];
 		}
 

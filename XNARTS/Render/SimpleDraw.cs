@@ -9,13 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNARTS
 {
-    public class SimpleDraw
+    public class XSimpleDraw
     {
-        public struct tBatchId
+        public struct xBatchId
         {
             public int mId;
 
-            public tBatchId( int id )
+            public xBatchId( int id )
             {
                 mId = id;
             }
@@ -28,7 +28,7 @@ namespace XNARTS
 
         private GraphicsDevice mGraphicsDevice;
 
-        public SimpleDraw( GraphicsDevice graphics_device )
+        public XSimpleDraw( GraphicsDevice graphics_device )
         {
             mGraphicsDevice = graphics_device;
             mLines = new VertexPositionColor[ 2 * kMaxLines ];
@@ -67,10 +67,10 @@ namespace XNARTS
 
         // not yet implemented 
 
-        public tBatchId StartLineStrip( int line_count )
+        public xBatchId StartLineStrip( int line_count )
         {
             // return index into line strip list as id
-            tBatchId id;
+            xBatchId id;
             id.mId = 0;
             return id;
         }
@@ -80,7 +80,7 @@ namespace XNARTS
 
         }
 
-        public void EndLineStrip( tBatchId line_strip_id )
+        public void EndLineStrip( xBatchId line_strip_id )
         {
             // verify all promised are there
         }
