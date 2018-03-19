@@ -53,6 +53,7 @@
     <Compile Include="Render\SimpleDraw.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
     <Compile Include="Utils\Assert.cs" />
+    <Compile Include="Utils\Pluralton.cs" />
     <Compile Include="Utils\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>

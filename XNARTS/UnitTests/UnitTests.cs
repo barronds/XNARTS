@@ -18,7 +18,7 @@ namespace XNARTS
         private static void ExecuteTests()
         {
             xCoord.unitTest();
-			xAABB2.unitTest();
+			xAABB2.UnitTest();
         }
 
 

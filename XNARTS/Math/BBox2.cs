@@ -218,7 +218,7 @@ namespace XNARTS
 		}
 
 
-		public static void unitTest()
+		public static void UnitTest()
 		{
 			xAABB2 aabb1 = new xAABB2();
 			XUtils.Assert( aabb1.mIsValid == false );

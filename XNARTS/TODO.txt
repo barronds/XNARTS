@@ -3,4 +3,4 @@
 - add triangles and/or quads to simple draw to make world look better
 - maybe make simple draws singletons OR 2 instances in a pluralton
 - consider transient simple draws and permanent simple draws so that things like the world don't need to be re-fed every frame into simple draw
-- fix UnitTests Framework to be just Unit Tests
+- unify singleton, pluralton public api.  move private contructor check to Initialize for pluralton.
