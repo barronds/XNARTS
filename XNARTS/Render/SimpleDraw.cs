@@ -11,8 +11,10 @@ namespace XNARTS
 {
 	public enum xeSimpleDrawType
 	{
-		Screen,
-		World
+		Screen_Transient,
+		Screen_Persistent,
+		World_Transient,
+		World_Persistent
 	}
 
 
@@ -37,6 +39,7 @@ namespace XNARTS
 		VertexPositionColor []	mTriangles;
 
         private GraphicsDevice	mGraphicsDevice;
+		private bool			mPersistent;
 
 
 		// private constructor as per pluralton
@@ -44,9 +47,10 @@ namespace XNARTS
 		{}
 
 
-        public void Init( GraphicsDevice graphics_device )
+        public void Init( GraphicsDevice graphics_device, bool persistent )
         {
             mGraphicsDevice = graphics_device;
+			mPersistent = persistent;
             mLines = new VertexPositionColor[ 2 * kMaxLines ];
             mNumLines = 0;
 			mTriangles = new VertexPositionColor[ 3 * kMaxTriangles ];
@@ -109,14 +113,22 @@ namespace XNARTS
             if( mNumLines > 0 )
             {
                 mGraphicsDevice.DrawUserPrimitives( PrimitiveType.LineList, mLines, 0, mNumLines );
-                mNumLines = 0;
+
+				if( !mPersistent )
+				{
+				    mNumLines = 0;
+				}
             }
 
 			// triangles
 			if( mNumTriangles > 0 )
 			{
 				mGraphicsDevice.DrawUserPrimitives( PrimitiveType.TriangleList, mTriangles, 0, mNumTriangles );
-				mNumTriangles = 0;
+
+				if( !mPersistent )
+				{
+					mNumTriangles = 0;
+				}
 			}
         }
 

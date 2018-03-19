@@ -43,8 +43,10 @@ namespace XNARTS
 			mGraphicsDeviceManager.ApplyChanges();
 
 			XSimpleDraw.Initialize();
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.World ).Init( graphics_device );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen ).Init( graphics_device );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Transient ).Init( graphics_device, false );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Persistent ).Init( graphics_device, true );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Transient ).Init( graphics_device, false );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Persistent ).Init( graphics_device, true );
 
 			mMainWorldCam = new WorldCam( mScreenDim );
 			mScreenCam = new ScreenCam( mScreenDim );
@@ -83,15 +85,18 @@ namespace XNARTS
 
 			mBasicEffect_World.VertexColorEnabled = true;
 
-			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
-			XSimpleDraw simple_draw_screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen );
+			XSimpleDraw simple_draw_world_transient = XSimpleDraw.Instance( xeSimpleDrawType.World_Transient );
+			XSimpleDraw simple_draw_world_persistent = XSimpleDraw.Instance( xeSimpleDrawType.World_Persistent );
+			XSimpleDraw simple_draw_screen_transient = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Transient );
+			XSimpleDraw simple_draw_screen_persistent = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Persistent );
 
 			foreach( EffectPass pass in mBasicEffect_World.CurrentTechnique.Passes )
 			{
 				pass.Apply();
 
 				// actually render simple draw stuff.  possible layers needed.
-				simple_draw_world.DrawAllPrimitives();
+				simple_draw_world_persistent.DrawAllPrimitives();
+				simple_draw_world_transient.DrawAllPrimitives();
 
 				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
 			}
@@ -105,7 +110,8 @@ namespace XNARTS
 				pass.Apply();
 
 				// actually render simple draw stuff.  possible layers needed.
-				simple_draw_screen.DrawAllPrimitives();
+				simple_draw_screen_persistent.DrawAllPrimitives();
+				simple_draw_screen_transient.DrawAllPrimitives();
 
 				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
 			}

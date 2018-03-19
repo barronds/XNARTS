@@ -46,14 +46,14 @@ namespace XNARTS
 			Vector3 start = new Vector3( -1f, -1f, -1f ) * 2f;
 			Vector3 end = -start;
 			Color color = Color.White;
-			XSimpleDraw.Instance( xeSimpleDrawType.World ).DrawLine( start, end, color, color );
+			XSimpleDraw.Instance( xeSimpleDrawType.World_Transient ).DrawLine( start, end, color, color );
 		}
 
 		public void RenderScreen( GameTime game_time )
 		{
 			Vector3 start = new Vector3( 0f, 0f, 0f );
 			Vector3 end = new Vector3( 1920f, 1080f, 0f );
-			XSimpleDraw screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen );
+			XSimpleDraw screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Transient );
 			screen.DrawLine( start, end, Color.Black, Color.White );
 			screen.DrawLine( new Vector3( 10f, 10f, 0f ), new Vector3( 100f, 10f, 0f ), Color.Black , Color.White );
 		}

@@ -1,4 +1,3 @@
 ﻿- get to work on camera class (2d orthographic)
-- consider transient simple draws and permanent simple draws so that things like the world don't need to be re-fed every frame into simple draw
 - consider game cameras as pluralton
 - consider simple draw method to draw whole map given array of colors, or index into color map

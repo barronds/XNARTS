@@ -16,6 +16,7 @@ namespace XNARTS
 
 	public class World : XSingleton< World >
 	{
+		private bool			mWorldRendered;
 		private xCoord			mMapSize;
 		private xMapCell [,]	mCells;
 
@@ -27,6 +28,7 @@ namespace XNARTS
 
 		public void Init()
 		{
+			mWorldRendered = false;
 			mMapSize = new xCoord( 16, 9 );
 			mCells = new xMapCell[ mMapSize.x, mMapSize.y ];
 			Random rand = new Random();
@@ -56,7 +58,7 @@ namespace XNARTS
 
 		public void RenderWorldLines( GameTime game_time )
 		{
-			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World_Transient );
 
 			Vector3 start = new Vector3();
 			Vector3 end = new Vector3();
@@ -88,20 +90,25 @@ namespace XNARTS
 
 		public void RenderWorld( GameTime game_time )
 		{
-			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
-
-			for( int x = 0; x < mMapSize.x; ++x )
+			if( !mWorldRendered )
 			{
-				for( int y = 0; y < mMapSize.y; ++y )
-				{
-					Vector3 low = new Vector3( x, y, 0f );
-					Vector3 high = new Vector3( x + 1, y + 1, 0f );
-					float fx = ((float)x) / mMapSize.x;
-					float fy = ((float)y) / mMapSize.y;
-					Color color = new Color( fx, fy, 0.5f );
+				XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World_Persistent );
 
-					simple_draw_world.DrawQuad( low, high, color );
+				for( int x = 0; x < mMapSize.x; ++x )
+				{
+					for( int y = 0; y < mMapSize.y; ++y )
+					{
+						Vector3 low = new Vector3( x, y, 0f );
+						Vector3 high = new Vector3( x + 1, y + 1, 0f );
+						float fx = ((float)x) / mMapSize.x;
+						float fy = ((float)y) / mMapSize.y;
+						Color color = new Color( fx, fy, 0.5f );
+
+						simple_draw_world.DrawQuad( low, high, color );
+					}
 				}
+
+				mWorldRendered = true;
 			}
 		}
 	}
