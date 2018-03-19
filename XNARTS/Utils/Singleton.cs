@@ -6,9 +6,9 @@ namespace XNARTS
 {
 	// XSingleton<T> usage:
 	// inherit like this: public class Foo : XSingleton< T >
-	// then make a private empty constructor in Foo.
-	// at some point, call InstantiateSingleton() and anytime afterwards Instance()
-	// Foo will probably need an Init() function to replace the work of a constructor, to be called shortly or right after InstantiateSingleton()
+	// then make a private empty constructor in T.  T may not have any public constructors.
+	// at some point, call CreateInstance() and anytime afterwards Instance()
+	// T will probably need an Init() function to replace the work of a constructor, to be called shortly or right after CreateInstance()
 	// the usage of sInitLock, the constructors check, and Activator came from the almighty internet. 
 
 	public class XSingleton<T> where T : class
@@ -28,7 +28,7 @@ namespace XNARTS
 		}
 
 
-		public static T InstantiateSingleton()
+		public static T CreateInstance()
 		{
 			lock( sInitLock )
 			{

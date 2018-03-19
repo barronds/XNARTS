@@ -21,6 +21,15 @@ namespace XNARTS
 
 		public static void Initialize()
 		{
+			Type t = typeof( T );
+
+			// Ensure there are no public constructors...
+			ConstructorInfo[] ctors = t.GetConstructors();
+			if( ctors.Length > 0 )
+			{
+				throw new InvalidOperationException( String.Format( "{0} has at least one accesible ctor making it impossible to enforce pluralton behaviour", t.Name));
+			}
+
 			XUtils.Assert( sInstances == null );
 			sInstances = new SortedDictionary< Key, T >();
 		}
@@ -47,16 +56,8 @@ namespace XNARTS
 					return Instance( key );
 				}
 				
-				Type t = typeof( T );
-
-				// Ensure there are no public constructors...
-				ConstructorInfo[] ctors = t.GetConstructors();
-				if( ctors.Length > 0 )
-				{
-					throw new InvalidOperationException( String.Format( "{0} has at least one accesible ctor making it impossible to enforce pluralton behaviour", t.Name));
-				}
-
 				// Create an instance via the private constructor
+				Type t = typeof( T );
 				T instance = (T)Activator.CreateInstance( t, true );
 				sInstances.Add( key, instance );
 				return instance;

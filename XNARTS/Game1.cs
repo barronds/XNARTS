@@ -25,7 +25,7 @@ namespace XNARTS
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
 			Content.RootDirectory = "Content";
-			XRenderManager.InstantiateSingleton();
+			XRenderManager.CreateInstance();
 		}
 		
 
@@ -38,8 +38,8 @@ namespace XNARTS
 		protected override void Initialize()
         {
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
-			XMouse.InstantiateSingleton().Init();
-			World.InstantiateSingleton().Init();
+			XMouse.CreateInstance().Init();
+			World.CreateInstance().Init();
 			base.Initialize();
         }
 
