@@ -1,6 +1,4 @@
 ﻿- get to work on camera class (2d orthographic)
-- make world placeholder in order to get camera right
-- add triangles and/or quads to simple draw to make world look better
 - consider transient simple draws and permanent simple draws so that things like the world don't need to be re-fed every frame into simple draw
-- unify singleton, pluralton public api.  move private contructor check to Initialize for pluralton.
 - consider game cameras as pluralton
+- consider simple draw method to draw whole map given array of colors, or index into color map

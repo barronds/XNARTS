@@ -54,7 +54,7 @@ namespace XNARTS
 		}
 
 
-		public void RenderWorld( GameTime game_time )
+		public void RenderWorldLines( GameTime game_time )
 		{
 			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
 
@@ -82,6 +82,26 @@ namespace XNARTS
 				end.Y = y;
 
 				simple_draw_world.DrawLine( start, end, Color.DarkGreen, Color.White );
+			}
+		}
+
+
+		public void RenderWorld( GameTime game_time )
+		{
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
+
+			for( int x = 0; x < mMapSize.x; ++x )
+			{
+				for( int y = 0; y < mMapSize.y; ++y )
+				{
+					Vector3 low = new Vector3( x, y, 0f );
+					Vector3 high = new Vector3( x + 1, y + 1, 0f );
+					float fx = ((float)x) / mMapSize.x;
+					float fy = ((float)y) / mMapSize.y;
+					Color color = new Color( fx, fy, 0.5f );
+
+					simple_draw_world.DrawQuad( low, high, color );
+				}
 			}
 		}
 	}
