@@ -20,16 +20,13 @@ namespace XNARTS
 		BasicEffect				mBasicEffect_World;
 		BasicEffect				mBasicEffect_Screen;
 
-		public XSimpleDraw		mSimpleDraw_World;
-		public XSimpleDraw		mSimpleDraw_Screen;
 		public xCoord			mScreenDim;
-		private XICamera			mMainWorldCam;
-		private XICamera			mScreenCam;
+		private XICamera		mMainWorldCam;
+		private XICamera		mScreenCam;
 
 
 		private XRenderManager()
-		{
-		}
+		{}
 
 
 		public void Initialize( GraphicsDevice graphics_device, GraphicsDeviceManager graphics_device_manager )
@@ -45,8 +42,9 @@ namespace XNARTS
 			mGraphicsDeviceManager.PreferredBackBufferHeight = mScreenDim.y;
 			mGraphicsDeviceManager.ApplyChanges();
 
-			mSimpleDraw_World = new XSimpleDraw( mGraphicsDevice );
-			mSimpleDraw_Screen = new XSimpleDraw( mGraphicsDevice );
+			XSimpleDraw.Initialize();
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.World ).Init( graphics_device );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen ).Init( graphics_device );
 
 			mMainWorldCam = new WorldCam( mScreenDim );
 			mScreenCam = new ScreenCam( mScreenDim );
@@ -85,12 +83,15 @@ namespace XNARTS
 
 			mBasicEffect_World.VertexColorEnabled = true;
 
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
+			XSimpleDraw simple_draw_screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen );
+
 			foreach( EffectPass pass in mBasicEffect_World.CurrentTechnique.Passes )
 			{
 				pass.Apply();
 
 				// actually render simple draw stuff.  possible layers needed.
-				mSimpleDraw_World.DrawAllPrimitives();
+				simple_draw_world.DrawAllPrimitives();
 
 				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
 			}
@@ -104,7 +105,7 @@ namespace XNARTS
 				pass.Apply();
 
 				// actually render simple draw stuff.  possible layers needed.
-				mSimpleDraw_Screen.DrawAllPrimitives();
+				simple_draw_screen.DrawAllPrimitives();
 
 				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
 			}

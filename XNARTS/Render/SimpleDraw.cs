@@ -9,7 +9,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNARTS
 {
-    public class XSimpleDraw
+	public enum xeSimpleDrawType
+	{
+		Screen,
+		World
+	}
+
+
+    public class XSimpleDraw : XPluralton< xeSimpleDrawType, XSimpleDraw >
     {
         public struct xBatchId
         {
@@ -24,11 +31,15 @@ namespace XNARTS
         const int               kMaxLines = 50;
         int                     mNumLines;
         VertexPositionColor []  mLines;
+        private GraphicsDevice	mGraphicsDevice;
 
 
-        private GraphicsDevice mGraphicsDevice;
+		// private constructor as per pluralton
+		private XSimpleDraw()
+		{}
 
-        public XSimpleDraw( GraphicsDevice graphics_device )
+
+        public void Init( GraphicsDevice graphics_device )
         {
             mGraphicsDevice = graphics_device;
             mLines = new VertexPositionColor[ 2 * kMaxLines ];

@@ -14,8 +14,6 @@ namespace XNARTS
     public class XMouse : XSingleton< XMouse >
     {
         xCoord mScreenDim;
-		XSimpleDraw mSimpleDrawWorld;
-		XSimpleDraw mSimpleDrawScreen;
 
 
 		private XMouse()
@@ -27,8 +25,6 @@ namespace XNARTS
 		{
 			XRenderManager render_manager = XRenderManager.Instance();
 			mScreenDim = render_manager.mScreenDim;
-			mSimpleDrawWorld = render_manager.mSimpleDraw_World;
-			mSimpleDrawScreen = render_manager.mSimpleDraw_Screen;
 		}
 
 
@@ -50,16 +46,16 @@ namespace XNARTS
 			Vector3 start = new Vector3( -1f, -1f, -1f ) * 2f;
 			Vector3 end = -start;
 			Color color = Color.White;
-			mSimpleDrawWorld.DrawLine( start, end, color, color );
+			XSimpleDraw.Instance( xeSimpleDrawType.World ).DrawLine( start, end, color, color );
 		}
 
 		public void RenderScreen( GameTime game_time )
 		{
 			Vector3 start = new Vector3( 0f, 0f, 0f );
 			Vector3 end = new Vector3( 1920f, 1080f, 0f );
-			mSimpleDrawScreen.DrawLine( start, end, Color.Black, Color.White );
-
-			mSimpleDrawScreen.DrawLine( new Vector3( 10f, 10f, 0f ), new Vector3( 100f, 10f, 0f ), Color.Black , Color.White );
+			XSimpleDraw screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen );
+			screen.DrawLine( start, end, Color.Black, Color.White );
+			screen.DrawLine( new Vector3( 10f, 10f, 0f ), new Vector3( 100f, 10f, 0f ), Color.Black , Color.White );
 		}
 	}
 }

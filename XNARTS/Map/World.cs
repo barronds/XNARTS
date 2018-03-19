@@ -18,7 +18,7 @@ namespace XNARTS
 	{
 		private xCoord			mMapSize;
 		private xMapCell [,]	mCells;
-		XSimpleDraw				mSimpleDraw;
+
 
 		// private constructor as per XSingleton
 		private World()
@@ -27,7 +27,6 @@ namespace XNARTS
 
 		public void Init()
 		{
-			mSimpleDraw = XRenderManager.Instance().mSimpleDraw_World;
 			mMapSize = new xCoord( 16, 9 );
 			mCells = new xMapCell[ mMapSize.x, mMapSize.y ];
 			Random rand = new Random();
@@ -57,6 +56,8 @@ namespace XNARTS
 
 		public void RenderWorld( GameTime game_time )
 		{
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World );
+
 			Vector3 start = new Vector3();
 			Vector3 end = new Vector3();
 
@@ -69,7 +70,7 @@ namespace XNARTS
 				start.X = x;
 				end.X = x;
 
-				mSimpleDraw.DrawLine( start, end, Color.Yellow, Color.Black );
+				simple_draw_world.DrawLine( start, end, Color.Yellow, Color.Black );
 			}
 
 			start.X = 0;
@@ -80,7 +81,7 @@ namespace XNARTS
 				start.Y = y;
 				end.Y = y;
 
-				mSimpleDraw.DrawLine( start, end, Color.DarkGreen, Color.White );
+				simple_draw_world.DrawLine( start, end, Color.DarkGreen, Color.White );
 			}
 		}
 	}
