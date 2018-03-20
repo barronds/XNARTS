@@ -93,6 +93,7 @@ namespace XNARTS
 			if( !mWorldRendered )
 			{
 				XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World_Persistent );
+				System.Random rand = new Random();
 
 				for( int x = 0; x < mMapSize.x; ++x )
 				{
@@ -100,9 +101,10 @@ namespace XNARTS
 					{
 						Vector3 low = new Vector3( x, y, 0f );
 						Vector3 high = new Vector3( x + 1, y + 1, 0f );
-						float fx = ((float)x) / mMapSize.x;
-						float fy = ((float)y) / mMapSize.y;
-						Color color = new Color( fx, fy, 0.5f );
+						float r = (float)rand.NextDouble();
+						float g = (float)rand.NextDouble();
+						float b = (float)rand.NextDouble();
+						Color color = new Color( r, g, b );
 
 						simple_draw_world.DrawQuad( low, high, color );
 					}
