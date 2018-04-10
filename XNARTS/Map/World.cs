@@ -14,7 +14,7 @@ namespace XNARTS
 	}
 
 
-	public class World : XSingleton< World >
+	public class XWorld : XSingleton< XWorld >
 	{
 		private bool			mWorldRendered;
 		private xCoord			mMapSize;
@@ -22,7 +22,7 @@ namespace XNARTS
 
 
 		// private constructor as per XSingleton
-		private World()
+		private XWorld()
 		{}
 
 

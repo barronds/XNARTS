@@ -78,7 +78,7 @@ namespace XNARTS
 			mGraphicsDevice.RasterizerState = rasterizerState;
 
 			// simple draw only clients
-			World.Instance().RenderWorld( game_time );
+			XWorld.Instance().RenderWorld( game_time );
 			XMouse mouse = XMouse.Instance();
 			mouse.RenderWorld( game_time );
 			mouse.RenderScreen( game_time );

@@ -26,7 +26,7 @@ namespace XNARTS
 		public WorldCam( xCoord screen_dim )
 		{
 			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
-			//xCoord world_size = World.Instance().GetMapSize();
+			//xCoord world_size = XWorld.Instance().GetMapSize();
 
 			// temporary
 			float viewport_scale = 10f;
