@@ -37,7 +37,7 @@ namespace XNARTS
 			var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 			mScreenDim = new xCoord( current_display_mode.Width, current_display_mode.Height );
 
-			mGraphicsDeviceManager.IsFullScreen = false;
+			mGraphicsDeviceManager.IsFullScreen = true;
 			mGraphicsDeviceManager.PreferredBackBufferWidth = mScreenDim.x;
 			mGraphicsDeviceManager.PreferredBackBufferHeight = mScreenDim.y;
 			mGraphicsDeviceManager.ApplyChanges();
