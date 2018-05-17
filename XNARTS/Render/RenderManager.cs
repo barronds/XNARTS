@@ -25,6 +25,7 @@ namespace XNARTS
 		private XICamera		mScreenCam;
 
 
+		// private constructor for XSingleton
 		private XRenderManager()
 		{}
 

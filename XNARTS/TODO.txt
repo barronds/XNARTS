@@ -1,7 +1,13 @@
-﻿- get to work on camera class (2d orthographic)
-- consider game cameras as pluralton
+﻿- consider game cameras as pluralton
 - consider simple draw method to draw whole map given array of colors, or index into color map
 - make the mouse work
 - consider game system interface (update, render)( gametime ) from Utils folder maybe, game types file
+
+
+
 - make a game configuration class that has initial data and that systems can tweak early so that all systems 
 may initialize irrespective of construction and initialization of those systems, hopefully.
+
+thinking about this one now.  how to integrate the initial per-system modification of the config.
+through a InitConfig() method?  can i still use that through singletons?  
+take everything out of constructors and do specific intialization?

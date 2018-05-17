@@ -25,6 +25,7 @@ namespace XNARTS
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
 			Content.RootDirectory = "Content";
+			XConfig.CreateInstance();
 			XRenderManager.CreateInstance();
 		}
 		
