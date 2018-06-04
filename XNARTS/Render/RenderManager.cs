@@ -44,10 +44,10 @@ namespace XNARTS
 			mGraphicsDeviceManager.ApplyChanges();
 
 			XSimpleDraw.Initialize();
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Transient ).Init( graphics_device, false );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Persistent ).Init( graphics_device, true );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Transient ).Init( graphics_device, false );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Persistent ).Init( graphics_device, true );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Transient ).Init( graphics_device, persistent: false );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Persistent ).Init( graphics_device, persistent: true );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Transient ).Init( graphics_device, persistent: false );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Persistent ).Init( graphics_device, persistent: true );
 
 			mMainWorldCam = new WorldCam( mScreenDim );
 			mScreenCam = new ScreenCam( mScreenDim );
