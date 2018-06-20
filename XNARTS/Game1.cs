@@ -38,9 +38,9 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
+			XWorld.CreateInstance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
 			XMouse.CreateInstance().Init();
-			XWorld.CreateInstance().Init();
 			base.Initialize();
         }
 
