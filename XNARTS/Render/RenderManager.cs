@@ -49,8 +49,8 @@ namespace XNARTS
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Transient ).Init( graphics_device, persistent: false );
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Persistent ).Init( graphics_device, persistent: true );
 
-			mMainWorldCam = new WorldCam( mScreenDim );
-			mScreenCam = new ScreenCam( mScreenDim );
+			mMainWorldCam = new XWorldCam( mScreenDim );
+			mScreenCam = new XScreenCam( mScreenDim );
 		}
 
 

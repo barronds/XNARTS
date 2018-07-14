@@ -16,14 +16,14 @@ namespace XNARTS
 	}
 
 
-	public class WorldCam : XICamera
+	public class XWorldCam : XICamera
 	{
 		private float mAspect;
 		private Matrix mView;
 		private Matrix mProjection;
 
 
-		public WorldCam( xCoord screen_dim )
+		public XWorldCam( xCoord screen_dim )
 		{
 			NewWay( screen_dim );
 		}
@@ -94,13 +94,13 @@ namespace XNARTS
 	}
 
 
-	public class ScreenCam : XICamera
+	public class XScreenCam : XICamera
 	{
 		private Matrix mView;
 		private Matrix mProjection;
 
 
-		public ScreenCam( xCoord screen_dim )
+		public XScreenCam( xCoord screen_dim )
 		{
 			mView = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
 			mProjection = Matrix.CreateOrthographicOffCenter( 0, screen_dim.x, screen_dim.y, 0, -1f, 1f );
