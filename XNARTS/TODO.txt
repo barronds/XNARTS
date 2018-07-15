@@ -11,3 +11,5 @@ may initialize irrespective of construction and initialization of those systems,
 thinking about this one now.  how to integrate the initial per-system modification of the config.
 through a InitConfig() method?  can i still use that through singletons?  
 take everything out of constructors and do specific intialization?
+
+- make input manager that abstracts away touch vs mouse controls, maybe encapsulates unit selection, commands

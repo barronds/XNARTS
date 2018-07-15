@@ -78,6 +78,9 @@ namespace XNARTS
 			rasterizerState.CullMode = CullMode.None;
 			mGraphicsDevice.RasterizerState = rasterizerState;
 
+			// maybe not the best place for this
+			mMainWorldCam.Update( game_time );
+
 			// simple draw only clients
 			XWorld.Instance().RenderWorld( game_time );
 			XMouse mouse = XMouse.Instance();

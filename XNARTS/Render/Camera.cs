@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna;
 
 
 namespace XNARTS
@@ -104,6 +105,13 @@ namespace XNARTS
 		void XICamera.Update( GameTime game_time )
 		{
 			// move with controls
+			Microsoft.Xna.Framework.Input.Touch.TouchCollection touches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
+			int how_many = touches.Count();
+
+			for( int i = 0; i < how_many; ++i )
+			{
+				Console.WriteLine( touches[ i ].ToString() );
+			}
 		}
 	}
 
