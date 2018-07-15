@@ -46,7 +46,7 @@ namespace XNARTS
 			float left = mWorldView.GetMin().X;
 			float right = mWorldView.GetMax().X;
 			float top = mWorldView.GetMin().Y;
-			float bottom = mAspect * (mWorldView.GetMax().X - mWorldView.GetMin().X);
+			float bottom = mWorldView.GetMax().Y;
 			float near = 1;
 			float far = -1;
 
@@ -68,7 +68,30 @@ namespace XNARTS
 
 		private xAABB2 ClampWorldView( xAABB2 world_view )
 		{
-			return world_view;
+			// make it true to aspect ratio and can't exceed width or height of map.
+			Vector2 min = world_view.GetMin();
+			Vector2 max = world_view.GetMax();
+
+			// clamp edges
+			min.X = Math.Max( 0, min.X );
+			min.Y = Math.Max( 0, min.Y );
+			max.X = Math.Min( mWorldSize.x, max.X );
+			max.Y = Math.Min( mWorldSize.y, max.Y );
+
+			// restore aspect ratio by bringing in x or y
+			Vector2 span = max - min;
+			float ideal_dy = span.X * mAspect;
+			
+			if( span.Y > ideal_dy )
+			{
+				max.Y = min.Y + span.X * mAspect;
+			}		
+			else
+			{
+				max.X = min.X + span.Y / mAspect;
+			}
+
+			return new xAABB2( min, max );
 		}
 
 
