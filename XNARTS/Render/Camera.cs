@@ -29,26 +29,32 @@ namespace XNARTS
 		{
 			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
 			mWorldSize = XWorld.Instance().GetMapSize();
+
+			// initial view of map
 			xAABB2 world_view = new xAABB2( new Vector2( 0, 0 ), new Vector2( mWorldSize.x, mWorldSize.y ) );
 			mWorldView = ClampWorldView( world_view );
-			NewWay( screen_dim );
+
+			// view matrix is unchanging
+			Vector3 pos = new Vector3( 0, 0, 1f );
+			Vector3 target = pos - 2f * Vector3.UnitZ;
+			mViewMatrix = Matrix.CreateLookAt( pos, target, Vector3.UnitY );
+
+			CalcProjectionMatrix( screen_dim );
 		}
 
 
-		private void NewWay( xCoord screen_dim )
+		private void CalcProjectionMatrix( xCoord screen_dim )
 		{
-			Vector3 pos = new Vector3( 0, 0, 1f );
-			Vector3 target = pos - 2f * Vector3.UnitZ;
-
-			mViewMatrix = Matrix.CreateLookAt( pos, target, Vector3.UnitY );
+			Vector2 min = mWorldView.GetMin();
+			Vector2 max = mWorldView.GetMax();
 
 			// left, right, bottom, top, near, far
-			float left = mWorldView.GetMin().X;
-			float right = mWorldView.GetMax().X;
-			float top = mWorldView.GetMin().Y;
-			float bottom = mWorldView.GetMax().Y;
-			float near = 1;
-			float far = -1;
+			float left = min.X;
+			float right = max.X;
+			float top = min.Y;
+			float bottom = max.Y;
+			const float near = 1;
+			const float far = -1;
 
 			mProjectionMatrix = Matrix.CreateOrthographicOffCenter( left, right, bottom, top, near, far );
 		}
