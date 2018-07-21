@@ -51,10 +51,10 @@ namespace XNARTS
 
 		public void RenderScreen( GameTime game_time )
 		{
-			Vector3 start = new Vector3( 10f, 10f, 0f );
-			Vector3 end = new Vector3( 1910f, 1070f, 0f );
-			XSimpleDraw screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Transient );
-			screen.DrawLine( start, end, Color.Black, Color.White );
+			//Vector3 start = new Vector3( 10f, 10f, 0f );
+			//Vector3 end = new Vector3( 1910f, 1070f, 0f );
+			//XSimpleDraw screen = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Transient );
+			//screen.DrawLine( start, end, Color.Black, Color.White );
 		}
 	}
 }
