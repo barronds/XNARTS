@@ -31,40 +31,56 @@ namespace XNARTS
 		}
 
 
+		// different gesture data will be available to be polled every frame and marked valid or not.
+		// at the start or end of a gesture, an event will occur and this data will be included.
+
 		public struct xSinglePokeData
 		{
-			public xCoord mScreenPos;
+			public bool		mValid;
+			public int		mId;
+			public xCoord	mScreenPos;
 		}
 
 
 		public struct xSingleHoldData
 		{
-			public xCoord mScreenPos;
+			public bool			mValid;
+			public int			mId;
+			public GameTime		mStartTime;
+			public xCoord		mScreenPos;
 		}
 
 
 		public struct xSingleDragData
 		{
-			public xCoord mLastScreenPos;
-			public xCoord mCurrentScreenPos;
+			public bool			mValid;
+			public int			mId;
+			public GameTime		mStartTime;
+			public xCoord		mStartScreenPos;
+			public xCoord		mLastScreenPos;
+			public xCoord		mCurrentScreenPos;
 		}
 
 
 		public struct xDoubleDragZoomData
 		{
-			public xCoord mLastAverageScreenPos;
-			public xCoord mCurrentAverageScreenPos;
-			public float mLastScreenSeparation;
-			public float mCurrentScreenSeparation;
+			public bool			mValid;
+			public int			mId;
+			public GameTime		mStartTime;
+			public xCoord		mStartAverageScreenPos;
+			public xCoord		mLastAverageScreenPos;
+			public xCoord		mCurrentAverageScreenPos;
+			public float		mLastScreenSeparation;
+			public float		mCurrentScreenSeparation;
 		}
 
 
-		xeInputResultType mInputResultType;
-		xSinglePokeData mSinglePokeData;
-		xSingleHoldData mSingleHoldData;
-		xSingleDragData mSingleDragData;
-		xDoubleDragZoomData mDoubleDragZoomData;
-
+		// these can generally be live together.
+		// eg., single drag would be active at the start of a single touch but might become also a single hold or single poke
+		private xSinglePokeData			mSinglePokeData;
+		private xSingleHoldData			mSingleHoldData;
+		private xSingleDragData			mSingleDragData;
+		private xDoubleDragZoomData		mDoubleDragZoomData;
 		
 		// private constructor for XSingleton
 		private XTouch()
@@ -73,7 +89,6 @@ namespace XNARTS
 
 		public void Init()
 		{
-			mInputResultType = xeInputResultType.None;
 		}
 
 
@@ -83,18 +98,10 @@ namespace XNARTS
 		}
 
 
-		// temporary until there are events
-		public xeInputResultType GetInput()
-		{
-			return xeInputResultType.None;
-		}
-
 
 		public xSinglePokeData GetSinglePokeData()
 		{
-			// TODO: assert that the type is correct and return something smart
-			XUtils.Assert( false );
-			return new xSinglePokeData();
+			return mSinglePokeData;
 		}
 	}
 }
