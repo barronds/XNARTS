@@ -94,9 +94,19 @@ namespace XNARTS
 
 		public void Update( GameTime game_time )
 		{
+			Microsoft.Xna.Framework.Input.Touch.TouchCollection touches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
+			var count = touches.Count();
+			if( count > 0 )
+			{
+				Console.WriteLine( "touches" );
+				Console.WriteLine( count.ToString() );
+			}
 
+			for ( int i = 0; i < count; ++i )
+			{
+				Console.WriteLine( touches[ i ].ToString() );
+			}
 		}
-
 
 
 		public xSinglePokeData GetSinglePokeData()

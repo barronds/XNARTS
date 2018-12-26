@@ -14,5 +14,5 @@ take everything out of constructors and do specific intialization?
 
 - make input manager that abstracts away touch vs mouse controls, maybe encapsulates unit selection, commands
 - maybe event system for input events
-- have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.
+- have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.  (not sure how to do this actually).
 - extend event system to allow immediate callback over messages.  requires internet to look up syntax for inheritance, functor, or lambda.

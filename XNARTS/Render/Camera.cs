@@ -104,14 +104,7 @@ namespace XNARTS
 
 		void XICamera.Update( GameTime game_time )
 		{
-			// move with controls
-			Microsoft.Xna.Framework.Input.Touch.TouchCollection touches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
-			int how_many = touches.Count();
-
-			for( int i = 0; i < how_many; ++i )
-			{
-				Console.WriteLine( touches[ i ].ToString() );
-			}
+			// move with touch controls
 		}
 	}
 

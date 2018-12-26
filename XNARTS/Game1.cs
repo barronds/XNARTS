@@ -41,6 +41,7 @@ namespace XNARTS
 			XWorld.CreateInstance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
 			XMouse.CreateInstance().Init();
+			XTouch.CreateInstance().Init();
 			base.Initialize();
         }
 
@@ -78,6 +79,7 @@ namespace XNARTS
             }
 
 			// TODO: Add your update logic here
+			XTouch.Instance().Update( game_time );
 			XMouse.Instance().Update( game_time );
 
             base.Update(game_time);
