@@ -20,6 +20,7 @@ namespace XNARTS
             xCoord.unitTest();
 			xAABB2.UnitTest();
 			XEventsUnitTests.UnitTest();
+			XStateMachineUnitTest.UnitTest();
         }
 
 

@@ -6,10 +6,22 @@ using System.Threading.Tasks;
 
 namespace XNARTS
 {
-	public struct txStateID
+	public struct txStateID : IComparable< txStateID >
 	{
 		private ulong mID;
 		private static ulong sNext = 1;
+
+/*
+		public static int Compare( txStateID a, txStateID b )
+		{
+			return (a.mID < b.mID) ? -1 : (a.mID > b.mID) ? 1 : 0;
+		}
+*/
+
+		public int CompareTo( txStateID value )
+		{
+			return (mID < value.mID) ? -1 : (mID > value.mID) ? 1 : 0;
+		}
 
 
 		public void Init()
@@ -30,7 +42,7 @@ namespace XNARTS
 		}
 
 
-		public override String ToString()
+		public override string ToString()
 		{
 			return "ID = " + mID.ToString();
 		}
@@ -40,6 +52,12 @@ namespace XNARTS
 	public struct txTrigger
 	{
 		private int mTrigger;
+
+
+		public int CompareTo( txTrigger value )
+		{
+			return (mTrigger < value.mTrigger) ? -1 : (mTrigger > value.mTrigger) ? 1 : 0;
+		}
 
 
 		public txTrigger( int trigger )
@@ -54,9 +72,9 @@ namespace XNARTS
 		}
 
 
-		public override String ToString()
+		public override string ToString()
 		{
-			return "Trigger = " + mTrigger.ToString();
+			return "\tTrigger = " + mTrigger.ToString();
 		}
 	}
 
@@ -66,6 +84,7 @@ namespace XNARTS
 		// holds the state for one instance of a state machine.
 		// holds the context object associated with the callbacks.
 		private XState mCurrentState;
+		private bool mLocked;
 		private SortedDictionary< txStateID, XState > mStates;
 
 		public delegate void Callback();
@@ -74,6 +93,8 @@ namespace XNARTS
 		public XStateMachine()
 		{
 			mCurrentState = null;
+			mLocked = false;
+			mStates = new SortedDictionary<txStateID, XState>();
 		}
 
 
@@ -137,7 +158,7 @@ namespace XNARTS
 
 			public void Update()
 			{
-				mUpdateCallback();
+				mUpdateCallback?.Invoke();
 			}
 
 
@@ -156,11 +177,11 @@ namespace XNARTS
 			}
 
 
-			public override String ToString()
+			public override string ToString()
 			{
-				String result = "State: " + mStateID.ToString() + ", Callback: " + mUpdateCallback.ToString() + "\n";
+				string result = "State: " + mStateID.ToString() + ", Update Callback: " + (mUpdateCallback != null ? mUpdateCallback.Method.ToString() : "null") + "\n";
 
-				foreach(  var trigger_transition_pair in mTransitions )
+				foreach( var trigger_transition_pair in mTransitions )
 				{
 					result += trigger_transition_pair.Key.ToString() + " -> " + trigger_transition_pair.Value.ToString() + "\n";
 				}
@@ -191,27 +212,31 @@ namespace XNARTS
 
 			public XState Trigger()
 			{
-				mTransitionCallback();
+				mTransitionCallback?.Invoke();
 				return mToState;
 			}
 
 
-			public override String ToString()
+			public override string ToString()
 			{
-				return mToState.ToString() + ", Callback: " + mTransitionCallback.ToString();
+				return mToState.mStateID.ToString() + ", Callback: " + (mTransitionCallback != null ? mTransitionCallback.Method.ToString() : "null");
 			}
 		}
 
 
 		public txStateID CreateState( Callback callback )
 		{
+			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
 			XState state = new XState( callback );
+			mStates.Add( state.mStateID, state );
 			return state.mStateID;
 		}
 
 
 		public void RemoveState( txStateID state_id, txStateID new_state_if_current )
 		{
+			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
+
 			// if that was the current state, prepare to switch states as indicated.
 			// remove all transitions to that state from other states.
 			// remove state.
@@ -243,20 +268,26 @@ namespace XNARTS
 
 
 		// TODO: templatize this to improve what is passed in for trigger, cast it to int
-		public void CreateTransition( txStateID from, txStateID to, Callback callback, txTrigger trigger )
+		public void CreateTransition( txStateID from, txStateID to, Callback callback, int trigger )
 		{
+			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
+
 			// make sure 'from' already exists
 			// make sure 'from' state doesn't already have that trigger (Add() will do that)
 			XState from_state, to_state;
 			bool found_from = mStates.TryGetValue( from, out from_state );
 			bool found_to = mStates.TryGetValue( to, out to_state );
 			XUtils.Assert( found_from && found_to );
-			from_state.Add( trigger, to_state, callback );
+
+			txTrigger tx_trigger = new txTrigger( trigger );
+			from_state.Add( tx_trigger, to_state, callback );
 		}
 
 
 		public void RemoveTransition( txStateID from, txTrigger trigger )
 		{
+			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
+
 			XState from_state;
 			bool found_from = mStates.TryGetValue( from, out from_state );
 			XUtils.Assert( found_from );
@@ -266,12 +297,15 @@ namespace XNARTS
 
 		public void Update()
 		{
+			mLocked = true;
 			mCurrentState.Update();
+			mLocked = false;
 		}
 
 
 		public void ProcessTrigger( txTrigger trigger )
 		{
+			mLocked = true;
 			XState change;
 			bool transition = mCurrentState.ProcessTrigger( trigger, out change );
 
@@ -279,6 +313,8 @@ namespace XNARTS
 			{
 				mCurrentState = change;
 			}
+
+			mLocked = false;
 		}
 
 
@@ -291,18 +327,60 @@ namespace XNARTS
 		}
 
 
-		public override String ToString()
+		public override string ToString()
 		{
-			String result = "State Machine States:\n";
+			string result = "State Machine States:\n";
 
 			foreach( var stateID_state_pair in mStates )
 			{
-				result += stateID_state_pair.Key.ToString() + ": " + stateID_state_pair.Value.ToString() + "\n";
+				result += stateID_state_pair.Value.ToString() + "\n";
 			}
 
 			return result;
 		}
+
+
+		public void Log( string msg = null )
+		{
+			Console.WriteLine( (msg != null ? msg + ": " : "") + ToString() );
+		}
 	}
 
 
+	public class XStateMachineUnitTest
+	{
+		private static XStateMachineUnitTest sUnitTest;
+
+
+		public XStateMachineUnitTest()
+		{ }
+
+
+		enum eTriggers
+		{
+			Jump,
+			Poke
+		}
+
+
+		public void Cb1()
+		{
+			Console.WriteLine( "Cb1" );
+		}
+
+
+		public static void UnitTest()
+		{
+			sUnitTest = new XStateMachineUnitTest();
+			XStateMachine sm = new XStateMachine();
+
+			txStateID s1 = sm.CreateState( null );
+			sm.SetStartingState( s1 );
+			sm.Update();
+
+			sm.CreateTransition( s1, s1, sUnitTest.Cb1, (int)eTriggers.Jump );
+
+			sm.Log();
+		}
+	}
 }
