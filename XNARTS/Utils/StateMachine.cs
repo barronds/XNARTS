@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace XNARTS
 {
+	// TODO: make txStateID more usable for clients, like operator== etc
 	public struct txStateID : IComparable< txStateID >
 	{
 		private ulong mID;
-		private static ulong sNext = 1;
+		private static ulong sNext = 2;
 
-/*
-		public static int Compare( txStateID a, txStateID b )
-		{
-			return (a.mID < b.mID) ? -1 : (a.mID > b.mID) ? 1 : 0;
-		}
-*/
+		public static txStateID kNone = new txStateID( 0 );
+
 
 		public int CompareTo( txStateID value )
 		{
@@ -42,6 +39,12 @@ namespace XNARTS
 		}
 
 
+		private txStateID( ulong id )
+		{
+			mID = id;
+		}
+
+
 		public override string ToString()
 		{
 			return "ID = " + mID.ToString();
@@ -49,37 +52,7 @@ namespace XNARTS
 	}
 
 
-	public struct txTrigger
-	{
-		private int mTrigger;
-
-
-		public int CompareTo( txTrigger value )
-		{
-			return (mTrigger < value.mTrigger) ? -1 : (mTrigger > value.mTrigger) ? 1 : 0;
-		}
-
-
-		public txTrigger( int trigger )
-		{
-			mTrigger = trigger;
-		}
-
-
-		public bool Equals( txTrigger rhs )
-		{
-			return mTrigger == rhs.mTrigger;
-		}
-
-
-		public override string ToString()
-		{
-			return "\tTrigger = " + mTrigger.ToString();
-		}
-	}
-
-
-	public class XStateMachine
+	public class XStateMachine< Trigger >
 	{
 		// holds the state for one instance of a state machine.
 		// holds the context object associated with the callbacks.
@@ -101,6 +74,7 @@ namespace XNARTS
 		public void SetStartingState( txStateID starting_state )
 		{
 			XUtils.Assert( mCurrentState == null );
+			XUtils.Assert( !starting_state.Equals( txStateID.kNone ) );
 			mCurrentState = GetState( starting_state );
 		}
 
@@ -109,18 +83,18 @@ namespace XNARTS
 		{
 			public txStateID mStateID;
 			private Callback mUpdateCallback;
-			private SortedDictionary< txTrigger, XTransition > mTransitions;
+			private SortedDictionary< Trigger, XTransition > mTransitions;
 
 
 			public XState( Callback callback )
 			{
 				mStateID.Init();
 				mUpdateCallback = callback;
-				mTransitions = new SortedDictionary<txTrigger, XTransition>();
+				mTransitions = new SortedDictionary<Trigger, XTransition>();
 			}
 
 
-			public void Add( txTrigger trigger, XState to_state, Callback callback )
+			public void Add( Trigger trigger, XState to_state, Callback callback )
 			{
 				XUtils.Assert( !mTransitions.ContainsKey( trigger ) );
 				XTransition transition = new XTransition( to_state, callback );
@@ -128,7 +102,7 @@ namespace XNARTS
 			}
 
 
-			public void Remove( txTrigger trigger )
+			public void Remove( Trigger trigger )
 			{
 				XUtils.Assert( mTransitions.ContainsKey( trigger ) );
 				mTransitions.Remove( trigger );
@@ -137,7 +111,7 @@ namespace XNARTS
 
 			public void RemoveTransitionsTo( txStateID state_id )
 			{
-				List< txTrigger > removals = new List< txTrigger >();
+				List< Trigger > removals = new List< Trigger >();
 
 				for( int i = 0; i < mTransitions.Count; ++i )
 				{
@@ -149,7 +123,7 @@ namespace XNARTS
 					}
 				}
 
-				foreach( txTrigger removal in removals )
+				foreach( Trigger removal in removals )
 				{
 					mTransitions.Remove( removal );
 				}
@@ -162,7 +136,7 @@ namespace XNARTS
 			}
 
 
-			public bool ProcessTrigger( txTrigger trigger, out XState to_state )
+			public bool ProcessTrigger( Trigger trigger, out XState to_state )
 			{
 				XTransition transition;
 
@@ -183,7 +157,7 @@ namespace XNARTS
 
 				foreach( var trigger_transition_pair in mTransitions )
 				{
-					result += trigger_transition_pair.Key.ToString() + " -> " + trigger_transition_pair.Value.ToString() + "\n";
+					result += "\t" + trigger_transition_pair.Key.ToString() + " -> state " + trigger_transition_pair.Value.ToString() + "\n";
 				}
 
 				return result;
@@ -219,7 +193,7 @@ namespace XNARTS
 
 			public override string ToString()
 			{
-				return mToState.mStateID.ToString() + ", Callback: " + (mTransitionCallback != null ? mTransitionCallback.Method.ToString() : "null");
+				return mToState.mStateID.ToString() + ", Transition Callback: " + (mTransitionCallback != null ? mTransitionCallback.Method.ToString() : "null");
 			}
 		}
 
@@ -245,8 +219,17 @@ namespace XNARTS
 			if( mCurrentState.mStateID.Equals( state_id ) )
 			{
 				XUtils.Assert( !new_state_if_current.Equals( state_id ) );
-				bool found_next = mStates.TryGetValue( new_state_if_current, out next_state );
-				XUtils.Assert( found_next );
+
+				if( new_state_if_current.Equals( txStateID.kNone ) )
+				{
+					XUtils.Assert( mStates.Count == 1, "can only switch to no current state if removing the last state" );
+					mCurrentState = null;
+				}
+				else
+				{
+					bool found_next = mStates.TryGetValue( new_state_if_current, out next_state );
+					XUtils.Assert( found_next );
+				}
 			}
 
 			for ( int i = 0; i < mStates.Count; ++i )
@@ -268,7 +251,7 @@ namespace XNARTS
 
 
 		// TODO: templatize this to improve what is passed in for trigger, cast it to int
-		public void CreateTransition( txStateID from, txStateID to, Callback callback, int trigger )
+		public void CreateTransition( txStateID from, txStateID to, Callback callback, Trigger trigger )
 		{
 			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
 
@@ -279,12 +262,11 @@ namespace XNARTS
 			bool found_to = mStates.TryGetValue( to, out to_state );
 			XUtils.Assert( found_from && found_to );
 
-			txTrigger tx_trigger = new txTrigger( trigger );
-			from_state.Add( tx_trigger, to_state, callback );
+			from_state.Add( trigger, to_state, callback );
 		}
 
 
-		public void RemoveTransition( txStateID from, txTrigger trigger )
+		public void RemoveTransition( txStateID from, Trigger trigger )
 		{
 			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
 
@@ -298,20 +280,29 @@ namespace XNARTS
 		public void Update()
 		{
 			mLocked = true;
-			mCurrentState.Update();
+
+			if( mCurrentState != null )
+			{
+				mCurrentState.Update();
+			}
+
 			mLocked = false;
 		}
 
 
-		public void ProcessTrigger( txTrigger trigger )
+		public void ProcessTrigger( Trigger trigger )
 		{
 			mLocked = true;
 			XState change;
-			bool transition = mCurrentState.ProcessTrigger( trigger, out change );
 
-			if( transition )
+			if( mCurrentState != null )
 			{
-				mCurrentState = change;
+				bool transition = mCurrentState.ProcessTrigger( trigger, out change );
+
+				if ( transition )
+				{
+					mCurrentState = change;
+				}
 			}
 
 			mLocked = false;
@@ -329,7 +320,7 @@ namespace XNARTS
 
 		public override string ToString()
 		{
-			string result = "State Machine States:\n";
+			string result = "State Machine Current State: " + (mCurrentState != null ? mCurrentState.mStateID.ToString() : "null") + "\nStates:\n";
 
 			foreach( var stateID_state_pair in mStates )
 			{
@@ -365,22 +356,103 @@ namespace XNARTS
 
 		public void Cb1()
 		{
-			Console.WriteLine( "Cb1" );
+			//Console.WriteLine( "Cb1" );
 		}
 
+
+		public void Cb2()
+		{
+			//Console.WriteLine( "Cb2" );
+		}
+
+
+		public static void Cb3()
+		{
+			//Console.WriteLine( "Cb3" );
+		}
 
 		public static void UnitTest()
 		{
 			sUnitTest = new XStateMachineUnitTest();
-			XStateMachine sm = new XStateMachine();
+			var sm = new XStateMachine< eTriggers >();
+
+			//sm.Log( "empty" );
 
 			txStateID s1 = sm.CreateState( null );
 			sm.SetStartingState( s1 );
 			sm.Update();
 
-			sm.CreateTransition( s1, s1, sUnitTest.Cb1, (int)eTriggers.Jump );
+			sm.CreateTransition( s1, s1, sUnitTest.Cb1, eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Poke );
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Poke );
 
-			sm.Log();
+			sm.CreateTransition( s1, s1, sUnitTest.Cb2, eTriggers.Poke );
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Poke );
+
+			//Console.WriteLine( "test removal" );
+			sm.RemoveTransition( s1, eTriggers.Jump );
+
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Poke );
+
+			// sm.RemoveTransition( s1, eTriggers.Jump );  // correctly asserts missing trigger
+			sm.RemoveTransition( s1, eTriggers.Poke );
+
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Poke );
+
+			sm.RemoveState( s1, txStateID.kNone );
+
+			sm.Update();
+			sm.ProcessTrigger( eTriggers.Poke );
+
+			// sm.SetStartingState( txStateID.kNone );  // correctly asserts illegal starting state
+
+			// sm.CreateTransition( s1, txStateID.kNone, sUnitTest.Cb2, eTriggers.Jump );  // asserts correctly s1 not found
+			// sm.CreateTransition( txStateID.kNone, txStateID.kNone, sUnitTest.Cb2, eTriggers.Jump );  // asserts correctly kNone not found
+
+			//Console.WriteLine( "testing non trivial transitions and static callbacks" );
+
+			txStateID s2 = sm.CreateState( Cb3 );
+			txStateID s3 = sm.CreateState( sUnitTest.Cb2 );
+			sm.SetStartingState( s2 );
+
+			sm.CreateTransition( s2, s3, sUnitTest.Cb1, eTriggers.Jump );
+			sm.CreateTransition( s3, s2, sUnitTest.Cb1, eTriggers.Poke );
+
+			sm.Update();
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.Update();
+			sm.ProcessTrigger( eTriggers.Poke );
+			sm.Update();
+			sm.ProcessTrigger( eTriggers.Jump );
+			sm.ProcessTrigger( eTriggers.Poke );
+			sm.Update();
+
+			//sm.Log();
+
+			//Console.WriteLine( "testing non trivial remove state" );
+
+			// sm.RemoveState( s2, s2 );  // correctly asserts can't name same state
+			sm.RemoveState( s2, s3 );
+
+			//sm.Log();
+
+			//Console.WriteLine( "testing non trivial remove state, not the current" );
+
+			txStateID s4 = sm.CreateState( sUnitTest.Cb1 );
+			sm.CreateTransition( s3, s4, sUnitTest.Cb1, eTriggers.Poke );
+			sm.CreateTransition( s4, s3, sUnitTest.Cb1, eTriggers.Poke );
+
+			//sm.Log();
+
+			sm.RemoveState( s4, s3 );
+
+			//sm.Log();
 		}
 	}
 }
