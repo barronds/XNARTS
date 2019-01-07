@@ -251,7 +251,7 @@ namespace XNARTS
 
 
 		// TODO: templatize this to improve what is passed in for trigger, cast it to int
-		public void CreateTransition( txStateID from, txStateID to, Callback callback, Trigger trigger )
+		public void CreateTransition( txStateID from, txStateID to, Trigger trigger, Callback callback )
 		{
 			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
 
@@ -382,14 +382,14 @@ namespace XNARTS
 			sm.SetStartingState( s1 );
 			sm.Update();
 
-			sm.CreateTransition( s1, s1, sUnitTest.Cb1, eTriggers.Jump );
+			sm.CreateTransition( s1, s1, eTriggers.Jump, sUnitTest.Cb1 );
 			sm.ProcessTrigger( eTriggers.Jump );
 			sm.ProcessTrigger( eTriggers.Jump );
 			sm.ProcessTrigger( eTriggers.Poke );
 			sm.ProcessTrigger( eTriggers.Jump );
 			sm.ProcessTrigger( eTriggers.Poke );
 
-			sm.CreateTransition( s1, s1, sUnitTest.Cb2, eTriggers.Poke );
+			sm.CreateTransition( s1, s1, eTriggers.Poke, sUnitTest.Cb2 );
 			sm.ProcessTrigger( eTriggers.Jump );
 			sm.ProcessTrigger( eTriggers.Poke );
 
@@ -421,8 +421,8 @@ namespace XNARTS
 			txStateID s3 = sm.CreateState( sUnitTest.Cb2 );
 			sm.SetStartingState( s2 );
 
-			sm.CreateTransition( s2, s3, sUnitTest.Cb1, eTriggers.Jump );
-			sm.CreateTransition( s3, s2, sUnitTest.Cb1, eTriggers.Poke );
+			sm.CreateTransition( s2, s3, eTriggers.Jump, sUnitTest.Cb1 );
+			sm.CreateTransition( s3, s2, eTriggers.Poke, sUnitTest.Cb1 );
 
 			sm.Update();
 			sm.ProcessTrigger( eTriggers.Jump );
@@ -445,8 +445,8 @@ namespace XNARTS
 			//Console.WriteLine( "testing non trivial remove state, not the current" );
 
 			txStateID s4 = sm.CreateState( sUnitTest.Cb1 );
-			sm.CreateTransition( s3, s4, sUnitTest.Cb1, eTriggers.Poke );
-			sm.CreateTransition( s4, s3, sUnitTest.Cb1, eTriggers.Poke );
+			sm.CreateTransition( s3, s4, eTriggers.Poke, sUnitTest.Cb1 );
+			sm.CreateTransition( s4, s3, eTriggers.Poke, sUnitTest.Cb1 );
 
 			//sm.Log();
 

@@ -55,6 +55,19 @@ namespace XNARTS
 		private xSingleHoldData		mSingleHoldData;
 		private xSingleDragData		mSingleDragData;
 		private xMultiDragData      mMultiDragData;
+
+		private enum eContactChange
+		{
+			ZeroToOne,
+			ZeroToSome,
+			OneToSome,
+			OneToZero,
+			SomeToOne,
+			SomeToZero,
+			StillToMoving,
+		}
+
+		private XStateMachine< eContactChange > mStateMachine;
 		
 
 		// private constructor for XSingleton
@@ -62,8 +75,76 @@ namespace XNARTS
 		{}
 
 
+		private void State_NoContacts()
+		{ }
+
+
+		private void State_TrackingSinglePoke()
+		{ }
+
+
+		private void State_TrackingSingleDrag()
+		{ }
+
+
+		private void State_TrackingMultiPoke()
+		{ }
+
+
+		private void State_TrackingMultiDrag()
+		{ }
+
+
+		private void State_IgnoringContacts()
+		{ }
+
+
+		private void Transition_NoContacts_TrackingSinglePoke()
+		{ }
+
+
+		private void Transition_NoContacts_TrackingMultiPoke()
+		{ }
+
+
+		private void Transition_TrackingSinglePoke_TrackingSingleDrag()
+		{ }
+
+
+		private void Transition_TrackingSinglePoke_NoContacts()
+		{ }
+
+
+		private void Transition_TrackingSinglePoke_TrackingMultiPoke()
+		{ }
+
+
+		private void Transition_TrackingSingleDrag_TrackingMultiDrag()
+		{ }
+
+
 		public void Init()
 		{
+			mStateMachine = new XStateMachine<eContactChange>();
+
+			txStateID no_contacts =				mStateMachine.CreateState( State_NoContacts );
+			txStateID tracking_single_poke =	mStateMachine.CreateState( State_TrackingSinglePoke );
+			txStateID tracking_single_drag =    mStateMachine.CreateState( State_TrackingSingleDrag );
+			txStateID tracking_multi_poke =     mStateMachine.CreateState( State_TrackingMultiPoke );
+			txStateID tracking_multi_drag =     mStateMachine.CreateState( State_TrackingMultiDrag );
+			txStateID ignoring_contacts =       mStateMachine.CreateState( State_IgnoringContacts );
+
+			mStateMachine.CreateTransition( no_contacts, tracking_single_poke, eContactChange.ZeroToOne, Transition_NoContacts_TrackingSinglePoke );
+			mStateMachine.CreateTransition( no_contacts, tracking_multi_poke, eContactChange.ZeroToSome, Transition_NoContacts_TrackingMultiPoke );
+
+			mStateMachine.CreateTransition( tracking_single_poke, tracking_single_drag, eContactChange.StillToMoving, Transition_TrackingSinglePoke_TrackingSingleDrag );
+			mStateMachine.CreateTransition( tracking_single_poke, no_contacts, eContactChange.OneToZero, Transition_TrackingSinglePoke_NoContacts );
+			mStateMachine.CreateTransition( tracking_single_poke, tracking_multi_poke, eContactChange.OneToSome, Transition_TrackingSinglePoke_TrackingMultiPoke );
+
+			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.OneToSome, Transition_TrackingSingleDrag_TrackingMultiDrag );
+			// Continue ...
+
+			mStateMachine.Log();
 		}
 
 
