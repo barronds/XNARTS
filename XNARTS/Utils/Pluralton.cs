@@ -25,24 +25,30 @@ namespace XNARTS
 
 			// Ensure there are no public constructors...
 			ConstructorInfo[] ctors = t.GetConstructors();
-			if( ctors.Length > 0 )
+			if ( ctors.Length > 0 )
 			{
-				throw new InvalidOperationException( String.Format( "{0} has at least one accesible ctor making it impossible to enforce pluralton behaviour", t.Name));
+				throw new InvalidOperationException( String.Format( "{0} has at least one accesible ctor making it impossible to enforce pluralton behaviour", t.Name ) );
 			}
 
 			XUtils.Assert( sInstances == null );
-			sInstances = new SortedDictionary< Key, T >();
+			sInstances = new SortedDictionary<Key, T>();
 		}
 
 
 		public static T Instance( Key key )
 		{
+			// Technically, the sInstances object isn't thread safe, as you can be
+			// adding an object to it in CreateInstance while reading from it
+			// here.  To be truly safe, you should be locking the same object
+			// (sInitLock), at which point it isn't really an initialization lock.
+			// Alternately, if the create is very sporadic, the reads are fast, and
+			// don't want to lock on read, you could lock up write, update a clone,
+			// then copy the clone over to the Pluralton object.
 			XUtils.Assert( sInstances != null, "must initialize XPluralton" );
 			T value;
 			XUtils.Assert( sInstances.TryGetValue( key, out value ), "instance doesn't exist" );
 			return value;
 		}
-
 
 		public static T CreateInstance( Key key )
 		{
@@ -63,5 +69,31 @@ namespace XNARTS
 				return instance;
 			}
 		}
+
+
+		public static T GetInstance( Key key )
+		{
+			lock ( sInitLock )
+			{
+				XUtils.Assert( sInstances != null, "must initialize XPluralton" );
+				T value;
+				if ( sInstances.TryGetValue( key, out value ) == false )
+				{
+					value = XPluralton<Key, T>.CreateInstanceNoLock( key );
+				}
+				return value;
+			}
+		}
+
+		private static T CreateInstanceNoLock( Key key )
+		{
+			XUtils.Assert( sInstances != null, "must initialize XPluralton" );
+			// Create an instance via the private constructor
+			Type t = typeof( T );
+			T instance = (T)Activator.CreateInstance( t, true );
+			sInstances.Add( key, instance );
+			return instance;
+		}
+
 	}
 }
