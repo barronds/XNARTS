@@ -101,13 +101,48 @@ namespace XNARTS
 			Some
 		}
 
-		private XStateMachine< eContactChange > mStateMachine;
-		private eContactCount					mPrevContactCount;
-		
+		private XStateMachine< eContactChange >							mStateMachine;
+		private Microsoft.Xna.Framework.Input.Touch.TouchCollection		mTouches;
+		private eContactCount											mPrevContactCount;
+
+		private Vector2 mMultiPoke_StartPos;
+		private double	mMultiPoke_StartMaxSeparation;
 
 		// private constructor for XSingleton
 		private XTouch()
 		{}
+
+
+		private Vector2 CalcAvgTouchPos()
+		{
+			XUtils.Assert( mTouches.Count > 0 );
+			Vector2 result = Vector2.Zero;
+
+			for ( int i = 0; i < mTouches.Count; ++i )
+			{
+				result += mTouches[ i ].Position;
+			}
+
+			return (1.0f / mTouches.Count) * result;
+		}
+
+
+		private double CalcMaxSeparation()
+		{
+			XUtils.Assert( mTouches.Count > 0 );
+			float max_separation_sqr = 0f;
+
+			for( int i = 0; i < mTouches.Count; ++i )
+			{
+				for( int j = i + 1; j < mTouches.Count; ++j )
+				{
+					float separation_sqr = (mTouches[ i ].Position - mTouches[ j ].Position).LengthSquared();
+					max_separation_sqr = Math.Max( separation_sqr, max_separation_sqr );
+				}
+			}
+
+			return Math.Sqrt( max_separation_sqr );
+		}
 
 
 		private void State_NoContacts()
@@ -120,20 +155,51 @@ namespace XNARTS
 		}
 		private void State_TrackingSingleDrag()
 		{ }
+
 		private void State_TrackingMultiPoke()
 		{
 			Console.WriteLine( "tracking multi poke" );
+
+			// tuning belongs in config
+			Vector2 pos = CalcAvgTouchPos();
+			const double kDragMoveDist = 6.0;
+
+			if( (pos - mMultiPoke_StartPos).LengthSquared() > kDragMoveDist * kDragMoveDist )
+			{
+				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
+				Console.WriteLine( "dist" );
+				return;
+			}
+
+			const double kDragSeparationChange = 12.0;
+			double separation = CalcMaxSeparation();
+
+			if( Math.Abs( separation - mMultiPoke_StartMaxSeparation ) > kDragSeparationChange )
+			{
+				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
+				Console.WriteLine( "spread" );
+
+				return;
+			}
 		}
+
 		private void State_TrackingMultiDrag()
-		{ }
+		{
+			Console.WriteLine( "tracking multi drag" );
+		}
 		private void State_IgnoringContacts()
 		{ }
 		private void State_Start()
 		{ }
+
+
 		private void Transition_NoContacts_TrackingSinglePoke()
 		{ }
 		private void Transition_NoContacts_TrackingMultiPoke()
-		{ }
+		{
+			mMultiPoke_StartPos = CalcAvgTouchPos();
+			mMultiPoke_StartMaxSeparation = CalcMaxSeparation();
+		}
 		private void Transition_TrackingSinglePoke_TrackingSingleDrag()
 		{ }
 		private void Transition_TrackingSinglePoke_NoContacts()
@@ -141,7 +207,10 @@ namespace XNARTS
 			Console.WriteLine( "poke!?" );
 		}
 		private void Transition_TrackingSinglePoke_TrackingMultiPoke()
-		{ }
+		{
+			mMultiPoke_StartPos = CalcAvgTouchPos();
+			mMultiPoke_StartMaxSeparation = CalcMaxSeparation();
+		}
 		private void Transition_TrackingSingleDrag_TrackingMultiDrag()
 		{ }
 		private void Transition_TrackingSingleDrag_NoContacts()
@@ -161,6 +230,8 @@ namespace XNARTS
 		public void Init()
 		{
 			mPrevContactCount = eContactCount.Unknown;
+			mMultiPoke_StartMaxSeparation = 0d;
+			mMultiPoke_StartMaxSeparation = 0d;
 			mStateMachine = new XStateMachine<eContactChange>();
 
 			txStateID start =                   mStateMachine.CreateState( State_Start );
@@ -200,9 +271,9 @@ namespace XNARTS
 		}
 
 
-		private eContactChange UpdateTouchCount( Microsoft.Xna.Framework.Input.Touch.TouchCollection touches )
+		private eContactChange UpdateTouchCount()
 		{
-			int num_touches = touches.Count();
+			int num_touches = mTouches.Count();
 			eContactChange count_change = eContactChange.NoChange;
 
 			eContactCount new_count =	num_touches > 1 ? eContactCount.Some : 
@@ -260,8 +331,7 @@ namespace XNARTS
 
 		private void LogTouches()
 		{
-			Microsoft.Xna.Framework.Input.Touch.TouchCollection touches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
-			var count = touches.Count();
+			var count = mTouches.Count();
 
 			if ( count > 0 )
 			{
@@ -271,16 +341,21 @@ namespace XNARTS
 
 			for ( int i = 0; i < count; ++i )
 			{
-				Console.WriteLine( touches[ i ].ToString() );
+				Console.WriteLine( mTouches[ i ].ToString() );
 			}
 		}
 
 
 		public void Update( GameTime game_time )
 		{
-			Microsoft.Xna.Framework.Input.Touch.TouchCollection touches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
-			eContactChange count_change = UpdateTouchCount( touches );
+			// cache touches every update in case it's expensive to get
+			mTouches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
+
+			// gather what is needed to update triggers first
+			eContactChange count_change = UpdateTouchCount();
 			mStateMachine.ProcessTrigger( count_change );
+
+			// update state machine last, possibly in new state
 			mStateMachine.Update();
 		}
 
