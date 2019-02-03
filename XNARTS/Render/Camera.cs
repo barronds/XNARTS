@@ -25,6 +25,8 @@ namespace XNARTS
 		private Matrix mViewMatrix;
 		private Matrix mProjectionMatrix;
 
+		private XListener< XTouch.MultiDragData > mMultiDragListener;
+
 
 		public XWorldCam( xCoord screen_dim )
 		{
@@ -41,6 +43,9 @@ namespace XNARTS
 			mViewMatrix = Matrix.CreateLookAt( pos, target, Vector3.UnitY );
 
 			CalcProjectionMatrix( screen_dim );
+
+			mMultiDragListener = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
+			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mMultiDragListener );
 		}
 
 
@@ -105,6 +110,15 @@ namespace XNARTS
 		void XICamera.Update( GameTime game_time )
 		{
 			// move with touch controls
+			int num_events = mMultiDragListener.GetNumEvents();
+
+			// note: need start event for multidrag.
+
+			for ( int i = 0; i < num_events; ++i )
+			{
+				XTouch.MultiDragData data = mMultiDragListener.ReadNext();
+				Console.WriteLine( "zoom " + data.mMaxScreenSeparation );
+			}
 		}
 	}
 

@@ -22,57 +22,40 @@ namespace XNARTS
 			MultiDrag
 		}
 
-
 		public class SingleTapData
 		{
 			public xCoord mScreenPos;
 		}
-
-
 		public class SingleHoldData
 		{
 			public xCoord mScreenPos;
 		}
-
-
 		public class SingleDragData
 		{
 			public List< xCoord > mPoints;
 		}
-
-
 		public class MultiTapData
 		{
 			public xCoord mAvgScreenPos;
 		}
-
-
 		public class MultiHoldData
 		{
 			public xCoord mAvgScreenPos;
 		}
-
-
-		public class tMultiDragDatum
-		{
-			public xCoord	mAvgScreenPos;
-			public float    mMaxScreenSeparation;
-		}
-
-
 		public class MultiDragData
 		{
-			public List< tMultiDragDatum > mPoints;
+			public Vector2  mAvgScreenPos;
+			public double   mMaxScreenSeparation;
+
+			public MultiDragData( Vector2 pos, double separation )
+			{
+				mAvgScreenPos = pos;
+				mMaxScreenSeparation = separation;
+			}
 		}
 
-
-		private SingleTapData		mSingleTapData;
-		private SingleHoldData		mSingleHoldData;
-		private SingleDragData		mSingleDragData;
-		private MultiTapData		mMultiTapData;
-		private MultiHoldData		mMultiHoldData;
-		private MultiDragData		mMultiDragData;
-
+		// broadcasters
+		public XBroadcaster<MultiDragData> mBroadcaster_MultiDrag { get; }
 
 		private enum eContactChange
 		{
@@ -92,7 +75,6 @@ namespace XNARTS
 			// contact motion
 			StillToMoving
 		}
-
 		private enum eContactCount
 		{
 			Unknown,
@@ -101,18 +83,25 @@ namespace XNARTS
 			Some
 		}
 
+		// members for XTouch
 		private XStateMachine< eContactChange >							mStateMachine;
 		private Microsoft.Xna.Framework.Input.Touch.TouchCollection		mTouches;
 		private eContactCount											mPrevContactCount;
 
+		// gesture members, maybe not ne (interrupted, what was i saying here???)
+
+		// data for states
 		private Vector2 mMultiPoke_StartPos;
 		private double	mMultiPoke_StartMaxSeparation;
 
 		// private constructor for XSingleton
 		private XTouch()
-		{}
+		{
+			Console.WriteLine( "private constructor!" );
+			mBroadcaster_MultiDrag = new XBroadcaster<MultiDragData>();
+		}
 
-
+		// state/transition helper functions
 		private Vector2 CalcAvgTouchPos()
 		{
 			XUtils.Assert( mTouches.Count > 0 );
@@ -125,8 +114,6 @@ namespace XNARTS
 
 			return (1.0f / mTouches.Count) * result;
 		}
-
-
 		private double CalcMaxSeparation()
 		{
 			XUtils.Assert( mTouches.Count > 0 );
@@ -143,8 +130,13 @@ namespace XNARTS
 
 			return Math.Sqrt( max_separation_sqr );
 		}
+		private void EnterMultiPoke()
+		{
+			mMultiPoke_StartPos = CalcAvgTouchPos();
+			mMultiPoke_StartMaxSeparation = CalcMaxSeparation();
+		}
 
-
+		// state update functions
 		private void State_NoContacts()
 		{
 			Console.WriteLine( "no contacts" );
@@ -155,7 +147,6 @@ namespace XNARTS
 		}
 		private void State_TrackingSingleDrag()
 		{ }
-
 		private void State_TrackingMultiPoke()
 		{
 			Console.WriteLine( "tracking multi poke" );
@@ -182,23 +173,23 @@ namespace XNARTS
 				return;
 			}
 		}
-
 		private void State_TrackingMultiDrag()
 		{
 			Console.WriteLine( "tracking multi drag" );
+			var data = new MultiDragData( CalcAvgTouchPos(), CalcMaxSeparation() );
+			mBroadcaster_MultiDrag.Post( data );
 		}
 		private void State_IgnoringContacts()
 		{ }
 		private void State_Start()
 		{ }
 
-
+		// transition functions
 		private void Transition_NoContacts_TrackingSinglePoke()
 		{ }
 		private void Transition_NoContacts_TrackingMultiPoke()
 		{
-			mMultiPoke_StartPos = CalcAvgTouchPos();
-			mMultiPoke_StartMaxSeparation = CalcMaxSeparation();
+			EnterMultiPoke();
 		}
 		private void Transition_TrackingSinglePoke_TrackingSingleDrag()
 		{ }
@@ -208,11 +199,16 @@ namespace XNARTS
 		}
 		private void Transition_TrackingSinglePoke_TrackingMultiPoke()
 		{
-			mMultiPoke_StartPos = CalcAvgTouchPos();
-			mMultiPoke_StartMaxSeparation = CalcMaxSeparation();
+			EnterMultiPoke();
 		}
 		private void Transition_TrackingSingleDrag_TrackingMultiDrag()
-		{ }
+		{
+			// of interest
+		}
+		private void Transition_TrackingMultiPoke_TrackingMultiDrag()
+		{
+			// of interest
+		}
 		private void Transition_TrackingSingleDrag_NoContacts()
 		{ }
 		private void Transition_TrackingMultiPoke_NoContacts()
@@ -226,6 +222,78 @@ namespace XNARTS
 		private void Transition_Trivial()
 		{ }
 
+		// update helpers
+		private eContactChange UpdateTouchCount()
+		{
+			int num_touches = mTouches.Count();
+			eContactChange count_change = eContactChange.NoChange;
+
+			eContactCount new_count =   num_touches > 1 ? eContactCount.Some :
+										num_touches > 0 ? eContactCount.One :
+										eContactCount.Zero;
+
+			if ( mPrevContactCount == eContactCount.Zero )
+			{
+				if ( new_count == eContactCount.One )
+				{
+					count_change = eContactChange.ZeroToOne;
+				}
+				else if ( new_count == eContactCount.Some )
+				{
+					count_change = eContactChange.ZeroToSome;
+				}
+			}
+			else if ( mPrevContactCount == eContactCount.One )
+			{
+				if ( new_count == eContactCount.Zero )
+				{
+					count_change = eContactChange.OneToZero;
+				}
+				else if ( new_count == eContactCount.Some )
+				{
+					count_change = eContactChange.OneToSome;
+				}
+			}
+			else if ( mPrevContactCount == eContactCount.Some )
+			{
+				if ( new_count == eContactCount.Zero )
+				{
+					count_change = eContactChange.SomeToZero;
+				}
+				else if ( new_count == eContactCount.One )
+				{
+					count_change = eContactChange.SomeToOne;
+				}
+			}
+			else if ( mPrevContactCount == eContactCount.Unknown )
+			{
+				count_change = (new_count == eContactCount.Zero) ?
+								eContactChange.NoInitialContacts :
+								eContactChange.InitialContacts;
+			}
+			else
+			{
+				XUtils.Assert( false );
+			}
+
+			mPrevContactCount = new_count;
+			return count_change;
+		}
+		private void LogTouches()
+		{
+			var count = mTouches.Count();
+
+			if ( count > 0 )
+			{
+				Console.WriteLine( "touches" );
+				Console.WriteLine( count.ToString() );
+			}
+
+			for ( int i = 0; i < count; ++i )
+			{
+				Console.WriteLine( mTouches[ i ].ToString() );
+			}
+		}
 
 		public void Init()
 		{
@@ -254,7 +322,7 @@ namespace XNARTS
 
 			mStateMachine.CreateTransition( tracking_multi_poke, no_contacts, eContactChange.SomeToZero, Transition_TrackingMultiPoke_NoContacts );
 			// trivial transitions below here, add interesting code later
-			mStateMachine.CreateTransition( tracking_multi_poke, tracking_multi_drag, eContactChange.StillToMoving, Transition_Trivial );
+			mStateMachine.CreateTransition( tracking_multi_poke, tracking_multi_drag, eContactChange.StillToMoving, Transition_TrackingMultiPoke_TrackingMultiDrag );
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_single_poke, eContactChange.SomeToOne, Transition_TrackingMultiPoke_TrackingSinglePoke );
 
 			mStateMachine.CreateTransition( tracking_multi_drag, no_contacts, eContactChange.SomeToZero, Transition_Trivial );
@@ -269,83 +337,6 @@ namespace XNARTS
 			mStateMachine.SetStartingState( start );
 			mStateMachine.Log();
 		}
-
-
-		private eContactChange UpdateTouchCount()
-		{
-			int num_touches = mTouches.Count();
-			eContactChange count_change = eContactChange.NoChange;
-
-			eContactCount new_count =	num_touches > 1 ? eContactCount.Some : 
-										num_touches > 0 ? eContactCount.One :
-										eContactCount.Zero;
-			
-			if( mPrevContactCount == eContactCount.Zero )
-			{
-				if( new_count == eContactCount.One )
-				{
-					count_change = eContactChange.ZeroToOne;
-				}
-				else if( new_count == eContactCount.Some )
-				{
-					count_change = eContactChange.ZeroToSome;
-				}
-			}
-			else if( mPrevContactCount == eContactCount.One )
-			{
-				if( new_count == eContactCount.Zero )
-				{
-					count_change = eContactChange.OneToZero;
-				}
-				else if( new_count == eContactCount.Some )
-				{
-					count_change = eContactChange.OneToSome;
-				}
-			}
-			else if( mPrevContactCount == eContactCount.Some )
-			{
-				if( new_count == eContactCount.Zero )
-				{
-					count_change = eContactChange.SomeToZero;
-				}
-				else if( new_count == eContactCount.One )
-				{
-					count_change = eContactChange.SomeToOne;
-				}
-			}
-			else if( mPrevContactCount == eContactCount.Unknown )
-			{
-				count_change =	(new_count == eContactCount.Zero) ? 
-								eContactChange.NoInitialContacts : 
-								eContactChange.InitialContacts;
-			}
-			else
-			{
-				XUtils.Assert( false );
-			}
-
-			mPrevContactCount = new_count;
-			return count_change;
-		}
-
-
-		private void LogTouches()
-		{
-			var count = mTouches.Count();
-
-			if ( count > 0 )
-			{
-				Console.WriteLine( "touches" );
-				Console.WriteLine( count.ToString() );
-			}
-
-			for ( int i = 0; i < count; ++i )
-			{
-				Console.WriteLine( mTouches[ i ].ToString() );
-			}
-		}
-
-
 		public void Update( GameTime game_time )
 		{
 			// cache touches every update in case it's expensive to get

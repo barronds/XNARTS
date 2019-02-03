@@ -38,10 +38,10 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
+			XTouch.CreateInstance().Init();
 			XWorld.CreateInstance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
 			XMouse.CreateInstance().Init();
-			XTouch.CreateInstance().Init();
 			base.Initialize();
         }
 
