@@ -32,6 +32,7 @@ namespace XNARTS
 		private XTouch.MultiDragData	mMultiDragStart;
 		private XTouch.MultiDragData    mMultiDragPrev;
 		private xAABB2					mMultiDragStartWorldView;
+		private double                  mMultiDragPrevZoomRatio;
 
 
 		public XWorldCam( xCoord screen_dim )
@@ -127,6 +128,7 @@ namespace XNARTS
 				mMultiDragStart = mListener_MultiDragStart.ReadNext().mData;
 				mMultiDragPrev = mMultiDragStart;
 				mMultiDragStartWorldView = mWorldView;
+				mMultiDragPrevZoomRatio = 1d;
 			}
 
 			int num_events = mListener_MultiDrag.GetNumEvents();
@@ -137,10 +139,15 @@ namespace XNARTS
 
 				// figure out zoom
 				// funny if we ever get a div 0 here
+				const double zoom_damping = 0.0d; // 0.85d is pretty good
 				double zoom_ratio = mMultiDragStart.mMaxScreenSeparation / data.mMaxScreenSeparation;
+				double damped_zoom_ratio = zoom_damping * mMultiDragPrevZoomRatio + (1d - zoom_damping) * zoom_ratio;
+				mMultiDragPrevZoomRatio = damped_zoom_ratio;
 				xAABB2 world_view = mMultiDragStartWorldView;
-				Console.WriteLine( "zoom " + zoom_ratio );
-				world_view.ScaleLocal( zoom_ratio );
+				//Console.WriteLine( "zoom " + zoom_ratio );
+				world_view.ScaleLocal( damped_zoom_ratio );
+
+				// repair translation based on where on the screen the zoom was
 
 				// figure out translation
 				// this calculation assumes fullscreen, viewport not taken into consideration
@@ -149,6 +156,10 @@ namespace XNARTS
 				Vector2 world_view_size = world_view.GetSize();
 				Vector2 world_move = new Vector2( screen_fraction.X * world_view_size.X, screen_fraction.Y * world_view_size.Y );
 				world_view.Translate( -world_move );
+
+				// update damped members
+				// TODO: BUG!  this only works when we do NOT update history.  math is broken.
+				//mMultiDragPrev = data;
 
 				// clamp and calc projection matrix
 				mWorldView = ClampWorldView( world_view );
