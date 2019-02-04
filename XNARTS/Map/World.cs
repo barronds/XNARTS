@@ -29,7 +29,7 @@ namespace XNARTS
 		public void Init()
 		{
 			mWorldRendered = false;
-			mMapSize = new xCoord( 16, 9 );
+			mMapSize = new xCoord( 160, 90 );
 			mCells = new xMapCell[ mMapSize.x, mMapSize.y ];
 			Random rand = new Random();
 

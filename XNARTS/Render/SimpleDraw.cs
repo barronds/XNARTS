@@ -34,7 +34,7 @@ namespace XNARTS
         int                     mNumLines;
         VertexPositionColor []  mLines;
 
-		const int				kMaxTriangles = 1000;
+		const int				kMaxTriangles = 100000;
 		int						mNumTriangles;
 		VertexPositionColor []	mTriangles;
 

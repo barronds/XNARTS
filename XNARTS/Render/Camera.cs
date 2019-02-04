@@ -139,7 +139,7 @@ namespace XNARTS
 
 				// figure out zoom
 				// funny if we ever get a div 0 here
-				const double zoom_damping = 0.0d; // 0.85d is pretty good
+				const double zoom_damping = 0.85d; // 0.85d is pretty good
 				double zoom_ratio = mMultiDragStart.mMaxScreenSeparation / data.mMaxScreenSeparation;
 				double damped_zoom_ratio = zoom_damping * mMultiDragPrevZoomRatio + (1d - zoom_damping) * zoom_ratio;
 				mMultiDragPrevZoomRatio = damped_zoom_ratio;
