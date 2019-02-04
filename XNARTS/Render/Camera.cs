@@ -20,6 +20,7 @@ namespace XNARTS
 	public class XWorldCam : XICamera
 	{
 		private float mAspect;
+		private xCoord mScreenDim;
 		private xCoord mWorldSize;
 		private xAABB2 mWorldView; 
 		private Matrix mViewMatrix;
@@ -29,11 +30,13 @@ namespace XNARTS
 		private XListener< XTouch.MultiDragData >	mListener_MultiDrag;
 
 		private XTouch.MultiDragData	mMultiDragStart;
+		private XTouch.MultiDragData    mMultiDragPrev;
 		private xAABB2					mMultiDragStartWorldView;
 
 
 		public XWorldCam( xCoord screen_dim )
 		{
+			mScreenDim = screen_dim;
 			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
 			mWorldSize = XWorld.Instance().GetMapSize();
 
@@ -55,6 +58,7 @@ namespace XNARTS
 			XTouch.Instance().mBroadcaster_MultiDragStart.Subscribe( mListener_MultiDragStart );
 
 			mMultiDragStart = new XTouch.MultiDragData( Vector2.Zero, 1f );
+			mMultiDragPrev = mMultiDragStart;
 		}
 
 
@@ -121,6 +125,7 @@ namespace XNARTS
 			if( mListener_MultiDragStart.GetNumEvents() > 0 )
 			{
 				mMultiDragStart = mListener_MultiDragStart.ReadNext().mData;
+				mMultiDragPrev = mMultiDragStart;
 				mMultiDragStartWorldView = mWorldView;
 			}
 
@@ -130,11 +135,22 @@ namespace XNARTS
 			{
 				XTouch.MultiDragData data = mListener_MultiDrag.ReadNext();
 
+				// figure out zoom
 				// funny if we ever get a div 0 here
 				double zoom_ratio = mMultiDragStart.mMaxScreenSeparation / data.mMaxScreenSeparation;
 				xAABB2 world_view = mMultiDragStartWorldView;
 				Console.WriteLine( "zoom " + zoom_ratio );
 				world_view.ScaleLocal( zoom_ratio );
+
+				// figure out translation
+				// this calculation assumes fullscreen, viewport not taken into consideration
+				Vector2 pixel_move = data.mAvgScreenPos - mMultiDragPrev.mAvgScreenPos;
+				Vector2 screen_fraction = new Vector2( pixel_move.X / mScreenDim.x, pixel_move.Y / mScreenDim.y );
+				Vector2 world_view_size = world_view.GetSize();
+				Vector2 world_move = new Vector2( screen_fraction.X * world_view_size.X, screen_fraction.Y * world_view_size.Y );
+				world_view.Translate( -world_move );
+
+				// clamp and calc projection matrix
 				mWorldView = ClampWorldView( world_view );
 				CalcProjectionMatrix();
 			}
