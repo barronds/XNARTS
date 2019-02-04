@@ -38,9 +38,18 @@ namespace XNARTS
 		{
 			public xCoord mAvgScreenPos;
 		}
-		public class MultiHoldData
+		public class MultiPokeData
 		{
 			public xCoord mAvgScreenPos;
+		}
+		public class MultiDragStart
+		{
+			public MultiDragStart( Vector2 pos, double separation )
+			{
+				mData = new MultiDragData( pos, separation );
+			}
+
+			public MultiDragData mData;
 		}
 		public class MultiDragData
 		{
@@ -55,7 +64,8 @@ namespace XNARTS
 		}
 
 		// broadcasters
-		public XBroadcaster<MultiDragData> mBroadcaster_MultiDrag { get; }
+		public XBroadcaster<MultiDragStart> mBroadcaster_MultiDragStart { get; }
+		public XBroadcaster<MultiDragData>	mBroadcaster_MultiDrag { get; }
 
 		private enum eContactChange
 		{
@@ -98,6 +108,7 @@ namespace XNARTS
 		private XTouch()
 		{
 			Console.WriteLine( "private constructor!" );
+			mBroadcaster_MultiDragStart = new XBroadcaster<MultiDragStart>();
 			mBroadcaster_MultiDrag = new XBroadcaster<MultiDragData>();
 		}
 
@@ -135,6 +146,12 @@ namespace XNARTS
 			mMultiPoke_StartPos = CalcAvgTouchPos();
 			mMultiPoke_StartMaxSeparation = CalcMaxSeparation();
 		}
+		private void StartMultiDrag()
+		{
+			var data = new MultiDragStart( CalcAvgTouchPos(), CalcMaxSeparation() );
+			mBroadcaster_MultiDragStart.Post( data );
+		}
+
 
 		// state update functions
 		private void State_NoContacts()
@@ -203,11 +220,11 @@ namespace XNARTS
 		}
 		private void Transition_SingleDrag_MultiDrag()
 		{
-			// of interest
+			StartMultiDrag();
 		}
 		private void Transition_MultiPoke_MultiDrag()
 		{
-			// of interest
+			StartMultiDrag();
 		}
 		private void Transition_SingleDrag_NoContacts()
 		{ }
@@ -321,7 +338,6 @@ namespace XNARTS
 			mStateMachine.CreateTransition( tracking_single_drag, no_contacts, eContactChange.OneToZero, Transition_SingleDrag_NoContacts );
 
 			mStateMachine.CreateTransition( tracking_multi_poke, no_contacts, eContactChange.SomeToZero, Transition_MultiPoke_NoContacts );
-			// trivial transitions below here, add interesting code later
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_multi_drag, eContactChange.StillToMoving, Transition_MultiPoke_MultiDrag );
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_single_poke, eContactChange.SomeToOne, Transition_MultiPoke_SinglePoke );
 

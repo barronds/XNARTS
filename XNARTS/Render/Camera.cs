@@ -25,7 +25,10 @@ namespace XNARTS
 		private Matrix mViewMatrix;
 		private Matrix mProjectionMatrix;
 
-		private XListener< XTouch.MultiDragData > mMultiDragListener;
+		private XListener< XTouch.MultiDragStart >	mListener_MultiDragStart;
+		private XListener< XTouch.MultiDragData >	mListener_MultiDrag;
+
+		private XTouch.MultiDragData mMultiDragStart;
 
 
 		public XWorldCam( xCoord screen_dim )
@@ -44,8 +47,14 @@ namespace XNARTS
 
 			CalcProjectionMatrix( screen_dim );
 
-			mMultiDragListener = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
-			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mMultiDragListener );
+			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
+			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
+
+			// this could be a problem, what about missed events?  what about piled up starts and ends and getting order wrong?
+			mListener_MultiDragStart = new XListener<XTouch.MultiDragStart>( 1, eEventQueueFullBehaviour.Assert );
+			XTouch.Instance().mBroadcaster_MultiDragStart.Subscribe( mListener_MultiDragStart );
+
+			mMultiDragStart = new XTouch.MultiDragData( Vector2.Zero, 1f );
 		}
 
 
@@ -109,14 +118,16 @@ namespace XNARTS
 
 		void XICamera.Update( GameTime game_time )
 		{
-			// move with touch controls
-			int num_events = mMultiDragListener.GetNumEvents();
+			if( mListener_MultiDragStart.GetNumEvents() > 0 )
+			{
+				mMultiDragStart = mListener_MultiDragStart.ReadNext().mData;
+			}
 
-			// note: need start event for multidrag.
+			int num_events = mListener_MultiDrag.GetNumEvents();
 
 			for ( int i = 0; i < num_events; ++i )
 			{
-				XTouch.MultiDragData data = mMultiDragListener.ReadNext();
+				XTouch.MultiDragData data = mListener_MultiDrag.ReadNext();
 				Console.WriteLine( "zoom " + data.mMaxScreenSeparation );
 			}
 		}
