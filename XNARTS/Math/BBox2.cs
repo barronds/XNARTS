@@ -172,6 +172,12 @@ namespace XNARTS
 		}
 
 
+		public void ScaleLocal( double d )
+		{
+			ScaleLocal( (float)d );
+		}
+
+
 		public void Translate( Vector2 translation )
 		{
 			XUtils.Assert( mIsValid );

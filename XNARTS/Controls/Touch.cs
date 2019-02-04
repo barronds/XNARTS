@@ -107,7 +107,6 @@ namespace XNARTS
 		// private constructor for XSingleton
 		private XTouch()
 		{
-			Console.WriteLine( "private constructor!" );
 			mBroadcaster_MultiDragStart = new XBroadcaster<MultiDragStart>();
 			mBroadcaster_MultiDrag = new XBroadcaster<MultiDragData>();
 		}
@@ -156,17 +155,17 @@ namespace XNARTS
 		// state update functions
 		private void State_NoContacts()
 		{
-			Console.WriteLine( "no contacts" );
+			//Console.WriteLine( "no contacts" );
 		}
 		private void State_SinglePoke()
 		{
-			Console.WriteLine( "tracking single poke" );
+			//Console.WriteLine( "tracking single poke" );
 		}
 		private void State_SingleDrag()
 		{ }
 		private void State_MultiPoke()
 		{
-			Console.WriteLine( "tracking multi poke" );
+			//Console.WriteLine( "tracking multi poke" );
 
 			// tuning belongs in config
 			Vector2 pos = CalcAvgTouchPos();
@@ -175,7 +174,7 @@ namespace XNARTS
 			if( (pos - mMultiPoke_StartPos).LengthSquared() > kDragMoveDist * kDragMoveDist )
 			{
 				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
-				Console.WriteLine( "dist" );
+				//Console.WriteLine( "dist" );
 				return;
 			}
 
@@ -185,14 +184,14 @@ namespace XNARTS
 			if( Math.Abs( separation - mMultiPoke_StartMaxSeparation ) > kDragSeparationChange )
 			{
 				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
-				Console.WriteLine( "spread" );
+				//Console.WriteLine( "spread" );
 
 				return;
 			}
 		}
 		private void State_MultiDrag()
 		{
-			Console.WriteLine( "tracking multi drag" );
+			//Console.WriteLine( "tracking multi drag" );
 			var data = new MultiDragData( CalcAvgTouchPos(), CalcMaxSeparation() );
 			mBroadcaster_MultiDrag.Post( data );
 		}
@@ -212,7 +211,7 @@ namespace XNARTS
 		{ }
 		private void Transition_SinglePoke_NoContacts()
 		{
-			Console.WriteLine( "poke!?" );
+			//Console.WriteLine( "poke!?" );
 		}
 		private void Transition_SinglePoke_MultiPoke()
 		{
@@ -230,11 +229,11 @@ namespace XNARTS
 		{ }
 		private void Transition_MultiPoke_NoContacts()
 		{
-			Console.WriteLine( "multi poke?!" );
+			//Console.WriteLine( "multi poke?!" );
 		}
 		private void Transition_MultiPoke_SinglePoke()
 		{
-			Console.WriteLine( "leaving multi for single poke tracking" );
+			//Console.WriteLine( "leaving multi for single poke tracking" );
 		}
 		private void Transition_Trivial()
 		{ }

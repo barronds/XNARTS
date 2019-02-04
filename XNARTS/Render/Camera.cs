@@ -28,7 +28,8 @@ namespace XNARTS
 		private XListener< XTouch.MultiDragStart >	mListener_MultiDragStart;
 		private XListener< XTouch.MultiDragData >	mListener_MultiDrag;
 
-		private XTouch.MultiDragData mMultiDragStart;
+		private XTouch.MultiDragData	mMultiDragStart;
+		private xAABB2					mMultiDragStartWorldView;
 
 
 		public XWorldCam( xCoord screen_dim )
@@ -44,8 +45,7 @@ namespace XNARTS
 			Vector3 pos = new Vector3( 0, 0, 1f );
 			Vector3 target = pos - 2f * Vector3.UnitZ;
 			mViewMatrix = Matrix.CreateLookAt( pos, target, Vector3.UnitY );
-
-			CalcProjectionMatrix( screen_dim );
+			CalcProjectionMatrix();
 
 			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
 			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
@@ -58,7 +58,7 @@ namespace XNARTS
 		}
 
 
-		private void CalcProjectionMatrix( xCoord screen_dim )
+		private void CalcProjectionMatrix()
 		{
 			Vector2 min = mWorldView.GetMin();
 			Vector2 max = mWorldView.GetMax();
@@ -121,6 +121,7 @@ namespace XNARTS
 			if( mListener_MultiDragStart.GetNumEvents() > 0 )
 			{
 				mMultiDragStart = mListener_MultiDragStart.ReadNext().mData;
+				mMultiDragStartWorldView = mWorldView;
 			}
 
 			int num_events = mListener_MultiDrag.GetNumEvents();
@@ -128,7 +129,14 @@ namespace XNARTS
 			for ( int i = 0; i < num_events; ++i )
 			{
 				XTouch.MultiDragData data = mListener_MultiDrag.ReadNext();
-				Console.WriteLine( "zoom " + data.mMaxScreenSeparation );
+
+				// funny if we ever get a div 0 here
+				double zoom_ratio = mMultiDragStart.mMaxScreenSeparation / data.mMaxScreenSeparation;
+				xAABB2 world_view = mMultiDragStartWorldView;
+				Console.WriteLine( "zoom " + zoom_ratio );
+				world_view.ScaleLocal( zoom_ratio );
+				mWorldView = ClampWorldView( world_view );
+				CalcProjectionMatrix();
 			}
 		}
 	}

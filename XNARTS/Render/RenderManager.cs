@@ -59,12 +59,19 @@ namespace XNARTS
 			// world space rendering setup
 			mBasicEffect_World = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_World.World = Matrix.Identity;
-			mBasicEffect_World.View = mMainWorldCam.GetViewMatrix();
-			mBasicEffect_World.Projection = mMainWorldCam.GetProjectionMatrix();
 
 			// screen space rendering setup
 			mBasicEffect_Screen = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_Screen.World = Matrix.Identity;
+
+			UpdateCameras();
+		}
+
+
+		private void UpdateCameras()
+		{
+			mBasicEffect_World.View = mMainWorldCam.GetViewMatrix();
+			mBasicEffect_World.Projection = mMainWorldCam.GetProjectionMatrix();
 			mBasicEffect_Screen.View = mScreenCam.GetViewMatrix();
 			mBasicEffect_Screen.Projection = mScreenCam.GetProjectionMatrix();
 		}
@@ -79,7 +86,9 @@ namespace XNARTS
 			mGraphicsDevice.RasterizerState = rasterizerState;
 
 			// maybe not the best place for this
+			// also, screen cam not updating anywhere
 			mMainWorldCam.Update( game_time );
+			UpdateCameras();
 
 			// simple draw only clients
 			XWorld.Instance().RenderWorld( game_time );
