@@ -32,7 +32,6 @@ namespace XNARTS
 		private XTouch.MultiDragData	mMultiDragStart;
 		private XTouch.MultiDragData    mMultiDragPrev;
 		private xAABB2					mMultiDragStartWorldView;
-		private double                  mMultiDragPrevZoomRatio;
 
 
 		public XWorldCam( xCoord screen_dim )
@@ -61,8 +60,6 @@ namespace XNARTS
 			mMultiDragStart = new XTouch.MultiDragData( Vector2.Zero, 1f );
 			mMultiDragPrev = mMultiDragStart;
 		}
-
-
 		private void CalcProjectionMatrix()
 		{
 			Vector2 min = mWorldView.GetMin();
@@ -78,20 +75,14 @@ namespace XNARTS
 
 			mProjectionMatrix = Matrix.CreateOrthographicOffCenter( left, right, bottom, top, near, far );
 		}
-
-
 		Matrix XICamera.GetViewMatrix()
 		{
 			return mViewMatrix;
 		}
-
-
 		Matrix XICamera.GetProjectionMatrix()
 		{
 			return mProjectionMatrix;
 		}
-
-
 		private xAABB2 ClampWorldView( xAABB2 world_view )
 		{
 			// make it true to aspect ratio and can't exceed width or height of map.
@@ -128,7 +119,6 @@ namespace XNARTS
 				mMultiDragStart = mListener_MultiDragStart.ReadNext().mData;
 				mMultiDragPrev = mMultiDragStart;
 				mMultiDragStartWorldView = mWorldView;
-				mMultiDragPrevZoomRatio = 1d;
 			}
 
 			int num_events = mListener_MultiDrag.GetNumEvents();
@@ -139,13 +129,10 @@ namespace XNARTS
 
 				// figure out zoom
 				// funny if we ever get a div 0 here
-				const double zoom_damping = 0.85d; // 0.85d is pretty good
 				double zoom_ratio = mMultiDragStart.mMaxScreenSeparation / data.mMaxScreenSeparation;
-				double damped_zoom_ratio = zoom_damping * mMultiDragPrevZoomRatio + (1d - zoom_damping) * zoom_ratio;
-				mMultiDragPrevZoomRatio = damped_zoom_ratio;
 				xAABB2 world_view = mMultiDragStartWorldView;
 				//Console.WriteLine( "zoom " + zoom_ratio );
-				world_view.ScaleLocal( damped_zoom_ratio );
+				world_view.ScaleLocal( zoom_ratio );
 
 				// repair translation based on where on the screen the zoom was
 
