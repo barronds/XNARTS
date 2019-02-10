@@ -37,7 +37,9 @@ namespace XNARTS
 			{
 				for( int y = 0; y < mMapSize.y; ++y )
 				{
-					mCells[ x, y ].mColor = new Color( (float)(rand.NextDouble()), (float)(rand.NextDouble()), (float)(rand.NextDouble()) );
+					mCells[ x, y ].mColor = new Color(	(float)(rand.NextDouble()), 
+														(float)(rand.NextDouble()), 
+														(float)(rand.NextDouble()) );
 				}
 			}
 		}

@@ -218,6 +218,12 @@ namespace XNARTS
 		}
 
 
+		public override string ToString()
+		{
+			return mMin.ToString() + " -> " + mMax.ToString();
+		}
+
+
 		private static void Validate( Vector2 min, Vector2 max )
 		{
 			XUtils.Assert( max.X >= min.X && max.Y >= min.Y );
