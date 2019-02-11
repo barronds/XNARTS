@@ -30,6 +30,7 @@ namespace XNARTS
 		private XListener< XTouch.MultiDragData >	mListener_MultiDrag;
 
 		private XTouch.MultiDragData    mMultiDragPrev;
+		float                           mDampedMaxScreenSeparation;
 
 
 		public XWorldCam( xCoord screen_dim )
@@ -56,6 +57,7 @@ namespace XNARTS
 			XTouch.Instance().mBroadcaster_MultiDragStart.Subscribe( mListener_MultiDragStart );
 
 			mMultiDragPrev = new XTouch.MultiDragData( Vector2.Zero, 1f );
+			mDampedMaxScreenSeparation = -1f;
 		}
 		private void CalcProjectionMatrix()
 		{
@@ -136,47 +138,39 @@ namespace XNARTS
 			{
 				XTouch.MultiDragData data = mListener_MultiDrag.ReadNext();
 
-				// figure out zoom
-				float zoom_ratio =(float)(mMultiDragPrev.mMaxScreenSeparation / data.mMaxScreenSeparation);
-				
-				// this view is now likely in the wrong spot, although the right size.
-				// we need to slide it so that the zoom point in world space is at the same place on the screen.
+				// figure out zoom.  damp so that human powered drag zoom is not jittery.
+				// it's not that there is anything wrong with the measurement or the calculation, it's
+				// that people don't seem to keep their fingers at constant separation when they mean to.
+				const float k_zoom_damping = 0.8f;
+				float ideal_zoom_ratio =(float)(mMultiDragPrev.mMaxScreenSeparation / data.mMaxScreenSeparation);
+				float zoom_ratio =  (mDampedMaxScreenSeparation > -1f)															?
+									(k_zoom_damping * mDampedMaxScreenSeparation + (1f - k_zoom_damping) * ideal_zoom_ratio)	:
+									ideal_zoom_ratio																			;
+				mDampedMaxScreenSeparation = zoom_ratio;
+
+				// place new world view so that the zoom point in world space is at the same place on the screen.
 				Vector2 size_0 = mWorldView.GetSize();
 				Vector2 size_1 = zoom_ratio * size_0;
-
 				Vector2 avg_world_pos = CalcWorldPos( data.mAvgScreenPos );
-
-				Console.WriteLine( avg_world_pos.ToString() );
-
 				float pos_x_fraction = data.mAvgScreenPos.X / mScreenDim.x;
 				float pos_y_fraction = data.mAvgScreenPos.Y / mScreenDim.y;
-
 				float dx_world = pos_x_fraction * size_1.X;
 				float dy_world = pos_y_fraction * size_1.Y;
-
 				Vector2 p0 = new Vector2( avg_world_pos.X - dx_world, avg_world_pos.Y - dy_world );
 				Vector2 p1 = p0 + size_1;
-
 				xAABB2 world_view = new xAABB2( p0, p1 );
 
-			//	Console.WriteLine( world_view.ToString() );
-
 				// figure out translation
-				// this calculation assumes fullscreen, viewport not taken into consideration
-				
+				// this calculation assumes fullscreen, viewport not taken into consideration			
 				Vector2 pixel_move = data.mAvgScreenPos - mMultiDragPrev.mAvgScreenPos;
 				Vector2 screen_fraction = new Vector2( pixel_move.X / mScreenDim.x, pixel_move.Y / mScreenDim.y );
 				Vector2 world_view_size = world_view.GetSize();
 				Vector2 world_move = new Vector2( screen_fraction.X * world_view_size.X, screen_fraction.Y * world_view_size.Y );
 				world_view.Translate( -world_move );
-				
-
-				// update damped members
 				mMultiDragPrev = data;
 
 				// clamp and calc projection matrix
-				//mWorldView = ClampWorldView( world_view );
-				mWorldView = world_view;
+				mWorldView = ClampWorldView( world_view );
 				CalcProjectionMatrix();
 			}
 		}
