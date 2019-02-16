@@ -11,13 +11,16 @@ namespace XNARTS
 	public enum xeTerrainType
 	{
 		Invalid = -1,
+
 		DeepWater,
 		ShallowWater,
 		Sand,
 		Grassland,
 		Forest,
 		Rock,
-		Snow
+		Snow,
+
+		Num
 	}
 
 
@@ -39,7 +42,7 @@ namespace XNARTS
 			public xCoord mBounds;
 			public T [,] mData;
 
-			public delegate void GridFilter( int x, int y );
+			public delegate void GridFilter( SafeGrid< T > grid, int x, int y );
 
 			public void Init( xCoord bounds, T init_value )
 			{
@@ -47,14 +50,7 @@ namespace XNARTS
 				mData = new T[ bounds.x, bounds.y ];
 				mBounds = bounds;
 
-				// would like a map function with lambda or something here
-				for( int x = 0; x < bounds.x; ++x )
-				{
-					for( int y = 0; y < bounds.y; ++y )
-					{
-						mData[ x, y ] = init_value;
-					}
-				}
+				Iterate( ( grid, x, y ) => { grid.mData[ x, y ] = init_value; } );
 			}
 
 			public T GetValueSafe( int x, int y )
@@ -70,7 +66,7 @@ namespace XNARTS
 				{
 					for( int y = 0; y < mBounds.y; ++y )
 					{
-						filter( x, y );
+						filter( this, x, y );
 					}
 				}
 			}
@@ -98,25 +94,12 @@ namespace XNARTS
 		{
 			Random rand = new Random();
 
-			/*
-			for ( int x = 0; x < mMapSize.x; ++x )
-			{
-				for ( int y = 0; y < mMapSize.y; ++y )
-				{
-					mCells[ x, y ].mTerrain = xeTerrainType.Sand;
-					mCells[ x, y ].mColor = new Color( (float)(rand.NextDouble()),
-														(float)(rand.NextDouble()),
-														(float)(rand.NextDouble()) );
-				}
-			}
-			*/
-
 			// tuning
-			const double	k_spike_density			= 0.01d;
-			const double	k_spike_height			= 1000d;
+			const double	k_spike_density			= 0.04d;
+			const double	k_spike_height			= 300d;
 			const double	k_spike_variance		= 0.6d;
-			const int		k_smoothing_passes		= 50; // choose even, more efficient
-			const double    k_smoothing_scalar		= 0.95d;
+			const int		k_smoothing_passes		= 200; // choose even, more efficient
+			const double    k_smoothing_scalar		= 0.5d;
 
 			// tuning derrivatives
 			double min_spike_height = k_spike_height * (1d - k_spike_variance);
@@ -147,28 +130,54 @@ namespace XNARTS
 			{
 				int target = n == 0 ? 1 : 0;
 
-				//heights[ n ].Iterate( ( x, y ) => { Console.WriteLine( "hello" ); Console.WriteLine( x + y ); } );
-
-				for( int x = 0; x < mMap.mBounds.x; ++x )
+				heights[ n ].Iterate( ( grid, x, y ) => 
 				{
-					for( int y = 0; y < mMap.mBounds.y;  ++y )
-					{
-						double lo_x = heights[ n ].GetValueSafe( x - 1, y );
-						double hi_x = heights[ n ].GetValueSafe( x + 1, y );
-						double lo_y = heights[ n ].GetValueSafe( x, y - 1 );
-						double hi_y = heights[ n ].GetValueSafe( x, y + 1 );
-						double here = heights[ n ].mData[ x, y ];
-						double blended = 0.25d * (lo_x + lo_y + hi_x + hi_y);
-						double result = k_smoothing_scalar * here + (1d - k_smoothing_scalar) * blended;
-						heights[ target ].mData[ x, y ] = result;
-					}
-				}
+					double lo_x = grid.GetValueSafe( x - 1, y );
+					double hi_x = grid.GetValueSafe( x + 1, y );
+					double lo_y = grid.GetValueSafe( x, y - 1 );
+					double hi_y = grid.GetValueSafe( x, y + 1 );
+					double here = grid.mData[ x, y ];
+					double blended = 0.25d * (lo_x + lo_y + hi_x + hi_y);
+					double result = k_smoothing_scalar * here + (1d - k_smoothing_scalar) * blended;
+					heights[ target ].mData[ x, y ] = result;
+				} );
 
 				n = n == 0 ? 1 : 0;
 			}
 
-			// interpret
+			double[] height_thresh = new double[ (int)xeTerrainType.Num - 1 ];
+			height_thresh[ (int)xeTerrainType.DeepWater ]		= 10.5d;
+			height_thresh[ (int)xeTerrainType.ShallowWater ]	= 12d;
+			height_thresh[ (int)xeTerrainType.Sand ]			= 12.9d;
+			height_thresh[ (int)xeTerrainType.Grassland ]		= 14.5d;
+			height_thresh[ (int)xeTerrainType.Forest ]			= 16d;
+			height_thresh[ (int)xeTerrainType.Rock ]			= 18d;
 
+			Color[] terrain_colors = new Color[ (int)xeTerrainType.Num ];
+			terrain_colors[ (int)xeTerrainType.DeepWater ]		= new Color( 0.25f, 0.35f, 0.6f );
+			terrain_colors[ (int)xeTerrainType.ShallowWater ]	= new Color( 0.3f, 0.5f, 0.75f );
+			terrain_colors[ (int)xeTerrainType.Sand ]			= new Color( 0.75f, 0.7f, 0.3f );
+			terrain_colors[ (int)xeTerrainType.Grassland ]		= new Color( 0.4f, 0.6f, 0.3f );
+			terrain_colors[ (int)xeTerrainType.Forest ]			= new Color( 0.15f, 0.45f, 0.3f );
+			terrain_colors[ (int)xeTerrainType.Rock ]			= new Color( 0.5f, 0.5f, 0.5f );
+			terrain_colors[ (int)xeTerrainType.Snow ]			= new Color( 0.9f, 0.9f, 0.9f );
+
+			mMap.Iterate( ( grid, x, y ) => 
+			{
+				xeTerrainType terrain = xeTerrainType.Snow;
+
+				for ( int t = 0; t < (int)xeTerrainType.Num - 1; ++t )
+				{
+					if( heights[ 0 ].mData[ x, y ] < height_thresh[ t ] )
+					{
+						terrain = (xeTerrainType)t;
+						break;
+					}
+				}
+
+				grid.mData[ x, y ].mTerrain = terrain;
+				grid.mData[ x, y ].mColor = terrain_colors[ (int)terrain ];
+			} );
 		}
 
 
@@ -224,20 +233,14 @@ namespace XNARTS
 				XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World_Persistent );
 				System.Random rand = new Random();
 
-				for( int x = 0; x < mMap.mBounds.x; ++x )
+				mMap.Iterate( ( grid, x, y ) => 
 				{
-					for( int y = 0; y < mMap.mBounds.y; ++y )
-					{
-						Vector3 low = new Vector3( x, y, 0f );
-						Vector3 high = new Vector3( x + 1, y + 1, 0f );
-						float r = (float)rand.NextDouble();
-						float g = (float)rand.NextDouble();
-						float b = (float)rand.NextDouble();
-						Color color = new Color( r, g, b );
+					Vector3 low = new Vector3( x, y, 0f );
+					Vector3 high = new Vector3( x + 1, y + 1, 0f );
+					Color color = grid.mData[ x, y ].mColor;
 
-						simple_draw_world.DrawQuad( low, high, color );
-					}
-				}
+					simple_draw_world.DrawQuad( low, high, color );
+				} );
 
 				mWorldRendered = true;
 			}
