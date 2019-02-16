@@ -39,7 +39,7 @@ namespace XNARTS
 			public xCoord mBounds;
 			public T [,] mData;
 
-			public delegate void GridFilter( SafeGrid<T> grid, int x, int y );
+			public delegate void GridFilter( int x, int y );
 
 			public void Init( xCoord bounds, T init_value )
 			{
@@ -70,7 +70,7 @@ namespace XNARTS
 				{
 					for( int y = 0; y < mBounds.y; ++y )
 					{
-						filter( this, x, y );
+						filter( x, y );
 					}
 				}
 			}
@@ -146,6 +146,8 @@ namespace XNARTS
 			for( int i = 0; i < k_smoothing_passes; ++i )
 			{
 				int target = n == 0 ? 1 : 0;
+
+				//heights[ n ].Iterate( ( x, y ) => { Console.WriteLine( "hello" ); Console.WriteLine( x + y ); } );
 
 				for( int x = 0; x < mMap.mBounds.x; ++x )
 				{
