@@ -42,9 +42,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="Controls\Keyboard.cs" />
     <Compile Include="Controls\Touch.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Map\World.cs" />
+    <Compile Include="Map\WorldGenTuning.cs" />
     <Compile Include="Math\BBox2.cs" />
     <Compile Include="Math\Coord.cs" />
     <Compile Include="Math\Helpers.cs" />
@@ -68,8 +70,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Documentation\randomMap.ts.txt" />
+    <Content Include="Documentation\worldMap.ts.txt" />
     <Content Include="Icon.ico" />
-    <Content Include="TODO.txt" />
+    <Content Include="Documentation\TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

@@ -39,6 +39,7 @@ namespace XNARTS
 		protected override void Initialize()
         {
 			XTouch.CreateInstance().Init();
+			XKeyInput.CreateInstance().Init();
 			XWorld.CreateInstance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
 			XMouse.CreateInstance().Init();
@@ -80,6 +81,7 @@ namespace XNARTS
 
 			// TODO: Add your update logic here
 			XTouch.Instance().Update( game_time );
+			XKeyInput.Instance().Update();
 			XMouse.Instance().Update( game_time );
 
             base.Update(game_time);

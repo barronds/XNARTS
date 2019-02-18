@@ -17,3 +17,7 @@ take everything out of constructors and do specific intialization?
 - extend event system to allow immediate callback over messages.  requires internet to look up syntax for inheritance, functor, or lambda.
 
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
+
+- world gen : use tuning sets
+- world gen : trigger rebuild on input (so create input system)
+- world gen : normalize heights so that tuning doesn't change
