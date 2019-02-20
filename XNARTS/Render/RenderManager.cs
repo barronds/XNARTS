@@ -44,11 +44,25 @@ namespace XNARTS
 			mGraphicsDeviceManager.ApplyChanges();
 
 			XSimpleDraw.Initialize();
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Transient ).Init( graphics_device, persistent: false );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.World_Persistent ).Init( graphics_device, persistent: true );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Transient ).Init( graphics_device, persistent: false );
-			XSimpleDraw.CreateInstance( xeSimpleDrawType.Screen_Persistent ).Init( graphics_device, persistent: true );
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Transient ).Init(	graphics_device, 
+																						persistent: false,
+																						max_lines: 50,
+																						max_triangles: 50 );
 
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Persistent ).Init(	graphics_device, 
+																						persistent: true,
+																						max_lines: 50,
+																						max_triangles: 100000 );
+
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.ScreenSpace_Transient ).Init(	graphics_device, 
+																						persistent: false,
+																						max_lines: 50,
+																						max_triangles: 50 );
+
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.ScreenSpace_Persistent ).Init( graphics_device, 
+																						persistent: true,
+																						max_lines: 50,
+																						max_triangles: 50 );
 			mMainWorldCam = new XWorldCam( mScreenDim );
 			mScreenCam = new XScreenCam( mScreenDim );
 		}
@@ -98,10 +112,10 @@ namespace XNARTS
 
 			mBasicEffect_World.VertexColorEnabled = true;
 
-			XSimpleDraw simple_draw_world_transient = XSimpleDraw.Instance( xeSimpleDrawType.World_Transient );
-			XSimpleDraw simple_draw_world_persistent = XSimpleDraw.Instance( xeSimpleDrawType.World_Persistent );
-			XSimpleDraw simple_draw_screen_transient = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Transient );
-			XSimpleDraw simple_draw_screen_persistent = XSimpleDraw.Instance( xeSimpleDrawType.Screen_Persistent );
+			XSimpleDraw simple_draw_world_transient = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
+			XSimpleDraw simple_draw_world_persistent = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent );
+			XSimpleDraw simple_draw_screen_transient = XSimpleDraw.Instance( xeSimpleDrawType.ScreenSpace_Transient );
+			XSimpleDraw simple_draw_screen_persistent = XSimpleDraw.Instance( xeSimpleDrawType.ScreenSpace_Persistent );
 
 			foreach( EffectPass pass in mBasicEffect_World.CurrentTechnique.Passes )
 			{

@@ -32,15 +32,15 @@ namespace XNARTS
 		// private constructor for singleton
 		private XKeyInput()
 		{
+			mBroadcaster_KeyDown = new XBroadcaster<KeyDown>();
+			mBroadcaster_KeyUp = new XBroadcaster<KeyUp>();
+			mBroadcaster_KeyHeld = new XBroadcaster<KeyHeld>();
+			mPrevPressedKeys = new List<Keys>();
 		}
 
 
 		public void Init()
 		{
-			mBroadcaster_KeyDown = new XBroadcaster<KeyDown>();
-			mBroadcaster_KeyUp = new XBroadcaster<KeyUp>();
-			mBroadcaster_KeyHeld = new XBroadcaster<KeyHeld>();
-			mPrevPressedKeys = new List< Keys >();
 		}
 
 

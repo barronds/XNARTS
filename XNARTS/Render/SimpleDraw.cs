@@ -11,10 +11,11 @@ namespace XNARTS
 {
 	public enum xeSimpleDrawType
 	{
-		Screen_Transient,
-		Screen_Persistent,
-		World_Transient,
-		World_Persistent
+		ScreenSpace_Transient,
+		ScreenSpace_Persistent,
+		WorldSpace_Transient,
+		WorldSpace_Persistent,
+		WorldSpace_Persistent_Map
 	}
 
 
@@ -30,11 +31,11 @@ namespace XNARTS
             }
         }
 
-        const int               kMaxLines = 50;
+        int						mMaxLines;
         int                     mNumLines;
         VertexPositionColor []  mLines;
 
-		const int				kMaxTriangles = 100000;
+		int						mMaxTriangles;
 		int						mNumTriangles;
 		VertexPositionColor []	mTriangles;
 
@@ -47,20 +48,22 @@ namespace XNARTS
 		{}
 
 
-        public void Init( GraphicsDevice graphics_device, bool persistent )
+        public void Init( GraphicsDevice graphics_device, bool persistent, int max_lines, int max_triangles )
         {
             mGraphicsDevice = graphics_device;
 			mPersistent = persistent;
-            mLines = new VertexPositionColor[ 2 * kMaxLines ];
+			mMaxLines = max_lines;
+			mMaxTriangles = max_triangles;
+            mLines = new VertexPositionColor[ 2 * mMaxLines ];
             mNumLines = 0;
-			mTriangles = new VertexPositionColor[ 3 * kMaxTriangles ];
+			mTriangles = new VertexPositionColor[ 3 * mMaxTriangles ];
 			mNumTriangles = 0;
         }
 
 
         public void DrawLine( Vector3 start_pos, Vector3 end_pos, Color start_color, Color end_color )
         {
-            if ( mNumLines == kMaxLines )
+            if ( mNumLines == mMaxLines )
             {
                 XUtils.Assert( false, "max lines exceeded" );
                 return;
@@ -79,7 +82,7 @@ namespace XNARTS
 		// watch the winding order for which way the normal goes, by right hand rule
 		public void DrawTriangle( Vector3 a, Vector3 b, Vector3 c, Color color )
 		{
-			if( mNumTriangles == kMaxTriangles )
+			if( mNumTriangles == mMaxTriangles )
 			{
 				XUtils.Assert( false, "max triangles exceeded" );
 			}

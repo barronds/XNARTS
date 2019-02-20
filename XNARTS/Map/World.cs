@@ -33,8 +33,9 @@ namespace XNARTS
 
 	public class XWorld : XSingleton< XWorld >
 	{
-		private bool					mWorldRendered;
-		private SafeGrid< xMapCell >    mMap;
+		private bool							mWorldRendered;
+		private SafeGrid< xMapCell >			mMap;
+		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
 
 		// maybe promote this to utility class
 		private class SafeGrid< T > where T : struct
@@ -80,6 +81,10 @@ namespace XNARTS
 		public void Init()
 		{
 			mWorldRendered = false;
+
+			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
+			XKeyInput.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
+
 			xCoord map_size = new xCoord( 160, 90 );
 			mMap = new SafeGrid< xMapCell >();
 			xMapCell init_val = new xMapCell();
@@ -196,7 +201,7 @@ namespace XNARTS
 
 		public void RenderWorldLines( GameTime game_time )
 		{
-			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World_Transient );
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
 
 			Vector3 start = new Vector3();
 			Vector3 end = new Vector3();
@@ -228,9 +233,19 @@ namespace XNARTS
 
 		public void RenderWorld( GameTime game_time )
 		{
+			if( mListenter_KeyUp.GetNumEvents() > 0 )
+			{
+				XKeyInput.KeyUp msg = mListenter_KeyUp.ReadNext();
+
+				if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
+				{
+					Console.WriteLine( "please generate world" );
+				}
+			}
+
 			if( !mWorldRendered )
 			{
-				XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.World_Persistent );
+				XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent );
 				System.Random rand = new Random();
 
 				mMap.Iterate( ( grid, x, y ) => 
