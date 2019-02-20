@@ -240,12 +240,16 @@ namespace XNARTS
 				if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
 				{
 					Console.WriteLine( "please generate world" );
+					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
+					simple_draw.CancelPrimitives();
+					mWorldRendered = false;
+					Generate();
 				}
 			}
 
 			if( !mWorldRendered )
 			{
-				XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent );
+				XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
 				System.Random rand = new Random();
 
 				mMap.Iterate( ( grid, x, y ) => 
@@ -254,7 +258,7 @@ namespace XNARTS
 					Vector3 high = new Vector3( x + 1, y + 1, 0f );
 					Color color = grid.mData[ x, y ].mColor;
 
-					simple_draw_world.DrawQuad( low, high, color );
+					simple_draw.DrawQuad( low, high, color );
 				} );
 
 				mWorldRendered = true;

@@ -52,7 +52,7 @@ namespace XNARTS
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Persistent ).Init(	graphics_device, 
 																						persistent: true,
 																						max_lines: 50,
-																						max_triangles: 100000 );
+																						max_triangles: 50 );
 
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.ScreenSpace_Transient ).Init(	graphics_device, 
 																						persistent: false,
@@ -63,6 +63,11 @@ namespace XNARTS
 																						persistent: true,
 																						max_lines: 50,
 																						max_triangles: 50 );
+
+			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Persistent_Map ).Init(	graphics_device,
+																							persistent: true,
+																							max_lines: 50,
+																							max_triangles: 100000 );
 			mMainWorldCam = new XWorldCam( mScreenDim );
 			mScreenCam = new XScreenCam( mScreenDim );
 		}
@@ -116,12 +121,14 @@ namespace XNARTS
 			XSimpleDraw simple_draw_world_persistent = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent );
 			XSimpleDraw simple_draw_screen_transient = XSimpleDraw.Instance( xeSimpleDrawType.ScreenSpace_Transient );
 			XSimpleDraw simple_draw_screen_persistent = XSimpleDraw.Instance( xeSimpleDrawType.ScreenSpace_Persistent );
+			XSimpleDraw simple_draw_world_map_persistent = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
 
-			foreach( EffectPass pass in mBasicEffect_World.CurrentTechnique.Passes )
+			foreach ( EffectPass pass in mBasicEffect_World.CurrentTechnique.Passes )
 			{
 				pass.Apply();
 
 				// actually render simple draw stuff.  possible layers needed.
+				simple_draw_world_map_persistent.DrawAllPrimitives();
 				simple_draw_world_persistent.DrawAllPrimitives();
 				simple_draw_world_transient.DrawAllPrimitives();
 

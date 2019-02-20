@@ -136,6 +136,12 @@ namespace XNARTS
         }
 
 
+		public void CancelPrimitives()
+		{
+			XUtils.Assert( mPersistent, "this method only necessary for persistent simple draws" );
+			mNumLines = 0;
+			mNumTriangles = 0;
+		}
 
 
         // not yet implemented 
