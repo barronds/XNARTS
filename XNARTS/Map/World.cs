@@ -28,6 +28,7 @@ namespace XNARTS
 	{
 		public xeTerrainType    mTerrain;
 		public Color			mColor;
+		public Color            mBlendedColor;
 	}
 
 
@@ -36,6 +37,7 @@ namespace XNARTS
 		private bool							mWorldRendered;
 		private SafeGrid< xMapCell >			mMap;
 		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
+
 
 		// maybe promote this to utility class
 		private class SafeGrid< T > where T : struct
@@ -94,6 +96,89 @@ namespace XNARTS
 			Generate();
 		}
 
+
+		public xCoord GetMapSize()
+		{
+			return mMap.mBounds;
+		}
+		public xMapCell GetMapCell( xCoord coord )
+		{
+			XUtils.Assert( coord.x >= 0 && coord.y >= 0 && coord.x < mMap.mBounds.x && coord.y < mMap.mBounds.y );
+			return mMap.mData[ coord.x, coord.y ];
+		}
+
+		public void RenderWorldLines( GameTime game_time )
+		{
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
+
+			Vector3 start = new Vector3();
+			Vector3 end = new Vector3();
+
+			// each cell is 1 unit on edge in world space
+			start.Y = 0;
+			end.Y = mMap.mBounds.y;
+
+			for ( int x = 0; x <= mMap.mBounds.x; ++x )
+			{
+				start.X = x;
+				end.X = x;
+
+				simple_draw_world.DrawLine( start, end, Color.Yellow, Color.Black );
+			}
+
+			start.X = 0;
+			end.X = mMap.mBounds.x;
+
+			for ( int y = 0; y <= mMap.mBounds.y; ++y )
+			{
+				start.Y = y;
+				end.Y = y;
+
+				simple_draw_world.DrawLine( start, end, Color.DarkGreen, Color.White );
+			}
+		}
+		public void RenderWorld( GameTime game_time )
+		{
+			if ( mListenter_KeyUp.GetNumEvents() > 0 )
+			{
+				XKeyInput.KeyUp msg = mListenter_KeyUp.ReadNext();
+
+				if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
+				{
+					Console.WriteLine( "please generate world" );
+					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
+					simple_draw.CancelPrimitives();
+					mWorldRendered = false;
+					Generate();
+				}
+			}
+
+			if ( !mWorldRendered )
+			{
+				XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
+				System.Random rand = new Random();
+
+				mMap.Iterate( ( grid, x, y ) =>
+				{
+					Vector3 low = new Vector3( x, y, 0f );
+					Vector3 high = new Vector3( x + 1, y + 1, 0f );
+					Color color = grid.mData[ x, y ].mColor;
+
+					simple_draw.DrawQuad( low, high, color );
+				} );
+
+				mWorldRendered = true;
+			}
+		}
+
+		private Vector3 ColorToVector3( Color c )
+		{
+			return c.ToVector3();
+		}
+		private Color Vector3ToColor( Vector3 v )
+		{
+			return new Color( v.X, v.Y, v.Z );
+		}
 
 		private void Generate()
 		{
@@ -183,85 +268,73 @@ namespace XNARTS
 				grid.mData[ x, y ].mTerrain = terrain;
 				grid.mData[ x, y ].mColor = terrain_colors[ (int)terrain ];
 			} );
-		}
 
+			const float k_here_weight = 0.5f;
+			const float k_diagonal_weight = 0.707f;
+			const float k_perpendicular_weight = 1f;
+			const float k_total_weight = 4 * (k_diagonal_weight + k_perpendicular_weight);
+			const int k_num_color_blend_passes = 0;
 
-		public xCoord GetMapSize()
-		{
-			return mMap.mBounds;
-		}
-
-
-		public xMapCell GetMapCell( xCoord coord )
-		{
-			XUtils.Assert( coord.x >= 0 && coord.y >= 0 && coord.x < mMap.mBounds.x && coord.y < mMap.mBounds.y );
-			return mMap.mData[ coord.x, coord.y ];
-		}
-
-
-		public void RenderWorldLines( GameTime game_time )
-		{
-			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
-
-			Vector3 start = new Vector3();
-			Vector3 end = new Vector3();
-
-			// each cell is 1 unit on edge in world space
-			start.Y = 0;
-			end.Y = mMap.mBounds.y;
-
-			for( int x = 0; x <= mMap.mBounds.x; ++x )
+			for ( int i = 0; i < k_num_color_blend_passes; ++i )
 			{
-				start.X = x;
-				end.X = x;
-
-				simple_draw_world.DrawLine( start, end, Color.Yellow, Color.Black );
-			}
-
-			start.X = 0;
-			end.X = mMap.mBounds.x;
-
-			for( int y = 0; y <= mMap.mBounds.y; ++y )
-			{
-				start.Y = y;
-				end.Y = y;
-
-				simple_draw_world.DrawLine( start, end, Color.DarkGreen, Color.White );
-			}
-		}
-
-
-		public void RenderWorld( GameTime game_time )
-		{
-			if( mListenter_KeyUp.GetNumEvents() > 0 )
-			{
-				XKeyInput.KeyUp msg = mListenter_KeyUp.ReadNext();
-
-				if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
+				mMap.Iterate( ( grid, x, y ) =>
 				{
-					Console.WriteLine( "please generate world" );
-					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
-					simple_draw.CancelPrimitives();
-					mWorldRendered = false;
-					Generate();
-				}
-			}
+					Color color_here = grid.mData[ x, y ].mColor;
 
-			if( !mWorldRendered )
-			{
-				XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
-				System.Random rand = new Random();
+					Color color_lo_x = grid.GetValueSafe( x - 1, y ).mColor;
+					Color color_hi_x = grid.GetValueSafe( x + 1, y ).mColor;
+					Color color_lo_y = grid.GetValueSafe( x, y - 1 ).mColor;
+					Color color_hi_y = grid.GetValueSafe( x, y + 1 ).mColor;
 
-				mMap.Iterate( ( grid, x, y ) => 
-				{
-					Vector3 low = new Vector3( x, y, 0f );
-					Vector3 high = new Vector3( x + 1, y + 1, 0f );
-					Color color = grid.mData[ x, y ].mColor;
+					Color color_lo_x_lo_y = grid.GetValueSafe( x - 1, y - 1 ).mColor;
+					Color color_lo_x_hi_y = grid.GetValueSafe( x - 1, y + 1 ).mColor;
+					Color color_hi_x_lo_y = grid.GetValueSafe( x + 1, y - 1 ).mColor;
+					Color color_hi_x_hi_y = grid.GetValueSafe( x + 1, y + 1 ).mColor;
 
-					simple_draw.DrawQuad( low, high, color );
+					Vector3 v_here = ColorToVector3( color_here );
+
+					Vector3 v_lo_x = ColorToVector3( color_lo_x );
+					Vector3 v_hi_x = ColorToVector3( color_hi_x );
+					Vector3 v_lo_y = ColorToVector3( color_lo_y );
+					Vector3 v_hi_y = ColorToVector3( color_hi_y );
+
+					Vector3 v_lo_x_lo_y = ColorToVector3( color_lo_x_lo_y );
+					Vector3 v_lo_x_hi_y = ColorToVector3( color_lo_x_hi_y );
+					Vector3 v_hi_x_lo_y = ColorToVector3( color_hi_x_lo_y );
+					Vector3 v_hi_x_hi_y = ColorToVector3( color_hi_x_hi_y );
+
+					// perpendicular weight 1, diagonal weight 0.707.  total weight 4(1.707)
+					Vector3 neighbour_sum = k_perpendicular_weight * v_lo_x +
+											k_perpendicular_weight * v_hi_x +
+											k_perpendicular_weight * v_lo_y +
+											k_perpendicular_weight * v_hi_y +
+											k_diagonal_weight * v_lo_x_lo_y +
+											k_diagonal_weight * v_lo_x_hi_y +
+											k_diagonal_weight * v_hi_x_lo_y +
+											k_diagonal_weight * v_hi_x_hi_y;
+
+					Vector3 blended_color = k_here_weight * v_here + (1f - k_here_weight) * (1f / k_total_weight) * neighbour_sum;
+					grid.mData[ x, y ].mBlendedColor = Vector3ToColor( blended_color );
 				} );
 
-				mWorldRendered = true;
+				mMap.Iterate( ( grid, x, y ) =>
+				{
+					grid.mData[ x, y ].mColor = grid.mData[ x, y ].mBlendedColor;
+				} );
+			}
+
+			const bool k_do_checkerboard = true;
+			const float k_checkerboard_scalar = 0.985f;
+
+			if( k_do_checkerboard )
+			{
+				mMap.Iterate( ( grid, x, y ) =>
+				{
+					if( ((x + y) % 2) == 0 )
+					{
+						grid.mData[ x, y ].mColor = Color.Multiply( grid.mData[ x, y ].mColor, k_checkerboard_scalar );
+					}
+				} );
 			}
 		}
 

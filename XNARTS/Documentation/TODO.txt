@@ -19,5 +19,5 @@ take everything out of constructors and do specific intialization?
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
 
 - world gen : use tuning sets
-- world gen : trigger rebuild on input (so create input system)
 - world gen : normalize heights so that tuning doesn't change
+- world gen : consider checkerboard as a function of zoom
