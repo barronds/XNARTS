@@ -87,7 +87,7 @@ namespace XNARTS
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
 			XKeyInput.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
 
-			xCoord map_size = new xCoord( 160, 90 );
+			xCoord map_size = new xCoord( 640, 360 );
 			mMap = new SafeGrid< xMapCell >();
 			xMapCell init_val = new xMapCell();
 			init_val.mTerrain = xeTerrainType.Invalid;

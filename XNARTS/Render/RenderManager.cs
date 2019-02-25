@@ -67,7 +67,7 @@ namespace XNARTS
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Persistent_Map ).Init(	graphics_device,
 																							persistent: true,
 																							max_lines: 50,
-																							max_triangles: 100000 );
+																							max_triangles: 1600000 );
 			mMainWorldCam = new XWorldCam( mScreenDim );
 			mScreenCam = new XScreenCam( mScreenDim );
 		}
