@@ -323,14 +323,26 @@ namespace XNARTS
 				} );
 			}
 
-			const bool k_do_checkerboard = true;
-			const float k_checkerboard_scalar = 0.985f;
-
-			if( k_do_checkerboard )
+			const bool k_do_color_lerp = true;
+			const float k_lerp_fraction = 0.3f;
+			Color lerp_color = new Color( 0.5f, 0.5f, 0.5f );
+			
+			if( k_do_color_lerp )
 			{
 				mMap.Iterate( ( grid, x, y ) =>
 				{
-					if( ((x + y) % 2) == 0 )
+					grid.mData[ x, y ].mColor = Color.Lerp( grid.mData[ x, y ].mColor, lerp_color, k_lerp_fraction );
+				} );
+			}
+
+			const bool k_do_checkerboard = true;
+			const float k_checkerboard_scalar = 0.985f;
+
+			if ( k_do_checkerboard )
+			{
+				mMap.Iterate( ( grid, x, y ) =>
+				{
+					if ( ((x + y) % 2) == 0 )
 					{
 						grid.mData[ x, y ].mColor = Color.Multiply( grid.mData[ x, y ].mColor, k_checkerboard_scalar );
 					}
