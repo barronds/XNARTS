@@ -180,16 +180,19 @@ namespace XNARTS
 			return new Color( v.X, v.Y, v.Z );
 		}
 
-		private void Generate()
+
+		private void Generate_Physical()
 		{
 			Random rand = new Random();
 
 			// tuning
-			const double	k_spike_density			= 0.04d;
-			const double	k_spike_height			= 300d;
-			const double	k_spike_variance		= 0.6d;
-			const int		k_smoothing_passes		= 200; // choose even, more efficient
-			const double    k_smoothing_scalar		= 0.5d;
+			const double    k_spike_density         = 0.04d;
+			const double    k_spike_height          = 300d;
+			const double    k_spike_variance        = 0.6d;
+			const double    k_min_normalized_height = 0.0d;
+			const double    k_max_normalized_height = 1.0d;
+			const int       k_smoothing_passes      = 200; // choose even, more efficient
+			const double    k_smoothing_scalar      = 0.5d;
 
 			// tuning derrivatives
 			double min_spike_height = k_spike_height * (1d - k_spike_variance);
@@ -198,7 +201,7 @@ namespace XNARTS
 			int num_spikes = (int)(k_spike_density * mMap.mBounds.x * mMap.mBounds.y);
 			SafeGrid< double >[] heights = new SafeGrid< double >[ 2 ];
 
-			for( int h = 0; h < 2; ++h )
+			for ( int h = 0; h < 2; ++h )
 			{
 				heights[ h ] = new SafeGrid<double>();
 				heights[ h ].Init( mMap.mBounds, 0d );
@@ -216,11 +219,11 @@ namespace XNARTS
 
 			// smooth
 			int n = 0;
-			for( int i = 0; i < k_smoothing_passes; ++i )
+			for ( int i = 0; i < k_smoothing_passes; ++i )
 			{
 				int target = n == 0 ? 1 : 0;
 
-				heights[ n ].Iterate( ( grid, x, y ) => 
+				heights[ n ].Iterate( ( grid, x, y ) =>
 				{
 					double lo_x = grid.GetValueSafe( x - 1, y );
 					double hi_x = grid.GetValueSafe( x + 1, y );
@@ -235,30 +238,45 @@ namespace XNARTS
 				n = n == 0 ? 1 : 0;
 			}
 
+			// normalize
+			double max_height = 0.0d;
+
+			heights[ 0 ].Iterate( ( grid, x, y ) =>
+			{
+				if( grid.mData[ x, y ] > max_height )
+				{
+					max_height = grid.mData[ x, y ];
+				}
+			} );
+
+			double normalizer = max_height > 0.0d ? 1d / max_height : 1d;
+
+			heights[ 0 ].Iterate( ( grid, x, y ) =>
+			{
+				grid.mData[ x, y ] *= normalizer;
+			} );
+
+			// height capping
+			heights[ 0 ].Iterate( ( grid, x, y ) =>
+			{
+				grid.mData[ x, y ] = XMath.Clamp( grid.mData[ x, y ], k_min_normalized_height, k_max_normalized_height );
+			} );
+
 			double[] height_thresh = new double[ (int)xeTerrainType.Num - 1 ];
-			height_thresh[ (int)xeTerrainType.DeepWater ]		= 10.5d;
-			height_thresh[ (int)xeTerrainType.ShallowWater ]	= 12d;
-			height_thresh[ (int)xeTerrainType.Sand ]			= 12.9d;
-			height_thresh[ (int)xeTerrainType.Grassland ]		= 14.5d;
-			height_thresh[ (int)xeTerrainType.Forest ]			= 16d;
-			height_thresh[ (int)xeTerrainType.Rock ]			= 18d;
+			height_thresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			height_thresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			height_thresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			height_thresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			height_thresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			height_thresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
-			Color[] terrain_colors = new Color[ (int)xeTerrainType.Num ];
-			terrain_colors[ (int)xeTerrainType.DeepWater ]		= new Color( 0.25f, 0.35f, 0.6f );
-			terrain_colors[ (int)xeTerrainType.ShallowWater ]	= new Color( 0.3f, 0.5f, 0.75f );
-			terrain_colors[ (int)xeTerrainType.Sand ]			= new Color( 0.75f, 0.7f, 0.3f );
-			terrain_colors[ (int)xeTerrainType.Grassland ]		= new Color( 0.4f, 0.6f, 0.3f );
-			terrain_colors[ (int)xeTerrainType.Forest ]			= new Color( 0.15f, 0.45f, 0.3f );
-			terrain_colors[ (int)xeTerrainType.Rock ]			= new Color( 0.5f, 0.5f, 0.5f );
-			terrain_colors[ (int)xeTerrainType.Snow ]			= new Color( 0.9f, 0.9f, 0.9f );
-
-			mMap.Iterate( ( grid, x, y ) => 
+			mMap.Iterate( ( grid, x, y ) =>
 			{
 				xeTerrainType terrain = xeTerrainType.Snow;
 
 				for ( int t = 0; t < (int)xeTerrainType.Num - 1; ++t )
 				{
-					if( heights[ 0 ].mData[ x, y ] < height_thresh[ t ] )
+					if ( heights[ 0 ].mData[ x, y ] < height_thresh[ t ] )
 					{
 						terrain = (xeTerrainType)t;
 						break;
@@ -266,14 +284,35 @@ namespace XNARTS
 				}
 
 				grid.mData[ x, y ].mTerrain = terrain;
-				grid.mData[ x, y ].mColor = terrain_colors[ (int)terrain ];
 			} );
+		}
 
+
+		private void Generate_AssignTerrainColors()
+		{
+			Color[] terrain_colors = new Color[ (int)xeTerrainType.Num ];
+			terrain_colors[ (int)xeTerrainType.DeepWater ] = new Color( 0.25f, 0.35f, 0.6f );
+			terrain_colors[ (int)xeTerrainType.ShallowWater ] = new Color( 0.3f, 0.5f, 0.75f );
+			terrain_colors[ (int)xeTerrainType.Sand ] = new Color( 0.75f, 0.7f, 0.3f );
+			terrain_colors[ (int)xeTerrainType.Grassland ] = new Color( 0.4f, 0.6f, 0.3f );
+			terrain_colors[ (int)xeTerrainType.Forest ] = new Color( 0.15f, 0.45f, 0.3f );
+			terrain_colors[ (int)xeTerrainType.Rock ] = new Color( 0.5f, 0.5f, 0.5f );
+			terrain_colors[ (int)xeTerrainType.Snow ] = new Color( 0.9f, 0.9f, 0.9f );
+
+			mMap.Iterate( ( grid, x, y ) =>
+			{
+				grid.mData[ x, y ].mColor = terrain_colors[ (int)(grid.mData[ x, y ].mTerrain) ];
+			} );
+		}
+
+
+		private void Generate_BlendColors()
+		{
+			const int k_num_color_blend_passes = 0; // 0 is disabled
 			const float k_here_weight = 0.5f;
 			const float k_diagonal_weight = 0.707f;
 			const float k_perpendicular_weight = 1f;
 			const float k_total_weight = 4 * (k_diagonal_weight + k_perpendicular_weight);
-			const int k_num_color_blend_passes = 0;
 
 			for ( int i = 0; i < k_num_color_blend_passes; ++i )
 			{
@@ -322,19 +361,27 @@ namespace XNARTS
 					grid.mData[ x, y ].mColor = grid.mData[ x, y ].mBlendedColor;
 				} );
 			}
+		}
 
+
+		private void Generate_ColorLerp()
+		{
 			const bool k_do_color_lerp = true;
 			const float k_lerp_fraction = 0.3f;
 			Color lerp_color = new Color( 0.5f, 0.5f, 0.5f );
-			
-			if( k_do_color_lerp )
+
+			if ( k_do_color_lerp )
 			{
 				mMap.Iterate( ( grid, x, y ) =>
 				{
 					grid.mData[ x, y ].mColor = Color.Lerp( grid.mData[ x, y ].mColor, lerp_color, k_lerp_fraction );
 				} );
 			}
+		}
 
+
+		private void Generate_Checkerboard()
+		{
 			const bool k_do_checkerboard = true;
 			const float k_checkerboard_scalar = 0.985f;
 
@@ -348,6 +395,16 @@ namespace XNARTS
 					}
 				} );
 			}
+		}
+
+
+		private void Generate()
+		{
+			Generate_Physical();
+			Generate_AssignTerrainColors();
+			Generate_BlendColors();
+			Generate_ColorLerp();
+			Generate_Checkerboard();
 		}
 
 
