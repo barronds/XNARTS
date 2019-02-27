@@ -26,8 +26,9 @@ namespace XNARTS
 		private Matrix mViewMatrix;
 		private Matrix mProjectionMatrix;
 
-		private XListener< XTouch.MultiDragStart >	mListener_MultiDragStart;
-		private XListener< XTouch.MultiDragData >	mListener_MultiDrag;
+		private XListener< XTouch.MultiDragStart >		mListener_MultiDragStart;
+		private XListener< XTouch.MultiDragData >		mListener_MultiDrag;
+		private XListener< XWorld.WorldRegenerated >    mListener_WorldRegenerated;
 
 		private XTouch.MultiDragData    mMultiDragPrev;
 		float                           mDampedMaxScreenSeparation;
@@ -37,6 +38,22 @@ namespace XNARTS
 		{
 			mScreenDim = screen_dim;
 			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
+			InitFromWorld();
+
+			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
+			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
+
+			// this could be a problem, what about missed events?  what about piled up starts and ends and getting order wrong?
+			mListener_MultiDragStart = new XListener<XTouch.MultiDragStart>( 1, eEventQueueFullBehaviour.Assert );
+			XTouch.Instance().mBroadcaster_MultiDragStart.Subscribe( mListener_MultiDragStart );
+
+			mListener_WorldRegenerated = new XListener<XWorld.WorldRegenerated>( 1, eEventQueueFullBehaviour.IgnoreOldest );
+			XWorld.Instance().mBroadcaster_WorldRegenerated.Subscribe( mListener_WorldRegenerated );
+		}
+
+
+		private void InitFromWorld()
+		{
 			mWorldSize = XWorld.Instance().GetMapSize();
 
 			// initial view of map
@@ -48,13 +65,6 @@ namespace XNARTS
 			Vector3 target = pos - 2f * Vector3.UnitZ;
 			mViewMatrix = Matrix.CreateLookAt( pos, target, Vector3.UnitY );
 			CalcProjectionMatrix();
-
-			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
-			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
-
-			// this could be a problem, what about missed events?  what about piled up starts and ends and getting order wrong?
-			mListener_MultiDragStart = new XListener<XTouch.MultiDragStart>( 1, eEventQueueFullBehaviour.Assert );
-			XTouch.Instance().mBroadcaster_MultiDragStart.Subscribe( mListener_MultiDragStart );
 
 			mMultiDragPrev = new XTouch.MultiDragData( Vector2.Zero, 1f );
 			mDampedMaxScreenSeparation = -1f;
@@ -127,6 +137,12 @@ namespace XNARTS
 
 		void XICamera.Update( GameTime game_time )
 		{
+			if( mListener_WorldRegenerated.GetNumEvents() > 0 )
+			{
+				mListener_WorldRegenerated.ReadNext();
+				InitFromWorld();
+			}
+
 			if( mListener_MultiDragStart.GetNumEvents() > 0 )
 			{
 				mMultiDragPrev = mListener_MultiDragStart.ReadNext().mData;

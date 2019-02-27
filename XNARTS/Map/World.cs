@@ -34,6 +34,10 @@ namespace XNARTS
 
 	public class XWorld : XSingleton< XWorld >
 	{
+		public class WorldRegenerated
+		{ }
+
+		public XBroadcaster< WorldRegenerated >	mBroadcaster_WorldRegenerated { get; }
 		private bool							mWorldRendered;
 		private SafeGrid< xMapCell >			mMap;
 		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
@@ -77,7 +81,9 @@ namespace XNARTS
 
 		// private constructor as per XSingleton
 		private XWorld()
-		{}
+		{
+			mBroadcaster_WorldRegenerated = new XBroadcaster< WorldRegenerated >();
+		}
 
 
 		public void Init()
@@ -87,7 +93,7 @@ namespace XNARTS
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
 			XKeyInput.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
 
-			xCoord map_size = new xCoord( 640, 360 );
+			xCoord map_size = new xCoord( 320, 180 );
 			mMap = new SafeGrid< xMapCell >();
 			xMapCell init_val = new xMapCell();
 			init_val.mTerrain = xeTerrainType.Invalid;
@@ -150,6 +156,9 @@ namespace XNARTS
 					simple_draw.CancelPrimitives();
 					mWorldRendered = false;
 					Generate();
+
+					WorldRegenerated world_regenerated = new WorldRegenerated();
+					mBroadcaster_WorldRegenerated.Post( world_regenerated );
 				}
 			}
 
