@@ -93,12 +93,6 @@ namespace XNARTS
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
 			XKeyInput.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
 
-			xCoord map_size = new xCoord( 320, 180 );
-			mMap = new SafeGrid< xMapCell >();
-			xMapCell init_val = new xMapCell();
-			init_val.mTerrain = xeTerrainType.Invalid;
-			init_val.mColor = new Color();
-			mMap.Init( map_size, init_val );
 			Generate();
 		}
 
@@ -192,16 +186,27 @@ namespace XNARTS
 
 		private void Generate_Physical()
 		{
-			Random rand = new Random();
-
 			// tuning
 			const double    k_spike_density         = 0.04d;
 			const double    k_spike_height          = 300d;
 			const double    k_spike_variance        = 0.6d;
 			const double    k_min_normalized_height = 0.0d;
 			const double    k_max_normalized_height = 1.0d;
-			const int       k_smoothing_passes      = 200; // choose even, more efficient
+			const int       k_smoothing_passes      = 200; 
 			const double    k_smoothing_scalar      = 0.5d;
+			const int       k_grid_width            = 320;
+			const int       k_grid_height           = 180;
+
+			// set up the grid
+			xCoord map_size = new xCoord( k_grid_width, k_grid_height );
+			mMap = new SafeGrid<xMapCell>();
+			xMapCell init_val = new xMapCell();
+			init_val.mTerrain = xeTerrainType.Invalid;
+			init_val.mColor = new Color();
+			mMap.Init( map_size, init_val );
+
+
+			Random rand = new Random();
 
 			// tuning derrivatives
 			double min_spike_height = k_spike_height * (1d - k_spike_variance);
@@ -228,7 +233,9 @@ namespace XNARTS
 
 			// smooth
 			int n = 0;
-			for ( int i = 0; i < k_smoothing_passes; ++i )
+			int smoothing_passes = (k_smoothing_passes % 2) == 1 ? k_smoothing_passes + 1 : k_smoothing_passes;
+
+			for ( int i = 0; i < smoothing_passes; ++i )
 			{
 				int target = n == 0 ? 1 : 0;
 
