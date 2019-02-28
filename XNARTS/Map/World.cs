@@ -39,6 +39,8 @@ namespace XNARTS
 
 		public XBroadcaster< WorldRegenerated >	mBroadcaster_WorldRegenerated { get; }
 		private bool							mWorldRendered;
+		private XWorldGen                       mWorldGen;
+		private XWorldGen.Set                   mWorldGenSet;
 		private SafeGrid< xMapCell >			mMap;
 		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
 
@@ -83,6 +85,8 @@ namespace XNARTS
 		private XWorld()
 		{
 			mBroadcaster_WorldRegenerated = new XBroadcaster< WorldRegenerated >();
+			mWorldGen = new XWorldGen();
+			mWorldGenSet = mWorldGen.GetTuningSet( XWorldGen.eMapType.Default );
 		}
 
 
@@ -186,19 +190,8 @@ namespace XNARTS
 
 		private void Generate_Physical()
 		{
-			// tuning
-			const double    k_spike_density         = 0.04d;
-			const double    k_spike_height          = 300d;
-			const double    k_spike_variance        = 0.6d;
-			const double    k_min_normalized_height = 0.0d;
-			const double    k_max_normalized_height = 1.0d;
-			const int       k_smoothing_passes      = 200; 
-			const double    k_smoothing_scalar      = 0.5d;
-			const int       k_grid_width            = 320;
-			const int       k_grid_height           = 180;
-
 			// set up the grid
-			xCoord map_size = new xCoord( k_grid_width, k_grid_height );
+			xCoord map_size = new xCoord( mWorldGenSet.mGridWidth, mWorldGenSet.mGridHeight );
 			mMap = new SafeGrid<xMapCell>();
 			xMapCell init_val = new xMapCell();
 			init_val.mTerrain = xeTerrainType.Invalid;
@@ -209,10 +202,10 @@ namespace XNARTS
 			Random rand = new Random();
 
 			// tuning derrivatives
-			double min_spike_height = k_spike_height * (1d - k_spike_variance);
-			double max_spike_height = k_spike_height * (1d + k_spike_variance);
+			double min_spike_height = mWorldGenSet.mSpikeHeight * (1d - mWorldGenSet.mSpikeVariance);
+			double max_spike_height = mWorldGenSet.mSpikeHeight * (1d + mWorldGenSet.mSpikeVariance);
 			double spike_height_spread = max_spike_height - min_spike_height;
-			int num_spikes = (int)(k_spike_density * mMap.mBounds.x * mMap.mBounds.y);
+			int num_spikes = (int)(mWorldGenSet.mSpikeDensity * mMap.mBounds.x * mMap.mBounds.y);
 			SafeGrid< double >[] heights = new SafeGrid< double >[ 2 ];
 
 			for ( int h = 0; h < 2; ++h )
@@ -233,7 +226,9 @@ namespace XNARTS
 
 			// smooth
 			int n = 0;
-			int smoothing_passes = (k_smoothing_passes % 2) == 1 ? k_smoothing_passes + 1 : k_smoothing_passes;
+			int smoothing_passes =	(mWorldGenSet.mSmoothingPasses % 2) == 1	? 
+									mWorldGenSet.mSmoothingPasses + 1			: 
+									mWorldGenSet.mSmoothingPasses				;
 
 			for ( int i = 0; i < smoothing_passes; ++i )
 			{
@@ -247,7 +242,7 @@ namespace XNARTS
 					double hi_y = grid.GetValueSafe( x, y + 1 );
 					double here = grid.mData[ x, y ];
 					double blended = 0.25d * (lo_x + lo_y + hi_x + hi_y);
-					double result = k_smoothing_scalar * here + (1d - k_smoothing_scalar) * blended;
+					double result = mWorldGenSet.mSmoothingScalar * here + (1d - mWorldGenSet.mSmoothingScalar) * blended;
 					heights[ target ].mData[ x, y ] = result;
 				} );
 
@@ -275,16 +270,8 @@ namespace XNARTS
 			// height capping
 			heights[ 0 ].Iterate( ( grid, x, y ) =>
 			{
-				grid.mData[ x, y ] = XMath.Clamp( grid.mData[ x, y ], k_min_normalized_height, k_max_normalized_height );
+				grid.mData[ x, y ] = XMath.Clamp( grid.mData[ x, y ], mWorldGenSet.mMinNormalizedHeight, mWorldGenSet.mMaxNormalizedHeight );
 			} );
-
-			double[] height_thresh = new double[ (int)xeTerrainType.Num - 1 ];
-			height_thresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
-			height_thresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
-			height_thresh[ (int)xeTerrainType.Sand ] = 0.65d;
-			height_thresh[ (int)xeTerrainType.Grassland ] = 0.7d;
-			height_thresh[ (int)xeTerrainType.Forest ] = 0.8d;
-			height_thresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			mMap.Iterate( ( grid, x, y ) =>
 			{
@@ -292,7 +279,7 @@ namespace XNARTS
 
 				for ( int t = 0; t < (int)xeTerrainType.Num - 1; ++t )
 				{
-					if ( heights[ 0 ].mData[ x, y ] < height_thresh[ t ] )
+					if ( heights[ 0 ].mData[ x, y ] < mWorldGenSet.mHeightThresh[ t ] )
 					{
 						terrain = (xeTerrainType)t;
 						break;
