@@ -38,9 +38,10 @@ namespace XNARTS
 		{ }
 
 		public XBroadcaster< WorldRegenerated >	mBroadcaster_WorldRegenerated { get; }
-		private bool							mWorldRendered;
-		private XWorldGen                       mWorldGen;
-		private XWorldGen.Set                   mWorldGenSet;
+		private bool							mRendered;
+		private XWorldGen                       mGen;
+		private XWorldGen.Set                   mGenSet;
+		private XWorldGen.eMapType              mMapType;
 		private SafeGrid< xMapCell >			mMap;
 		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
 
@@ -85,14 +86,15 @@ namespace XNARTS
 		private XWorld()
 		{
 			mBroadcaster_WorldRegenerated = new XBroadcaster< WorldRegenerated >();
-			mWorldGen = new XWorldGen();
-			mWorldGenSet = mWorldGen.GetTuningSet( XWorldGen.eMapType.Default );
+			mGen = new XWorldGen();
+			mMapType = XWorldGen.eMapType.Default;
+			mGenSet = mGen.GetTuningSet( mMapType );
 		}
 
 
 		public void Init()
 		{
-			mWorldRendered = false;
+			mRendered = false;
 
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
 			XKeyInput.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
@@ -149,10 +151,23 @@ namespace XNARTS
 
 				if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
 				{
-					Console.WriteLine( "please generate world" );
 					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
 					simple_draw.CancelPrimitives();
-					mWorldRendered = false;
+					mRendered = false;
+					Generate();
+
+					WorldRegenerated world_regenerated = new WorldRegenerated();
+					mBroadcaster_WorldRegenerated.Post( world_regenerated );
+				}
+
+				if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
+				{
+					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
+					simple_draw.CancelPrimitives();
+					mRendered = false;
+					mMapType = (XWorldGen.eMapType)(((int)mMapType + 1) % (int)XWorldGen.eMapType.Num);
+					mGenSet = mGen.GetTuningSet( mMapType );
+					Console.WriteLine( "please generate world with new type " + mMapType.ToString() );
 					Generate();
 
 					WorldRegenerated world_regenerated = new WorldRegenerated();
@@ -160,7 +175,7 @@ namespace XNARTS
 				}
 			}
 
-			if ( !mWorldRendered )
+			if ( !mRendered )
 			{
 				XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
 				System.Random rand = new Random();
@@ -174,7 +189,7 @@ namespace XNARTS
 					simple_draw.DrawQuad( low, high, color );
 				} );
 
-				mWorldRendered = true;
+				mRendered = true;
 			}
 		}
 
@@ -191,7 +206,7 @@ namespace XNARTS
 		private void Generate_Physical()
 		{
 			// set up the grid
-			xCoord map_size = new xCoord( mWorldGenSet.mGridWidth, mWorldGenSet.mGridHeight );
+			xCoord map_size = new xCoord( mGenSet.mGridWidth, mGenSet.mGridHeight );
 			mMap = new SafeGrid<xMapCell>();
 			xMapCell init_val = new xMapCell();
 			init_val.mTerrain = xeTerrainType.Invalid;
@@ -202,10 +217,10 @@ namespace XNARTS
 			Random rand = new Random();
 
 			// tuning derrivatives
-			double min_spike_height = mWorldGenSet.mSpikeHeight * (1d - mWorldGenSet.mSpikeVariance);
-			double max_spike_height = mWorldGenSet.mSpikeHeight * (1d + mWorldGenSet.mSpikeVariance);
+			double min_spike_height = mGenSet.mSpikeHeight * (1d - mGenSet.mSpikeVariance);
+			double max_spike_height = mGenSet.mSpikeHeight * (1d + mGenSet.mSpikeVariance);
 			double spike_height_spread = max_spike_height - min_spike_height;
-			int num_spikes = (int)(mWorldGenSet.mSpikeDensity * mMap.mBounds.x * mMap.mBounds.y);
+			int num_spikes = (int)(mGenSet.mSpikeDensity * mMap.mBounds.x * mMap.mBounds.y);
 			SafeGrid< double >[] heights = new SafeGrid< double >[ 2 ];
 
 			for ( int h = 0; h < 2; ++h )
@@ -226,9 +241,9 @@ namespace XNARTS
 
 			// smooth
 			int n = 0;
-			int smoothing_passes =	(mWorldGenSet.mSmoothingPasses % 2) == 1	? 
-									mWorldGenSet.mSmoothingPasses + 1			: 
-									mWorldGenSet.mSmoothingPasses				;
+			int smoothing_passes =	(mGenSet.mSmoothingPasses % 2) == 1	? 
+									mGenSet.mSmoothingPasses + 1			: 
+									mGenSet.mSmoothingPasses				;
 
 			for ( int i = 0; i < smoothing_passes; ++i )
 			{
@@ -242,7 +257,7 @@ namespace XNARTS
 					double hi_y = grid.GetValueSafe( x, y + 1 );
 					double here = grid.mData[ x, y ];
 					double blended = 0.25d * (lo_x + lo_y + hi_x + hi_y);
-					double result = mWorldGenSet.mSmoothingScalar * here + (1d - mWorldGenSet.mSmoothingScalar) * blended;
+					double result = mGenSet.mSmoothingScalar * here + (1d - mGenSet.mSmoothingScalar) * blended;
 					heights[ target ].mData[ x, y ] = result;
 				} );
 
@@ -270,7 +285,7 @@ namespace XNARTS
 			// height capping
 			heights[ 0 ].Iterate( ( grid, x, y ) =>
 			{
-				grid.mData[ x, y ] = XMath.Clamp( grid.mData[ x, y ], mWorldGenSet.mMinNormalizedHeight, mWorldGenSet.mMaxNormalizedHeight );
+				grid.mData[ x, y ] = XMath.Clamp( grid.mData[ x, y ], mGenSet.mMinNormalizedHeight, mGenSet.mMaxNormalizedHeight );
 			} );
 
 			mMap.Iterate( ( grid, x, y ) =>
@@ -279,7 +294,7 @@ namespace XNARTS
 
 				for ( int t = 0; t < (int)xeTerrainType.Num - 1; ++t )
 				{
-					if ( heights[ 0 ].mData[ x, y ] < mWorldGenSet.mHeightThresh[ t ] )
+					if ( heights[ 0 ].mData[ x, y ] < mGenSet.mHeightThresh[ t ] )
 					{
 						terrain = (xeTerrainType)t;
 						break;

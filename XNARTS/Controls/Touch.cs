@@ -350,7 +350,7 @@ namespace XNARTS
 			mStateMachine.CreateTransition( start, ignoring_contacts, eContactChange.InitialContacts, Transition_Trivial );
 
 			mStateMachine.SetStartingState( start );
-			mStateMachine.Log();
+			//mStateMachine.Log();
 		}
 		public void Update( GameTime game_time )
 		{
