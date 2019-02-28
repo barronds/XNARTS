@@ -83,6 +83,7 @@ namespace XNARTS
 			XTouch.Instance().Update( game_time );
 			XKeyInput.Instance().Update();
 			XMouse.Instance().Update( game_time );
+			XWorld.Instance().Update();
 
             base.Update(game_time);
         }

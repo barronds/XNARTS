@@ -53,7 +53,6 @@ namespace XNARTS
 			public T [,] mData;
 
 			public delegate void GridFilter( SafeGrid< T > grid, int x, int y );
-
 			public void Init( xCoord bounds, T init_value )
 			{
 				XUtils.Assert( bounds.x > 0 && bounds.y > 0 );
@@ -62,14 +61,12 @@ namespace XNARTS
 
 				Iterate( ( grid, x, y ) => { grid.mData[ x, y ] = init_value; } );
 			}
-
 			public T GetValueSafe( int x, int y )
 			{
 				x = (x < 0) ? 0 : (x >= mBounds.x) ? (mBounds.x - 1) : x;
 				y = (y < 0) ? 0 : (y >= mBounds.y) ? (mBounds.y - 1) : y;
 				return mData[ x, y ];
 			}
-
 			public void Iterate( GridFilter filter )
 			{
 				for( int x = 0; x < mBounds.x; ++x )
@@ -145,36 +142,6 @@ namespace XNARTS
 		}
 		public void RenderWorld( GameTime game_time )
 		{
-			if ( mListenter_KeyUp.GetNumEvents() > 0 )
-			{
-				XKeyInput.KeyUp msg = mListenter_KeyUp.ReadNext();
-
-				if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
-				{
-					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
-					simple_draw.CancelPrimitives();
-					mRendered = false;
-					Generate();
-
-					WorldRegenerated world_regenerated = new WorldRegenerated();
-					mBroadcaster_WorldRegenerated.Post( world_regenerated );
-				}
-
-				if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
-				{
-					XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
-					simple_draw.CancelPrimitives();
-					mRendered = false;
-					mMapType = (XWorldGen.eMapType)(((int)mMapType + 1) % (int)XWorldGen.eMapType.Num);
-					mGenSet = mGen.GetTuningSet( mMapType );
-					Console.WriteLine( "please generate world with new type " + mMapType.ToString() );
-					Generate();
-
-					WorldRegenerated world_regenerated = new WorldRegenerated();
-					mBroadcaster_WorldRegenerated.Post( world_regenerated );
-				}
-			}
-
 			if ( !mRendered )
 			{
 				XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
@@ -190,6 +157,42 @@ namespace XNARTS
 				} );
 
 				mRendered = true;
+			}
+		}
+
+		public void Update()
+		{
+			ProcessInput();
+		}
+		private void ProcessInput()
+		{
+			bool generate_map = false;
+
+			if ( mListenter_KeyUp.GetNumEvents() > 0 )
+			{
+				XKeyInput.KeyUp msg = mListenter_KeyUp.ReadNext();
+
+				if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
+				{
+					generate_map = true;
+				}
+				else if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
+				{
+					mMapType = (XWorldGen.eMapType)(((int)mMapType + 1) % (int)XWorldGen.eMapType.Num);
+					mGenSet = mGen.GetTuningSet( mMapType );
+					generate_map = true;
+				}
+			}
+
+			if ( generate_map )
+			{
+				XSimpleDraw simple_draw = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
+				simple_draw.CancelPrimitives();
+				mRendered = false;
+				Generate();
+
+				WorldRegenerated world_regenerated = new WorldRegenerated();
+				mBroadcaster_WorldRegenerated.Post( world_regenerated );
 			}
 		}
 
@@ -212,7 +215,6 @@ namespace XNARTS
 			init_val.mTerrain = xeTerrainType.Invalid;
 			init_val.mColor = new Color();
 			mMap.Init( map_size, init_val );
-
 
 			Random rand = new Random();
 
