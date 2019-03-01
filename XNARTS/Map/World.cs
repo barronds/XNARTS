@@ -41,6 +41,7 @@ namespace XNARTS
 		private bool							mRendered;
 		private XWorldGen                       mGen;
 		private XWorldGen.Set                   mGenSet;
+		private int								mMapScale;
 		private XWorldGen.eMapType              mMapType;
 		private SafeGrid< xMapCell >			mMap;
 		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
@@ -86,6 +87,7 @@ namespace XNARTS
 			mGen = new XWorldGen();
 			mMapType = XWorldGen.eMapType.Default;
 			mGenSet = mGen.GetTuningSet( mMapType );
+			mMapScale = 1;
 		}
 
 
@@ -178,9 +180,20 @@ namespace XNARTS
 				}
 				else if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
 				{
+					// loop through map types
 					mMapType = (XWorldGen.eMapType)(((int)mMapType + 1) % (int)XWorldGen.eMapType.Num);
 					mGenSet = mGen.GetTuningSet( mMapType );
 					generate_map = true;
+				}
+				else if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.S )
+				{
+					++mMapScale;
+					generate_map = true;
+
+					if( mMapScale > mGen.GetMaxMapScale() )
+					{
+						mMapScale = 1;
+					}
 				}
 			}
 
@@ -209,7 +222,8 @@ namespace XNARTS
 		private void Generate_Physical()
 		{
 			// set up the grid
-			xCoord map_size = new xCoord( mGenSet.mGridWidth, mGenSet.mGridHeight );
+			xCoord min_map_size = mGen.GetMinMapSize();
+			xCoord map_size = mMapScale * min_map_size;
 			mMap = new SafeGrid<xMapCell>();
 			xMapCell init_val = new xMapCell();
 			init_val.mTerrain = xeTerrainType.Invalid;
