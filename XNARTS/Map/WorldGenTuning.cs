@@ -186,14 +186,14 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mPostProcess			= PostProcess_NorthSeaIslands;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.56d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.63d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.82d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.82d;
 
 			s = mSets[ (int)eMapType.Prarie ];
 
@@ -357,7 +357,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mPostProcess			= PostProcess_Mediterranean;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -398,6 +398,40 @@ namespace XNARTS
 				else if( t == xeTerrainType.Rock )
 				{
 					grid.mData[ x, y ].mTerrain = xeTerrainType.Snow;
+				}
+			} );
+		}
+
+
+		private void PostProcess_Mediterranean( XSafeGrid<xMapCell> map )
+		{
+			// no snow, rock instead
+			map.Iterate( ( grid, x, y ) =>
+			{
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.Snow )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+				}
+			} );
+		}
+
+
+		private void PostProcess_NorthSeaIslands( XSafeGrid<xMapCell> map )
+		{
+			// rock - grass - rock - snow.  so sand and forest become rock
+			map.Iterate( ( grid, x, y ) =>
+			{
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.Sand )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+				}
+				else if ( t == xeTerrainType.Forest )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
 				}
 			} );
 		}
