@@ -162,10 +162,10 @@ namespace XNARTS
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.68d;
 
 			s = mSets[ (int)eMapType.NorthSeaIslands ];
 
