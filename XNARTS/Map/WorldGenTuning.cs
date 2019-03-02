@@ -30,7 +30,7 @@ namespace XNARTS
 
 			Num,
 
-			Default = Prairie
+			Default = Mediterranean
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
@@ -350,7 +350,7 @@ namespace XNARTS
 			s = mSets[ (int)eMapType.Mediterranean ];
 
 			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
+			s.mSpikeDensity			= 0.08;
 			s.mSpikeHeight			= 300;
 			s.mSpikeVariance		= 0.6;
 			s.mMinNormalizedHeight	= 0;
@@ -364,7 +364,7 @@ namespace XNARTS
 			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
 			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
 			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 1;
 		}
 
 
@@ -383,7 +383,6 @@ namespace XNARTS
 
 		private void PostProcess_DoNothing( XSafeGrid<xMapCell> map )
 		{ }
-
 		private void PostProcess_ArcticIslands( XSafeGrid<xMapCell> map )
 		{
 			// swap rock and snow
@@ -401,23 +400,10 @@ namespace XNARTS
 				}
 			} );
 		}
-
-
 		private void PostProcess_Mediterranean( XSafeGrid<xMapCell> map )
 		{
-			// no snow, rock instead
-			map.Iterate( ( grid, x, y ) =>
-			{
-				xeTerrainType t = grid.mData[ x, y ].mTerrain;
-
-				if ( t == xeTerrainType.Snow )
-				{
-					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
-				}
-			} );
+			PostProcess_DoNothing( map );
 		}
-
-
 		private void PostProcess_NorthSeaIslands( XSafeGrid<xMapCell> map )
 		{
 			// rock - grass - rock - snow.  so sand and forest become rock
@@ -435,8 +421,6 @@ namespace XNARTS
 				}
 			} );
 		}
-
-
 		private void PostProcess_Prairie( XSafeGrid<xMapCell> map )
 		{
 			Random r = new Random();
