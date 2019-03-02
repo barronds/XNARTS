@@ -89,7 +89,7 @@ namespace XNARTS
 			mGen = new XWorldGen();
 			mMapType = XWorldGen.eMapType.Default;
 			mGenSet = mGen.GetTuningSet( mMapType );
-			mMapScale = 1;
+			mMapScale = 2;
 		}
 
 
