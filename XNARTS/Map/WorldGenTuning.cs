@@ -33,17 +33,20 @@ namespace XNARTS
 			Default = GulfIslands
 		}
 
+		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
+
 		public class Set
 		{
-			public bool     mInitialized;
-			public double	mSpikeDensity;
-			public double	mSpikeHeight;
-			public double	mSpikeVariance;
-			public double	mMinNormalizedHeight;
-			public double	mMaxNormalizedHeight;
-			public int		mSmoothingPasses;
-			public double	mSmoothingScalar;
-			public double[] mHeightThresh;
+			public bool			mInitialized;
+			public double		mSpikeDensity;
+			public double		mSpikeHeight;
+			public double		mSpikeVariance;
+			public double		mMinNormalizedHeight;
+			public double		mMaxNormalizedHeight;
+			public int			mSmoothingPasses;
+			public double		mSmoothingScalar;
+			public dPostProcess mPostProcess;
+			public double[]		mHeightThresh;
 		}
 
 		private Set[] mSets;
@@ -69,6 +72,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -87,6 +91,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -105,6 +110,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -123,6 +129,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -141,6 +148,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -159,13 +167,14 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_ArcticIslands;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
 			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.6d;
 			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.6d;
 			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.68d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.7d;
 
 			s = mSets[ (int)eMapType.NorthSeaIslands ];
 
@@ -177,6 +186,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -195,6 +205,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -213,6 +224,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -231,6 +243,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -249,6 +262,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -267,6 +281,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -285,6 +300,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -303,6 +319,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -321,6 +338,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -339,6 +357,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
+			s.mPostProcess			= PostProcess_DoNothing;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -360,6 +379,27 @@ namespace XNARTS
 		public int GetMaxMapScale()
 		{
 			return 5;
+		}
+
+		private void PostProcess_DoNothing( XSafeGrid<xMapCell> map )
+		{ }
+
+		private void PostProcess_ArcticIslands( XSafeGrid<xMapCell> map )
+		{
+			// swap rock and snow
+			map.Iterate( ( grid, x, y ) =>
+			{
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.Snow )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+				}
+				else if( t == xeTerrainType.Rock )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Snow;
+				}
+			} );
 		}
 	}
 }

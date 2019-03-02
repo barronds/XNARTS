@@ -32,6 +32,40 @@ namespace XNARTS
 	}
 
 
+	// maybe promote this to utility class
+	public class XSafeGrid<T> where T : struct
+	{
+		public xCoord mBounds;
+		public T [,] mData;
+
+		public delegate void GridFilter( XSafeGrid<T> grid, int x, int y );
+		public void Init( xCoord bounds, T init_value )
+		{
+			XUtils.Assert( bounds.x > 0 && bounds.y > 0 );
+			mData = new T[ bounds.x, bounds.y ];
+			mBounds = bounds;
+
+			Iterate( ( grid, x, y ) => { grid.mData[ x, y ] = init_value; } );
+		}
+		public T GetValueSafe( int x, int y )
+		{
+			x = (x < 0) ? 0 : (x >= mBounds.x) ? (mBounds.x - 1) : x;
+			y = (y < 0) ? 0 : (y >= mBounds.y) ? (mBounds.y - 1) : y;
+			return mData[ x, y ];
+		}
+		public void Iterate( GridFilter filter )
+		{
+			for ( int x = 0; x < mBounds.x; ++x )
+			{
+				for ( int y = 0; y < mBounds.y; ++y )
+				{
+					filter( this, x, y );
+				}
+			}
+		}
+	}
+
+
 	public class XWorld : XSingleton< XWorld >
 	{
 		public class WorldRegenerated
@@ -43,42 +77,10 @@ namespace XNARTS
 		private XWorldGen.Set                   mGenSet;
 		private int								mMapScale;
 		private XWorldGen.eMapType              mMapType;
-		private SafeGrid< xMapCell >			mMap;
+		private XSafeGrid< xMapCell >			mMap;
 		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
 
 
-		// maybe promote this to utility class
-		private class SafeGrid< T > where T : struct
-		{
-			public xCoord mBounds;
-			public T [,] mData;
-
-			public delegate void GridFilter( SafeGrid< T > grid, int x, int y );
-			public void Init( xCoord bounds, T init_value )
-			{
-				XUtils.Assert( bounds.x > 0 && bounds.y > 0 );
-				mData = new T[ bounds.x, bounds.y ];
-				mBounds = bounds;
-
-				Iterate( ( grid, x, y ) => { grid.mData[ x, y ] = init_value; } );
-			}
-			public T GetValueSafe( int x, int y )
-			{
-				x = (x < 0) ? 0 : (x >= mBounds.x) ? (mBounds.x - 1) : x;
-				y = (y < 0) ? 0 : (y >= mBounds.y) ? (mBounds.y - 1) : y;
-				return mData[ x, y ];
-			}
-			public void Iterate( GridFilter filter )
-			{
-				for( int x = 0; x < mBounds.x; ++x )
-				{
-					for( int y = 0; y < mBounds.y; ++y )
-					{
-						filter( this, x, y );
-					}
-				}
-			}
-		}
 
 		// private constructor as per XSingleton
 		private XWorld()
@@ -224,7 +226,7 @@ namespace XNARTS
 			// set up the grid
 			xCoord min_map_size = mGen.GetMinMapSize();
 			xCoord map_size = mMapScale * min_map_size;
-			mMap = new SafeGrid<xMapCell>();
+			mMap = new XSafeGrid<xMapCell>();
 			xMapCell init_val = new xMapCell();
 			init_val.mTerrain = xeTerrainType.Invalid;
 			init_val.mColor = new Color();
@@ -237,11 +239,11 @@ namespace XNARTS
 			double max_spike_height = mGenSet.mSpikeHeight * (1d + mGenSet.mSpikeVariance);
 			double spike_height_spread = max_spike_height - min_spike_height;
 			int num_spikes = (int)(mGenSet.mSpikeDensity * mMap.mBounds.x * mMap.mBounds.y);
-			SafeGrid< double >[] heights = new SafeGrid< double >[ 2 ];
+			XSafeGrid< double >[] heights = new XSafeGrid< double >[ 2 ];
 
 			for ( int h = 0; h < 2; ++h )
 			{
-				heights[ h ] = new SafeGrid<double>();
+				heights[ h ] = new XSafeGrid<double>();
 				heights[ h ].Init( mMap.mBounds, 0d );
 			}
 
@@ -258,8 +260,8 @@ namespace XNARTS
 			// smooth
 			int n = 0;
 			int smoothing_passes =	(mGenSet.mSmoothingPasses % 2) == 1	? 
-									mGenSet.mSmoothingPasses + 1			: 
-									mGenSet.mSmoothingPasses				;
+									mGenSet.mSmoothingPasses + 1		: 
+									mGenSet.mSmoothingPasses			;
 
 			for ( int i = 0; i < smoothing_passes; ++i )
 			{
@@ -319,6 +321,8 @@ namespace XNARTS
 
 				grid.mData[ x, y ].mTerrain = terrain;
 			} );
+
+			mGenSet.mPostProcess( mMap );
 		}
 
 
