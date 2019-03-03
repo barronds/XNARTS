@@ -312,7 +312,7 @@ namespace XNARTS
 
 				for ( int t = 0; t < (int)xeTerrainType.Num - 1; ++t )
 				{
-					if ( heights[ 0 ].mData[ x, y ] < mGenSet.mHeightThresh[ t ] )
+					if ( heights[ 0 ].mData[ x, y ] <= mGenSet.mHeightThresh[ t ] )
 					{
 						terrain = (xeTerrainType)t;
 						break;

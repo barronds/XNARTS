@@ -30,7 +30,7 @@ namespace XNARTS
 
 			Num,
 
-			Default = Mediterranean
+			Default = SouthPacificIslands
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
@@ -110,14 +110,14 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mPostProcess			= PostProcess_SouthPacificIslands;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.55d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.75;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 1;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 1;
 
 			s = mSets[ (int)eMapType.CarribeanIslands ];
 
@@ -500,6 +500,10 @@ namespace XNARTS
 					}
 				}
 			} );
+		}
+		private void PostProcess_SouthPacificIslands( XSafeGrid<xMapCell> map )
+		{
+
 		}
 	}
 }
