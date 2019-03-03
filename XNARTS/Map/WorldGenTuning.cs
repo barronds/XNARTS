@@ -30,7 +30,7 @@ namespace XNARTS
 
 			Num,
 
-			Default = SouthPacificIslands
+			Default = Desert
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
@@ -236,16 +236,16 @@ namespace XNARTS
 			s = mSets[ (int)eMapType.Desert ];
 
 			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
+			s.mSpikeDensity			= 0.15;
 			s.mSpikeHeight			= 300;
 			s.mSpikeVariance		= 0.6;
 			s.mMinNormalizedHeight	= 0;
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mPostProcess			= PostProcess_Desert;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.4d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
 			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
 			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
@@ -503,7 +503,117 @@ namespace XNARTS
 		}
 		private void PostProcess_SouthPacificIslands( XSafeGrid<xMapCell> map )
 		{
+			PostProcess_DoNothing( map );
+		}
+		private void PostProcess_Desert( XSafeGrid<xMapCell> map )
+		{
+			Random r = new Random();
 
+			// deep - pure desert
+			// shallow - extremely sparse grass and rocks
+			// sand - very sparse grass and rocks
+			map.Iterate( ( grid, x, y ) =>
+			{
+			xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.DeepWater )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.ShallowWater;
+				}
+				else if ( t == xeTerrainType.ShallowWater )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+				}
+				else if ( t == xeTerrainType.Sand )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.01 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.02 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Grassland )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.02 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.04 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Forest )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.04 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.35 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Forest )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.04 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.35 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Rock )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.03 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.7 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Snow )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+				}
+			} );
 		}
 	}
 }
