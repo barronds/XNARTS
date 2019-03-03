@@ -30,7 +30,7 @@ namespace XNARTS
 
 			Num,
 
-			Default = Tundra
+			Default = DesertMountains
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
@@ -262,13 +262,13 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mPostProcess			= PostProcess_DesertMountains;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.4d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.55d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.75d;
 			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
 
 			s = mSets[ (int)eMapType.Tundra ];
@@ -575,23 +575,6 @@ namespace XNARTS
 						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
 					}
 				}
-				else if ( t == xeTerrainType.Forest )
-				{
-					double d = r.NextDouble();
-
-					if ( d < 0.04 )
-					{
-						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
-					}
-					else if ( d < 0.35 )
-					{
-						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
-					}
-					else
-					{
-						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
-					}
-				}
 				else if ( t == xeTerrainType.Rock )
 				{
 					double d = r.NextDouble();
@@ -717,6 +700,123 @@ namespace XNARTS
 					else
 					{
 						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+				}
+			} );
+		}
+		private void PostProcess_DesertMountains( XSafeGrid<xMapCell> map )
+		{
+			Random r = new Random();
+
+			map.Iterate( ( grid, x, y ) =>
+			{
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.DeepWater )
+				{
+					double d = r.NextDouble();
+
+					if( d < 0.5 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.9 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Forest;
+					}
+				}
+				else if ( t == xeTerrainType.ShallowWater )
+				{
+					double d = r.NextDouble();
+
+					if( d < 0.15 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else if ( d < 0.6 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Sand )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.1 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+					}
+					else if ( d < 0.65 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Grassland )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.5 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Forest )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.7 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Rock )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.2 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Snow;
+					}
+					else if ( d < 0.8 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+					}
+				}
+				else if ( t == xeTerrainType.Snow )
+				{
+					double d = r.NextDouble();
+
+					if ( d < 0.4 )
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
+					}
+					else
+					{
+						grid.mData[ x, y ].mTerrain = xeTerrainType.Snow;
 					}
 				}
 			} );
