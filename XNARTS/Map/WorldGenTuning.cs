@@ -30,7 +30,7 @@ namespace XNARTS
 
 			Num,
 
-			Default = DesertMountains
+			Default = ScandinavianCoast
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
@@ -72,7 +72,7 @@ namespace XNARTS
 			s.mMaxNormalizedHeight	= 1;
 			s.mSmoothingPasses		= 200;
 			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mPostProcess			= PostProcess_ScandinavianCoast;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
@@ -84,7 +84,7 @@ namespace XNARTS
 			s = mSets[ (int)eMapType.ScandinavianCoast ];
 
 			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
+			s.mSpikeDensity			= 0.08;
 			s.mSpikeHeight			= 300;
 			s.mSpikeVariance		= 0.6;
 			s.mMinNormalizedHeight	= 0;
@@ -93,12 +93,12 @@ namespace XNARTS
 			s.mSmoothingScalar		= 0.5;
 			s.mPostProcess			= PostProcess_DoNothing;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.58d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.61d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.64d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.67d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.70d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.80d;
 
 			s = mSets[ (int)eMapType.SouthPacificIslands ];
 
@@ -821,5 +821,10 @@ namespace XNARTS
 				}
 			} );
 		}
+		private void PostProcess_ScandinavianCoast( XSafeGrid<xMapCell> map )
+		{
+			PostProcess_DoNothing( map );
+		}
+		
 	}
 }
