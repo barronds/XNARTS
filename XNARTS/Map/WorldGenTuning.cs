@@ -29,23 +29,23 @@ namespace XNARTS
 
 			Num,
 
-			Default = TropicalIslands
+			Default = Badlands
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
 
 		public class Set
 		{
-			public bool			mInitialized;
-			public double		mSpikeDensity;
-			public double		mSpikeHeight;
-			public double		mSpikeVariance;
-			public double		mMinNormalizedHeight;
-			public double		mMaxNormalizedHeight;
-			public int			mSmoothingPasses;
-			public double		mSmoothingScalar;
+			public bool         mInitialized;
+			public double       mSpikeDensity;
+			public double       mSpikeHeight;
+			public double       mSpikeVariance;
+			public double       mMinNormalizedHeight;
+			public double       mMaxNormalizedHeight;
+			public int          mSmoothingPasses;
+			public double       mSmoothingScalar;
 			public dPostProcess mPostProcess;
-			public double[]		mHeightThresh;
+			public double[]     mHeightThresh;
 		}
 
 		private Set[] mSets;
@@ -54,7 +54,7 @@ namespace XNARTS
 		{
 			mSets = new Set[ (int)eMapType.Num ];
 
-			for( int i = 0; i < (int)eMapType.Num; ++i )
+			for ( int i = 0; i < (int)eMapType.Num; ++i )
 			{
 				mSets[ i ] = new Set();
 				mSets[ i ].mHeightThresh = new double[ (int)xeTerrainType.Num - 1 ];
@@ -63,288 +63,288 @@ namespace XNARTS
 
 			Set s = mSets[ (int)eMapType.ScandinavianCoast ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_ScandinavianCoast;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_ScandinavianCoast;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.ScandinavianCoast ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.08;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.08;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_DoNothing;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.58d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.61d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.64d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.67d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.70d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.80d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.58d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.61d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.64d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.67d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.70d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.80d;
 
 			s = mSets[ (int)eMapType.TropicalIslands ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_TropicalIslands;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_TropicalIslands;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.45d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.75d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.75;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 1;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 1;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.45d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.75;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 1;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 1;
 
 			s = mSets[ (int)eMapType.GulfIslands ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_DoNothing;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.ArcticIslands ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_ArcticIslands;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_ArcticIslands;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.7d;
 
 			s = mSets[ (int)eMapType.NorthSeaIslands ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_NorthSeaIslands;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_NorthSeaIslands;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.56d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.63d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.75d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.82d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.82d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.56d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.63d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.82d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.82d;
 
 			s = mSets[ (int)eMapType.Prairie ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.16;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_Prairie;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.16;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_Prairie;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.6;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.65;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.75d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.85d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.6;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.65;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.85d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.Badlands ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.14;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_Badlands;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.6;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.65;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.75d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.6;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.6;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.Desert ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.15;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_Desert;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.15;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_Desert;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.4d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.4d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.DesertMountains ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DesertMountains;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_DesertMountains;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.4d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.55d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.75d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.4d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.55d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.75d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.Tundra ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.14;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_Tundra;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.14;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_Tundra;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.NorthernForest ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_DoNothing;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.TemperateForest ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_DoNothing;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.TropicalForest ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.04;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_DoNothing;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.04;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_DoNothing;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
 
 			s = mSets[ (int)eMapType.Mediterranean ];
 
-			s.mInitialized			= true;
-			s.mSpikeDensity			= 0.08;
-			s.mSpikeHeight			= 300;
-			s.mSpikeVariance		= 0.6;
-			s.mMinNormalizedHeight	= 0;
-			s.mMaxNormalizedHeight	= 1;
-			s.mSmoothingPasses		= 200;
-			s.mSmoothingScalar		= 0.5;
-			s.mPostProcess			= PostProcess_Mediterranean;
+			s.mInitialized = true;
+			s.mSpikeDensity = 0.08;
+			s.mSpikeHeight = 300;
+			s.mSpikeVariance = 0.6;
+			s.mMinNormalizedHeight = 0;
+			s.mMaxNormalizedHeight = 1;
+			s.mSmoothingPasses = 200;
+			s.mSmoothingScalar = 0.5;
+			s.mPostProcess = PostProcess_Mediterranean;
 
-			s.mHeightThresh[ (int)xeTerrainType.DeepWater ]		= 0.5d;
-			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ]	= 0.6d;
-			s.mHeightThresh[ (int)xeTerrainType.Sand ]			= 0.65d;
-			s.mHeightThresh[ (int)xeTerrainType.Grassland ]		= 0.7d;
-			s.mHeightThresh[ (int)xeTerrainType.Forest ]		= 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ]			= 1;
+			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
+			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
+			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
+			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
+			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 1;
 		}
 
 
@@ -374,7 +374,7 @@ namespace XNARTS
 				{
 					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
 				}
-				else if( t == xeTerrainType.Rock )
+				else if ( t == xeTerrainType.Rock )
 				{
 					grid.mData[ x, y ].mTerrain = xeTerrainType.Snow;
 				}
@@ -422,7 +422,7 @@ namespace XNARTS
 				}
 				else if ( t == xeTerrainType.ShallowWater )
 				{
-					if( r.NextDouble() < 0.5 )
+					if ( r.NextDouble() < 0.5 )
 					{
 						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
 					}
@@ -494,7 +494,7 @@ namespace XNARTS
 			// sand - very sparse grass and rocks
 			map.Iterate( ( grid, x, y ) =>
 			{
-			xeTerrainType t = grid.mData[ x, y ].mTerrain;
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
 
 				if ( t == xeTerrainType.DeepWater )
 				{
@@ -577,7 +577,7 @@ namespace XNARTS
 					grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
 				}
 			} );
-		}	
+		}
 		private void PostProcess_Tundra( XSafeGrid<xMapCell> map )
 		{
 			Random r = new Random();
@@ -696,7 +696,7 @@ namespace XNARTS
 				{
 					double d = r.NextDouble();
 
-					if( d < 0.5 )
+					if ( d < 0.5 )
 					{
 						grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
 					}
@@ -713,7 +713,7 @@ namespace XNARTS
 				{
 					double d = r.NextDouble();
 
-					if( d < 0.15 )
+					if ( d < 0.15 )
 					{
 						grid.mData[ x, y ].mTerrain = xeTerrainType.Rock;
 					}
@@ -805,6 +805,29 @@ namespace XNARTS
 		{
 			PostProcess_DoNothing( map );
 		}
-		
+		private void PostProcess_Badlands( XSafeGrid<xMapCell> map )
+		{
+			map.Iterate( ( grid, x, y ) =>
+			{
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.DeepWater )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+				}
+				else if ( t == xeTerrainType.ShallowWater )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+				}
+				else if ( t == xeTerrainType.Sand )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+				}
+				else if ( t == xeTerrainType.Forest )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Sand;
+				}
+			} );
+		}
 	}
 }
