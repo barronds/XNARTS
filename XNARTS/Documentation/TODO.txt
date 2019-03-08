@@ -1,22 +1,14 @@
-﻿- consider game cameras as pluralton
-- consider simple draw method to draw whole map given array of colors, or index into color map
+﻿- consider simple draw method to draw whole map given array of colors, or index into color map
 - make the mouse work
 - consider game system interface (update, render)( gametime ) from Utils folder maybe, game types file
 
-
-
-- make a game configuration class that has initial data and that systems can tweak early so that all systems 
-may initialize irrespective of construction and initialization of those systems, hopefully.
-
-thinking about this one now.  how to integrate the initial per-system modification of the config.
-through a InitConfig() method?  can i still use that through singletons?  
-take everything out of constructors and do specific intialization?
-
 - make input manager that abstracts away touch vs mouse controls, maybe encapsulates unit selection, commands
 - have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.  (not sure how to do this actually).
-- extend event system to allow immediate callback over messages.  requires internet to look up syntax for inheritance, functor, or lambda.
+- extend event system to allow immediate callback over messages. 
 
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
 
-- world gen : use tuning sets
-- world gen : consider checkerboard as a function of zoom
+- gui system
+- get fonts rendering in screenspace
+
+- fix multi contacts in touch input to ignore 3+

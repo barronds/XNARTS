@@ -76,11 +76,11 @@ namespace XNARTS
 			// number of contacts
 			NoChange,
 			ZeroToOne,
-			ZeroToSome,
-			OneToSome,
+			ZeroToTwo,
+			OneToTwo,
 			OneToZero,
-			SomeToOne,
-			SomeToZero,
+			TwoToOne,
+			TwoToZero,
 
 			// contact motion
 			StillToMoving
@@ -256,7 +256,7 @@ namespace XNARTS
 				}
 				else if ( new_count == eContactCount.Some )
 				{
-					count_change = eContactChange.ZeroToSome;
+					count_change = eContactChange.ZeroToTwo;
 				}
 			}
 			else if ( mPrevContactCount == eContactCount.One )
@@ -267,18 +267,18 @@ namespace XNARTS
 				}
 				else if ( new_count == eContactCount.Some )
 				{
-					count_change = eContactChange.OneToSome;
+					count_change = eContactChange.OneToTwo;
 				}
 			}
 			else if ( mPrevContactCount == eContactCount.Some )
 			{
 				if ( new_count == eContactCount.Zero )
 				{
-					count_change = eContactChange.SomeToZero;
+					count_change = eContactChange.TwoToZero;
 				}
 				else if ( new_count == eContactCount.One )
 				{
-					count_change = eContactChange.SomeToOne;
+					count_change = eContactChange.TwoToOne;
 				}
 			}
 			else if ( mPrevContactCount == eContactCount.Unknown )
@@ -327,24 +327,24 @@ namespace XNARTS
 			txStateID ignoring_contacts =       mStateMachine.CreateState( State_IgnoringContacts );
 
 			mStateMachine.CreateTransition( no_contacts, tracking_single_poke, eContactChange.ZeroToOne, Transition_NoContacts_SinglePoke );
-			mStateMachine.CreateTransition( no_contacts, tracking_multi_poke, eContactChange.ZeroToSome, Transition_NoContacts_MultiPoke );
+			mStateMachine.CreateTransition( no_contacts, tracking_multi_poke, eContactChange.ZeroToTwo, Transition_NoContacts_MultiPoke );
 
 			mStateMachine.CreateTransition( tracking_single_poke, tracking_single_drag, eContactChange.StillToMoving, Transition_SinglePoke_SingleDrag );
 			mStateMachine.CreateTransition( tracking_single_poke, no_contacts, eContactChange.OneToZero, Transition_SinglePoke_NoContacts );
-			mStateMachine.CreateTransition( tracking_single_poke, tracking_multi_poke, eContactChange.OneToSome, Transition_SinglePoke_MultiPoke );
+			mStateMachine.CreateTransition( tracking_single_poke, tracking_multi_poke, eContactChange.OneToTwo, Transition_SinglePoke_MultiPoke );
 
-			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.OneToSome, Transition_SingleDrag_MultiDrag );
+			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.OneToTwo, Transition_SingleDrag_MultiDrag );
 			mStateMachine.CreateTransition( tracking_single_drag, no_contacts, eContactChange.OneToZero, Transition_SingleDrag_NoContacts );
 
-			mStateMachine.CreateTransition( tracking_multi_poke, no_contacts, eContactChange.SomeToZero, Transition_MultiPoke_NoContacts );
+			mStateMachine.CreateTransition( tracking_multi_poke, no_contacts, eContactChange.TwoToZero, Transition_MultiPoke_NoContacts );
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_multi_drag, eContactChange.StillToMoving, Transition_MultiPoke_MultiDrag );
-			mStateMachine.CreateTransition( tracking_multi_poke, tracking_single_poke, eContactChange.SomeToOne, Transition_MultiPoke_SinglePoke );
+			mStateMachine.CreateTransition( tracking_multi_poke, tracking_single_poke, eContactChange.TwoToOne, Transition_MultiPoke_SinglePoke );
 
-			mStateMachine.CreateTransition( tracking_multi_drag, no_contacts, eContactChange.SomeToZero, Transition_Trivial );
-			mStateMachine.CreateTransition( tracking_multi_drag, ignoring_contacts, eContactChange.SomeToOne, Transition_Trivial );
+			mStateMachine.CreateTransition( tracking_multi_drag, no_contacts, eContactChange.TwoToZero, Transition_Trivial );
+			mStateMachine.CreateTransition( tracking_multi_drag, ignoring_contacts, eContactChange.TwoToOne, Transition_Trivial );
 
 			mStateMachine.CreateTransition( ignoring_contacts, no_contacts, eContactChange.OneToZero, Transition_Trivial );
-			mStateMachine.CreateTransition( ignoring_contacts, no_contacts, eContactChange.SomeToZero, Transition_Trivial );
+			mStateMachine.CreateTransition( ignoring_contacts, no_contacts, eContactChange.TwoToZero, Transition_Trivial );
 
 			mStateMachine.CreateTransition( start, no_contacts, eContactChange.NoInitialContacts, Transition_Trivial );
 			mStateMachine.CreateTransition( start, ignoring_contacts, eContactChange.InitialContacts, Transition_Trivial );
