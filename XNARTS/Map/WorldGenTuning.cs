@@ -29,7 +29,7 @@ namespace XNARTS
 
 			Num,
 
-			Default = Badlands
+			Default = NorthernForest
 		}
 
 		public delegate void dPostProcess( XSafeGrid<xMapCell> map );
@@ -273,21 +273,21 @@ namespace XNARTS
 			s = mSets[ (int)eMapType.NorthernForest ];
 
 			s.mInitialized = true;
-			s.mSpikeDensity = 0.04;
+			s.mSpikeDensity = 0.24;
 			s.mSpikeHeight = 300;
 			s.mSpikeVariance = 0.6;
 			s.mMinNormalizedHeight = 0;
 			s.mMaxNormalizedHeight = 1;
 			s.mSmoothingPasses = 200;
 			s.mSmoothingScalar = 0.5;
-			s.mPostProcess = PostProcess_DoNothing;
+			s.mPostProcess = PostProcess_NorthernForest;
 
 			s.mHeightThresh[ (int)xeTerrainType.DeepWater ] = 0.5d;
 			s.mHeightThresh[ (int)xeTerrainType.ShallowWater ] = 0.6d;
 			s.mHeightThresh[ (int)xeTerrainType.Sand ] = 0.65d;
 			s.mHeightThresh[ (int)xeTerrainType.Grassland ] = 0.7d;
 			s.mHeightThresh[ (int)xeTerrainType.Forest ] = 0.8d;
-			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.9d;
+			s.mHeightThresh[ (int)xeTerrainType.Rock ] = 0.85d;
 
 			s = mSets[ (int)eMapType.TemperateForest ];
 
@@ -829,5 +829,19 @@ namespace XNARTS
 				}
 			} );
 		}
+		private void PostProcess_NorthernForest( XSafeGrid<xMapCell> map )
+		{
+			map.Iterate( ( grid, x, y ) =>
+			{
+				xeTerrainType t = grid.mData[ x, y ].mTerrain;
+
+				if ( t == xeTerrainType.Sand )
+				{
+					grid.mData[ x, y ].mTerrain = xeTerrainType.Grassland;
+				}
+			} );
+		}
+
+		
 	}
 }
