@@ -77,10 +77,16 @@ namespace XNARTS
 			NoChange,
 			ZeroToOne,
 			ZeroToTwo,
+			ZeroToMany,
 			OneToTwo,
+			OneToMany,
 			OneToZero,
 			TwoToOne,
+			TwoToMany,
 			TwoToZero,
+			ManyToOne,
+			ManyToTwo,
+			ManyToZero,
 
 			// contact motion
 			StillToMoving
@@ -90,7 +96,8 @@ namespace XNARTS
 			Unknown,
 			Zero,
 			One,
-			Some
+			Two,
+			Many
 		}
 
 		// members for XTouch
@@ -244,7 +251,7 @@ namespace XNARTS
 			int num_touches = mTouches.Count();
 			eContactChange count_change = eContactChange.NoChange;
 
-			eContactCount new_count =   num_touches > 1 ? eContactCount.Some :
+			eContactCount new_count =   num_touches > 1 ? eContactCount.Many :
 										num_touches > 0 ? eContactCount.One :
 										eContactCount.Zero;
 
@@ -254,7 +261,7 @@ namespace XNARTS
 				{
 					count_change = eContactChange.ZeroToOne;
 				}
-				else if ( new_count == eContactCount.Some )
+				else if ( new_count == eContactCount.Many )
 				{
 					count_change = eContactChange.ZeroToTwo;
 				}
@@ -265,12 +272,12 @@ namespace XNARTS
 				{
 					count_change = eContactChange.OneToZero;
 				}
-				else if ( new_count == eContactCount.Some )
+				else if ( new_count == eContactCount.Many )
 				{
 					count_change = eContactChange.OneToTwo;
 				}
 			}
-			else if ( mPrevContactCount == eContactCount.Some )
+			else if ( mPrevContactCount == eContactCount.Many )
 			{
 				if ( new_count == eContactCount.Zero )
 				{
