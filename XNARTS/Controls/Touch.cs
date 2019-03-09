@@ -251,42 +251,38 @@ namespace XNARTS
 			int num_touches = mTouches.Count();
 			eContactChange count_change = eContactChange.NoChange;
 
-			eContactCount new_count =   num_touches > 1 ? eContactCount.Many :
+			eContactCount new_count =   num_touches > 2 ? eContactCount.Many :
+										num_touches > 1 ? eContactCount.Two :
 										num_touches > 0 ? eContactCount.One :
 										eContactCount.Zero;
 
 			if ( mPrevContactCount == eContactCount.Zero )
 			{
-				if ( new_count == eContactCount.One )
-				{
-					count_change = eContactChange.ZeroToOne;
-				}
-				else if ( new_count == eContactCount.Many )
-				{
-					count_change = eContactChange.ZeroToTwo;
-				}
+				count_change =	new_count == eContactCount.One ? eContactChange.ZeroToOne	:
+								new_count == eContactCount.Two ? eContactChange.ZeroToTwo	:
+								new_count == eContactCount.Many ? eContactChange.ZeroToMany :
+								eContactChange.NoChange										;
 			}
 			else if ( mPrevContactCount == eContactCount.One )
 			{
-				if ( new_count == eContactCount.Zero )
-				{
-					count_change = eContactChange.OneToZero;
-				}
-				else if ( new_count == eContactCount.Many )
-				{
-					count_change = eContactChange.OneToTwo;
-				}
+				count_change =	new_count == eContactCount.Zero ? eContactChange.OneToZero	:
+								new_count == eContactCount.Two ? eContactChange.OneToTwo	:
+								new_count == eContactCount.Many ? eContactChange.OneToMany	:
+								eContactChange.NoChange										;
+			}
+			else if ( mPrevContactCount == eContactCount.Two )
+			{
+				count_change =	new_count == eContactCount.Zero ? eContactChange.TwoToZero	:
+								new_count == eContactCount.One ? eContactChange.TwoToOne	:
+								new_count == eContactCount.Many ? eContactChange.TwoToMany	:
+								eContactChange.NoChange										;
 			}
 			else if ( mPrevContactCount == eContactCount.Many )
 			{
-				if ( new_count == eContactCount.Zero )
-				{
-					count_change = eContactChange.TwoToZero;
-				}
-				else if ( new_count == eContactCount.One )
-				{
-					count_change = eContactChange.TwoToOne;
-				}
+				count_change =	new_count == eContactCount.Zero ? eContactChange.ManyToZero	:
+								new_count == eContactCount.One ? eContactChange.ManyToOne	:
+								new_count == eContactCount.Two ? eContactChange.ManyToTwo	:
+								eContactChange.NoChange										;
 			}
 			else if ( mPrevContactCount == eContactCount.Unknown )
 			{
@@ -335,23 +331,29 @@ namespace XNARTS
 
 			mStateMachine.CreateTransition( no_contacts, tracking_single_poke, eContactChange.ZeroToOne, Transition_NoContacts_SinglePoke );
 			mStateMachine.CreateTransition( no_contacts, tracking_multi_poke, eContactChange.ZeroToTwo, Transition_NoContacts_MultiPoke );
+			mStateMachine.CreateTransition( no_contacts, ignoring_contacts, eContactChange.ZeroToMany, Transition_Trivial );
 
 			mStateMachine.CreateTransition( tracking_single_poke, tracking_single_drag, eContactChange.StillToMoving, Transition_SinglePoke_SingleDrag );
 			mStateMachine.CreateTransition( tracking_single_poke, no_contacts, eContactChange.OneToZero, Transition_SinglePoke_NoContacts );
 			mStateMachine.CreateTransition( tracking_single_poke, tracking_multi_poke, eContactChange.OneToTwo, Transition_SinglePoke_MultiPoke );
+			mStateMachine.CreateTransition( tracking_single_poke, ignoring_contacts, eContactChange.OneToMany, Transition_Trivial );
 
 			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.OneToTwo, Transition_SingleDrag_MultiDrag );
 			mStateMachine.CreateTransition( tracking_single_drag, no_contacts, eContactChange.OneToZero, Transition_SingleDrag_NoContacts );
+			mStateMachine.CreateTransition( tracking_single_drag, ignoring_contacts, eContactChange.OneToMany, Transition_Trivial );
 
 			mStateMachine.CreateTransition( tracking_multi_poke, no_contacts, eContactChange.TwoToZero, Transition_MultiPoke_NoContacts );
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_multi_drag, eContactChange.StillToMoving, Transition_MultiPoke_MultiDrag );
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_single_poke, eContactChange.TwoToOne, Transition_MultiPoke_SinglePoke );
+			mStateMachine.CreateTransition( tracking_multi_poke, ignoring_contacts, eContactChange.TwoToMany, Transition_Trivial );
 
 			mStateMachine.CreateTransition( tracking_multi_drag, no_contacts, eContactChange.TwoToZero, Transition_Trivial );
 			mStateMachine.CreateTransition( tracking_multi_drag, ignoring_contacts, eContactChange.TwoToOne, Transition_Trivial );
+			mStateMachine.CreateTransition( tracking_multi_drag, ignoring_contacts, eContactChange.TwoToMany, Transition_Trivial );
 
 			mStateMachine.CreateTransition( ignoring_contacts, no_contacts, eContactChange.OneToZero, Transition_Trivial );
 			mStateMachine.CreateTransition( ignoring_contacts, no_contacts, eContactChange.TwoToZero, Transition_Trivial );
+			mStateMachine.CreateTransition( ignoring_contacts, no_contacts, eContactChange.ManyToZero, Transition_Trivial );
 
 			mStateMachine.CreateTransition( start, no_contacts, eContactChange.NoInitialContacts, Transition_Trivial );
 			mStateMachine.CreateTransition( start, ignoring_contacts, eContactChange.InitialContacts, Transition_Trivial );
