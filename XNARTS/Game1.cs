@@ -25,10 +25,14 @@ namespace XNARTS
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
 			Content.RootDirectory = "Content";
-			XConfig.CreateInstance();
 			XRenderManager.CreateInstance();
+			XTouch.CreateInstance();
+			XKeyInput.CreateInstance();
+			XWorld.CreateInstance();
+			XMouse.CreateInstance();
+			XUI.CreateInstance();
 		}
-		
+
 
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -38,12 +42,13 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
-			XTouch.CreateInstance().Init();
-			XKeyInput.CreateInstance().Init();
-			XWorld.CreateInstance().Init();
+			XTouch.Instance().Init();
+			XKeyInput.Instance().Init();
+			XWorld.Instance().Init();
+			XMouse.Instance().Init();
+			XUI.Instance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
-			XMouse.CreateInstance().Init();
-			XUI.CreateInstance();
+
 			base.Initialize();
         }
 

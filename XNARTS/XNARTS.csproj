@@ -41,7 +41,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
     <Compile Include="Controls\Keyboard.cs" />
     <Compile Include="Controls\Touch.cs" />
     <Compile Include="Game1.cs" />

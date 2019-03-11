@@ -184,5 +184,8 @@ namespace XNARTS
 			// private constructor as per singleton
 			mBroadcaster_ButtonEvent = new XBroadcaster<ButtonEvent>();
 		}
+
+		public void Init()
+		{ }
 	}
 }
