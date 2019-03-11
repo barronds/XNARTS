@@ -11,4 +11,4 @@
 - gui system
 - get fonts rendering in screenspace
 
-- fix multi contacts in touch input to ignore 3+
+- do the right inheritence with events

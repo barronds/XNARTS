@@ -43,6 +43,7 @@ namespace XNARTS
 			XWorld.CreateInstance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
 			XMouse.CreateInstance().Init();
+			XUI.CreateInstance();
 			base.Initialize();
         }
 

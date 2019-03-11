@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-
 	public class XTouch : XSingleton< XTouch >
 	{
 		public enum xeGestureType
@@ -361,6 +360,7 @@ namespace XNARTS
 			mStateMachine.SetStartingState( start );
 			//mStateMachine.Log();
 		}
+
 		public void Update( GameTime game_time )
 		{
 			// cache touches every update in case it's expensive to get
