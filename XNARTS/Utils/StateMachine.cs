@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	// TODO: make txStateID more usable for clients, like operator== etc
-	public struct txStateID : IComparable< txStateID >
+	public struct txStateID : IComparable< txStateID >, IEquatable< txStateID >
 	{
 		private ulong mID;
 		private static ulong sNext = 2;
-
 		public static txStateID kNone = new txStateID( 0 );
 
 
@@ -42,6 +41,37 @@ namespace XNARTS
 		private txStateID( ulong id )
 		{
 			mID = id;
+		}
+
+
+		public static bool operator ==( txStateID lhs, txStateID rhs )
+		{
+			return lhs.Equals( rhs );
+		}
+
+
+		public static bool operator !=( txStateID lhs, txStateID rhs )
+		{
+			return !(lhs.Equals( rhs ));
+		}
+
+
+		public override bool Equals( Object obj )
+		{
+			if ( (obj == null) || !this.GetType().Equals( obj.GetType() ) )
+			{
+				return false;
+			}
+			else
+			{
+				txStateID id = (txStateID)obj;
+				return id == this;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return (int)mID;
 		}
 
 
@@ -153,14 +183,23 @@ namespace XNARTS
 
 			public override string ToString()
 			{
-				string result = "State: " + mStateID.ToString() + ", Update Callback: " + (mUpdateCallback != null ? mUpdateCallback.Method.ToString() : "null") + "\n";
+				string result = GetIDString() + "\n";
 
-				foreach( var trigger_transition_pair in mTransitions )
+				foreach ( var trigger_transition_pair in mTransitions )
 				{
 					result += "\t" + trigger_transition_pair.Key.ToString() + " -> state " + trigger_transition_pair.Value.ToString() + "\n";
 				}
 
 				return result;
+			}
+
+
+			public string GetIDString()
+			{
+				return	"State: " + 
+						mStateID.ToString() + 
+						", Update Callback: " + 
+						(mUpdateCallback != null ? mUpdateCallback.Method.ToString() : "null");
 			}
 		}
 
@@ -318,6 +357,12 @@ namespace XNARTS
 		}
 
 
+		public txStateID GetCurrentStateID()
+		{
+			return (mCurrentState != null) ? mCurrentState.mStateID : txStateID.kNone;
+		}
+
+
 		public override string ToString()
 		{
 			string result = "State Machine Current State: " + (mCurrentState != null ? mCurrentState.mStateID.ToString() : "null") + "\nStates:\n";
@@ -329,6 +374,13 @@ namespace XNARTS
 
 			return result;
 		}
+
+
+		public string GetCurrentStateIDString()
+		{
+			return (mCurrentState != null) ? mCurrentState.GetIDString() : "null";
+		}
+
 
 
 		public void Log( string msg = null )
@@ -373,6 +425,7 @@ namespace XNARTS
 
 		public static void UnitTest()
 		{
+			GameTime t = new GameTime();
 			sUnitTest = new XStateMachineUnitTest();
 			var sm = new XStateMachine< eTriggers >();
 

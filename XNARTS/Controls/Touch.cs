@@ -10,18 +10,7 @@ namespace XNARTS
 {
 	public class XTouch : XSingleton< XTouch >
 	{
-		public enum xeGestureType
-		{
-			None,
-			SingleTap,
-			SingleHold,
-			SingleDrag,
-			MultiTap,
-			MultiHold,
-			MultiDrag
-		}
-
-		public class SingleTapData
+		public class SinglePokeData
 		{
 			public xCoord mScreenPos;
 		}
@@ -41,30 +30,22 @@ namespace XNARTS
 		{
 			public xCoord mAvgScreenPos;
 		}
-		public class MultiDragStart
-		{
-			public MultiDragStart( Vector2 pos, double separation )
-			{
-				mData = new MultiDragData( pos, separation );
-			}
-
-			public MultiDragData mData;
-		}
 		public class MultiDragData
 		{
 			public Vector2  mAvgScreenPos;
 			public double   mMaxScreenSeparation;
+			public int      mFrameCount;
 
-			public MultiDragData( Vector2 pos, double separation )
+			public MultiDragData( Vector2 pos, double separation, int frame_count )
 			{
 				mAvgScreenPos = pos;
 				mMaxScreenSeparation = separation;
+				mFrameCount = frame_count;
 			}
 		}
 
 		// broadcasters
-		public XBroadcaster<MultiDragStart> mBroadcaster_MultiDragStart { get; }
-		public XBroadcaster<MultiDragData>	mBroadcaster_MultiDrag { get; }
+		public XBroadcaster<MultiDragData> mBroadcaster_MultiDrag { get; }
 
 		private enum eContactChange
 		{
@@ -88,7 +69,11 @@ namespace XNARTS
 			ManyToZero,
 
 			// contact motion
-			StillToMoving
+			StillToMoving,
+
+			// processed transitions
+			SingleDragToMultiDrag,
+			SingleDragToMultiDragTooSlow
 		}
 		private enum eContactCount
 		{
@@ -102,18 +87,21 @@ namespace XNARTS
 		// members for XTouch
 		private XStateMachine< eContactChange >							mStateMachine;
 		private Microsoft.Xna.Framework.Input.Touch.TouchCollection		mTouches;
-		private eContactCount											mPrevContactCount;
+		private eContactCount											mContactCount;
+		private GameTime                                                mCurrentGameTime;
 
 		// gesture members, maybe not ne (interrupted, what was i saying here???)
 
 		// data for states
-		private Vector2 mMultiPoke_StartPos;
-		private double	mMultiPoke_StartMaxSeparation;
+		private double		mSingleDragStartTimeSec;
+		private Vector2     mSinglePoke_StartPos;
+		private Vector2		mMultiPoke_StartPos;
+		private double		mMultiPoke_StartMaxSeparation;
+		private int			mMultiDrag_FrameCount;
 
 		// private constructor for XSingleton
 		private XTouch()
 		{
-			mBroadcaster_MultiDragStart = new XBroadcaster<MultiDragStart>();
 			mBroadcaster_MultiDrag = new XBroadcaster<MultiDragData>();
 		}
 
@@ -129,6 +117,11 @@ namespace XNARTS
 			}
 
 			return (1.0f / mTouches.Count) * result;
+		}
+		private Vector2 GetSingleTouchPos()
+		{
+			XUtils.Assert( mTouches.Count == 1 );
+			return mTouches[ 0 ].Position;
 		}
 		private double CalcMaxSeparation()
 		{
@@ -146,6 +139,14 @@ namespace XNARTS
 
 			return Math.Sqrt( max_separation_sqr );
 		}
+		private void EnterSinglePoke()
+		{
+			mSinglePoke_StartPos = GetSingleTouchPos();
+		}
+		private void EnterSingleDrag()
+		{
+			mSingleDragStartTimeSec = mCurrentGameTime.TotalGameTime.TotalSeconds;
+		}
 		private void EnterMultiPoke()
 		{
 			mMultiPoke_StartPos = CalcAvgTouchPos();
@@ -153,8 +154,7 @@ namespace XNARTS
 		}
 		private void StartMultiDrag()
 		{
-			var data = new MultiDragStart( CalcAvgTouchPos(), CalcMaxSeparation() );
-			mBroadcaster_MultiDragStart.Post( data );
+			mMultiDrag_FrameCount = 0;
 		}
 
 
@@ -165,10 +165,30 @@ namespace XNARTS
 		}
 		private void State_SinglePoke()
 		{
-			//Console.WriteLine( "tracking single poke" );
+			double k_drift_thresh_sqr = XMath.Sqr( 10d );
+			Vector2 drift = GetSingleTouchPos() - mSinglePoke_StartPos;
+
+			if( drift.LengthSquared() > k_drift_thresh_sqr )
+			{
+				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
+			}
 		}
 		private void State_SingleDrag()
-		{ }
+		{
+			// we can go quickly to multidrag but if in single drag deliberately, then no
+			const double k_thresh_seconds = 0.1;
+
+			if( mContactCount == eContactCount.Two )
+			{
+				double elapsed = mCurrentGameTime.TotalGameTime.TotalSeconds - mSingleDragStartTimeSec;
+
+				eContactChange change = (elapsed > k_thresh_seconds)				?
+										eContactChange.SingleDragToMultiDragTooSlow :
+										eContactChange.SingleDragToMultiDrag        ;
+
+				mStateMachine.ProcessTrigger( change );
+			}
+		}
 		private void State_MultiPoke()
 		{
 			//Console.WriteLine( "tracking multi poke" );
@@ -197,9 +217,9 @@ namespace XNARTS
 		}
 		private void State_MultiDrag()
 		{
-			//Console.WriteLine( "tracking multi drag" );
-			var data = new MultiDragData( CalcAvgTouchPos(), CalcMaxSeparation() );
+			var data = new MultiDragData( CalcAvgTouchPos(), CalcMaxSeparation(), mMultiDrag_FrameCount );
 			mBroadcaster_MultiDrag.Post( data );
+			++mMultiDrag_FrameCount;
 		}
 		private void State_IgnoringContacts()
 		{ }
@@ -208,13 +228,17 @@ namespace XNARTS
 
 		// transition functions
 		private void Transition_NoContacts_SinglePoke()
-		{ }
+		{
+			EnterSinglePoke();
+		}
 		private void Transition_NoContacts_MultiPoke()
 		{
 			EnterMultiPoke();
 		}
 		private void Transition_SinglePoke_SingleDrag()
-		{ }
+		{
+			EnterSingleDrag();
+		}
 		private void Transition_SinglePoke_NoContacts()
 		{
 			//Console.WriteLine( "poke!?" );
@@ -237,10 +261,6 @@ namespace XNARTS
 		{
 			//Console.WriteLine( "multi poke?!" );
 		}
-		private void Transition_MultiPoke_SinglePoke()
-		{
-			//Console.WriteLine( "leaving multi for single poke tracking" );
-		}
 		private void Transition_Trivial()
 		{ }
 
@@ -248,6 +268,7 @@ namespace XNARTS
 		private eContactChange UpdateTouchCount()
 		{
 			int num_touches = mTouches.Count();
+			eContactCount prev_contact_count = mContactCount;
 			eContactChange count_change = eContactChange.NoChange;
 
 			eContactCount new_count =   num_touches > 2 ? eContactCount.Many :
@@ -255,35 +276,35 @@ namespace XNARTS
 										num_touches > 0 ? eContactCount.One :
 										eContactCount.Zero;
 
-			if ( mPrevContactCount == eContactCount.Zero )
+			if ( prev_contact_count == eContactCount.Zero )
 			{
 				count_change =	new_count == eContactCount.One ? eContactChange.ZeroToOne	:
 								new_count == eContactCount.Two ? eContactChange.ZeroToTwo	:
 								new_count == eContactCount.Many ? eContactChange.ZeroToMany :
 								eContactChange.NoChange										;
 			}
-			else if ( mPrevContactCount == eContactCount.One )
+			else if ( prev_contact_count == eContactCount.One )
 			{
 				count_change =	new_count == eContactCount.Zero ? eContactChange.OneToZero	:
 								new_count == eContactCount.Two ? eContactChange.OneToTwo	:
 								new_count == eContactCount.Many ? eContactChange.OneToMany	:
 								eContactChange.NoChange										;
 			}
-			else if ( mPrevContactCount == eContactCount.Two )
+			else if ( prev_contact_count == eContactCount.Two )
 			{
 				count_change =	new_count == eContactCount.Zero ? eContactChange.TwoToZero	:
 								new_count == eContactCount.One ? eContactChange.TwoToOne	:
 								new_count == eContactCount.Many ? eContactChange.TwoToMany	:
 								eContactChange.NoChange										;
 			}
-			else if ( mPrevContactCount == eContactCount.Many )
+			else if ( prev_contact_count == eContactCount.Many )
 			{
 				count_change =	new_count == eContactCount.Zero ? eContactChange.ManyToZero	:
 								new_count == eContactCount.One ? eContactChange.ManyToOne	:
 								new_count == eContactCount.Two ? eContactChange.ManyToTwo	:
 								eContactChange.NoChange										;
 			}
-			else if ( mPrevContactCount == eContactCount.Unknown )
+			else if ( prev_contact_count == eContactCount.Unknown )
 			{
 				count_change = (new_count == eContactCount.Zero) ?
 								eContactChange.NoInitialContacts :
@@ -294,7 +315,7 @@ namespace XNARTS
 				XUtils.Assert( false );
 			}
 
-			mPrevContactCount = new_count;
+			mContactCount = new_count;
 			return count_change;
 		}
 		private void LogTouches()
@@ -315,7 +336,8 @@ namespace XNARTS
 
 		public void Init()
 		{
-			mPrevContactCount = eContactCount.Unknown;
+			mCurrentGameTime = new GameTime();
+			mContactCount = eContactCount.Unknown;
 			mMultiPoke_StartMaxSeparation = 0d;
 			mMultiPoke_StartMaxSeparation = 0d;
 			mStateMachine = new XStateMachine<eContactChange>();
@@ -337,13 +359,14 @@ namespace XNARTS
 			mStateMachine.CreateTransition( tracking_single_poke, tracking_multi_poke, eContactChange.OneToTwo, Transition_SinglePoke_MultiPoke );
 			mStateMachine.CreateTransition( tracking_single_poke, ignoring_contacts, eContactChange.OneToMany, Transition_Trivial );
 
-			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.OneToTwo, Transition_SingleDrag_MultiDrag );
+			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.SingleDragToMultiDrag, Transition_SingleDrag_MultiDrag );
 			mStateMachine.CreateTransition( tracking_single_drag, no_contacts, eContactChange.OneToZero, Transition_SingleDrag_NoContacts );
 			mStateMachine.CreateTransition( tracking_single_drag, ignoring_contacts, eContactChange.OneToMany, Transition_Trivial );
+			mStateMachine.CreateTransition( tracking_single_drag, ignoring_contacts, eContactChange.SingleDragToMultiDragTooSlow, Transition_Trivial );
 
 			mStateMachine.CreateTransition( tracking_multi_poke, no_contacts, eContactChange.TwoToZero, Transition_MultiPoke_NoContacts );
 			mStateMachine.CreateTransition( tracking_multi_poke, tracking_multi_drag, eContactChange.StillToMoving, Transition_MultiPoke_MultiDrag );
-			mStateMachine.CreateTransition( tracking_multi_poke, tracking_single_poke, eContactChange.TwoToOne, Transition_MultiPoke_SinglePoke );
+			mStateMachine.CreateTransition( tracking_multi_poke, ignoring_contacts, eContactChange.TwoToOne, Transition_Trivial );
 			mStateMachine.CreateTransition( tracking_multi_poke, ignoring_contacts, eContactChange.TwoToMany, Transition_Trivial );
 
 			mStateMachine.CreateTransition( tracking_multi_drag, no_contacts, eContactChange.TwoToZero, Transition_Trivial );
@@ -358,11 +381,12 @@ namespace XNARTS
 			mStateMachine.CreateTransition( start, ignoring_contacts, eContactChange.InitialContacts, Transition_Trivial );
 
 			mStateMachine.SetStartingState( start );
-			//mStateMachine.Log();
 		}
 
 		public void Update( GameTime game_time )
 		{
+			mCurrentGameTime = game_time;
+
 			// cache touches every update in case it's expensive to get
 			mTouches = Microsoft.Xna.Framework.Input.Touch.TouchPanel.GetState();
 

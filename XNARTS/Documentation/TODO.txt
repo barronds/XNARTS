@@ -1,6 +1,5 @@
 ﻿- consider simple draw method to draw whole map given array of colors, or index into color map
 - make the mouse work
-- consider game system interface (update, render)( gametime ) from Utils folder maybe, game types file
 
 - make input manager that abstracts away touch vs mouse controls, maybe encapsulates unit selection, commands
 - have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.  (not sure how to do this actually).
@@ -10,5 +9,11 @@
 
 - gui system
 - get fonts rendering in screenspace
+- get touch working for taps, holds
 
 - do the right inheritence with events
+
+- get touch poke working
+
+- have state machine states and transitions return possible triggers and process that in touch.
+- have state machine update take incoming trigger, and hook that up in touch.

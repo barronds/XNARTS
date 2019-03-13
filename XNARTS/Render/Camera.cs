@@ -26,7 +26,6 @@ namespace XNARTS
 		private Matrix mViewMatrix;
 		private Matrix mProjectionMatrix;
 
-		private XListener< XTouch.MultiDragStart >		mListener_MultiDragStart;
 		private XListener< XTouch.MultiDragData >		mListener_MultiDrag;
 		private XListener< XWorld.WorldRegenerated >    mListener_WorldRegenerated;
 
@@ -42,10 +41,6 @@ namespace XNARTS
 
 			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
 			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
-
-			// this could be a problem, what about missed events?  what about piled up starts and ends and getting order wrong?
-			mListener_MultiDragStart = new XListener<XTouch.MultiDragStart>( 1, eEventQueueFullBehaviour.Assert );
-			XTouch.Instance().mBroadcaster_MultiDragStart.Subscribe( mListener_MultiDragStart );
 
 			mListener_WorldRegenerated = new XListener<XWorld.WorldRegenerated>( 1, eEventQueueFullBehaviour.IgnoreOldest );
 			XWorld.Instance().mBroadcaster_WorldRegenerated.Subscribe( mListener_WorldRegenerated );
@@ -66,7 +61,7 @@ namespace XNARTS
 			mViewMatrix = Matrix.CreateLookAt( pos, target, Vector3.UnitY );
 			CalcProjectionMatrix();
 
-			mMultiDragPrev = new XTouch.MultiDragData( Vector2.Zero, 1f );
+			mMultiDragPrev = new XTouch.MultiDragData( Vector2.Zero, 1f, 0 );
 			mDampedMaxScreenSeparation = -1f;
 		}
 		private void CalcProjectionMatrix()
@@ -143,16 +138,16 @@ namespace XNARTS
 				InitFromWorld();
 			}
 
-			if( mListener_MultiDragStart.GetNumEvents() > 0 )
-			{
-				mMultiDragPrev = mListener_MultiDragStart.ReadNext().mData;
-			}
-
 			int num_events = mListener_MultiDrag.GetNumEvents();
 
 			for ( int i = 0; i < num_events; ++i )
 			{
 				XTouch.MultiDragData data = mListener_MultiDrag.ReadNext();
+
+				if( data.mFrameCount == 0 )
+				{
+					mMultiDragPrev = data;
+				}
 
 				// figure out zoom.  damp so that human powered drag zoom is not jittery.
 				// it's not that there is anything wrong with the measurement or the calculation, it's
