@@ -179,13 +179,29 @@ namespace XNARTS
 			}
 		}
 
+		private XListener< XTouch.SinglePokeData > mListener_SinglePoke;
+
 		private XUI()
 		{
 			// private constructor as per singleton
 			mBroadcaster_ButtonEvent = new XBroadcaster<ButtonEvent>();
+			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>();
 		}
 
 		public void Init()
-		{ }
+		{
+			// XTouch.Instance().mBroadcaster_SinglePoke.Subscribe( mListener_SinglePoke );
+		}
+
+		public void Update( GameTime t )
+		{
+			/*
+			if( mListener_SinglePoke.GetNumEvents() > 0 )
+			{
+				XTouch.SinglePokeData data = mListener_SinglePoke.ReadNext();
+				data.Log();
+			}
+			*/
+		}
 	}
 }

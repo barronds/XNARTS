@@ -10,13 +10,50 @@ namespace XNARTS
 {
 	public class XTouch : XSingleton< XTouch >
 	{
+		public enum ePokeDetail
+		{
+			Invalid = -1,
+
+			Start,
+			Hold,
+			End_Normal,
+			End_Abort,
+
+			Num,
+		}
+
 		public class SinglePokeData
 		{
-			public xCoord mScreenPos;
-		}
-		public class SingleHoldData
-		{
-			public xCoord mScreenPos;
+			public SinglePokeData( ePokeDetail detail, Vector2 start_pos, int frame_count )
+			{
+				mCurrentPosValid = false;
+				mStartPos = start_pos;
+				mDetail = detail;
+				mFrameCount = frame_count;
+			}
+			public SinglePokeData( ePokeDetail detail, Vector2 start_pos, Vector2 current_pos, int frame_count )
+			{
+				mCurrentPosValid = true;
+				mDetail = detail;
+				mStartPos = start_pos;
+				mCurrentPos = current_pos;
+				mFrameCount = frame_count;
+			}
+
+			public void Log()
+			{
+				Console.WriteLine(	"SinglePokeData " + mDetail.ToString() +
+									" start " + mStartPos.ToString() +
+									" current " + mCurrentPos.ToString() +
+									" curr_valid " + mCurrentPosValid +
+									" frames " + mFrameCount );
+			}
+
+			public Vector2		mStartPos;
+			public Vector2		mCurrentPos;
+			public ePokeDetail  mDetail;
+			public bool         mCurrentPosValid;
+			public int          mFrameCount;
 		}
 		public class SingleDragData
 		{
@@ -45,7 +82,8 @@ namespace XNARTS
 		}
 
 		// broadcasters
-		public XBroadcaster<MultiDragData> mBroadcaster_MultiDrag { get; }
+		public XBroadcaster<MultiDragData>	mBroadcaster_MultiDrag { get; }
+		public XBroadcaster<SinglePokeData> mBroadcaster_SinglePoke { get; }
 
 		private enum eContactChange
 		{
@@ -95,6 +133,7 @@ namespace XNARTS
 		// data for states
 		private double		mSingleDragStartTimeSec;
 		private Vector2     mSinglePoke_StartPos;
+		private int			mSinglePoke_FrameCount;
 		private Vector2		mMultiPoke_StartPos;
 		private double		mMultiPoke_StartMaxSeparation;
 		private int			mMultiDrag_FrameCount;
@@ -103,9 +142,78 @@ namespace XNARTS
 		private XTouch()
 		{
 			mBroadcaster_MultiDrag = new XBroadcaster<MultiDragData>();
+			mBroadcaster_SinglePoke = new XBroadcaster<SinglePokeData>();
 		}
 
 		// state/transition helper functions
+		private eContactChange UpdateTouchCount()
+		{
+			int num_touches = mTouches.Count();
+			eContactCount prev_contact_count = mContactCount;
+			eContactChange count_change = eContactChange.NoChange;
+
+			eContactCount new_count =   num_touches > 2 ? eContactCount.Many :
+										num_touches > 1 ? eContactCount.Two :
+										num_touches > 0 ? eContactCount.One :
+										eContactCount.Zero;
+
+			if ( prev_contact_count == eContactCount.Zero )
+			{
+				count_change = new_count == eContactCount.One ? eContactChange.ZeroToOne :
+								new_count == eContactCount.Two ? eContactChange.ZeroToTwo :
+								new_count == eContactCount.Many ? eContactChange.ZeroToMany :
+								eContactChange.NoChange;
+			}
+			else if ( prev_contact_count == eContactCount.One )
+			{
+				count_change = new_count == eContactCount.Zero ? eContactChange.OneToZero :
+								new_count == eContactCount.Two ? eContactChange.OneToTwo :
+								new_count == eContactCount.Many ? eContactChange.OneToMany :
+								eContactChange.NoChange;
+			}
+			else if ( prev_contact_count == eContactCount.Two )
+			{
+				count_change = new_count == eContactCount.Zero ? eContactChange.TwoToZero :
+								new_count == eContactCount.One ? eContactChange.TwoToOne :
+								new_count == eContactCount.Many ? eContactChange.TwoToMany :
+								eContactChange.NoChange;
+			}
+			else if ( prev_contact_count == eContactCount.Many )
+			{
+				count_change = new_count == eContactCount.Zero ? eContactChange.ManyToZero :
+								new_count == eContactCount.One ? eContactChange.ManyToOne :
+								new_count == eContactCount.Two ? eContactChange.ManyToTwo :
+								eContactChange.NoChange;
+			}
+			else if ( prev_contact_count == eContactCount.Unknown )
+			{
+				count_change = (new_count == eContactCount.Zero) ?
+								eContactChange.NoInitialContacts :
+								eContactChange.InitialContacts;
+			}
+			else
+			{
+				XUtils.Assert( false );
+			}
+
+			mContactCount = new_count;
+			return count_change;
+		}
+		private void LogTouches()
+		{
+			var count = mTouches.Count();
+
+			if ( count > 0 )
+			{
+				Console.WriteLine( "touches" );
+				Console.WriteLine( count.ToString() );
+			}
+
+			for ( int i = 0; i < count; ++i )
+			{
+				Console.WriteLine( mTouches[ i ].ToString() );
+			}
+		}
 		private Vector2 CalcAvgTouchPos()
 		{
 			XUtils.Assert( mTouches.Count > 0 );
@@ -142,6 +250,15 @@ namespace XNARTS
 		private void EnterSinglePoke()
 		{
 			mSinglePoke_StartPos = GetSingleTouchPos();
+			mSinglePoke_FrameCount = 0;
+		}
+		private void ExitSinglePoke( ePokeDetail detail, bool current_pos_valid )
+		{
+			SinglePokeData data =	current_pos_valid																				? 
+									new SinglePokeData( detail, mSinglePoke_StartPos, GetSingleTouchPos(), mSinglePoke_FrameCount )	:
+									new SinglePokeData( detail, mSinglePoke_StartPos, mSinglePoke_FrameCount )						;
+
+			mBroadcaster_SinglePoke.Post( data );
 		}
 		private void EnterSingleDrag()
 		{
@@ -157,7 +274,6 @@ namespace XNARTS
 			mMultiDrag_FrameCount = 0;
 		}
 
-
 		// state update functions
 		private void State_NoContacts()
 		{
@@ -165,13 +281,20 @@ namespace XNARTS
 		}
 		private void State_SinglePoke()
 		{
-			double k_drift_thresh_sqr = XMath.Sqr( 10d );
-			Vector2 drift = GetSingleTouchPos() - mSinglePoke_StartPos;
+			double k_drift_thresh_sqr = XMath.Sqr( 45d );
+			Vector2 current_pos = GetSingleTouchPos();
+			Vector2 drift = current_pos - mSinglePoke_StartPos;
 
 			if( drift.LengthSquared() > k_drift_thresh_sqr )
 			{
 				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
+				return;
 			}
+
+			ePokeDetail detail = mSinglePoke_FrameCount == 0 ? ePokeDetail.Start : ePokeDetail.Hold;
+			SinglePokeData data = new SinglePokeData( detail, mSinglePoke_StartPos, current_pos, mSinglePoke_FrameCount );
+			mBroadcaster_SinglePoke.Post( data );
+			++mSinglePoke_FrameCount;
 		}
 		private void State_SingleDrag()
 		{
@@ -237,14 +360,20 @@ namespace XNARTS
 		}
 		private void Transition_SinglePoke_SingleDrag()
 		{
+			ExitSinglePoke( ePokeDetail.End_Abort, true );
 			EnterSingleDrag();
+		}
+		private void Transition_SinglePoke_IgnoringContacts()
+		{
+			ExitSinglePoke( ePokeDetail.End_Abort, false );
 		}
 		private void Transition_SinglePoke_NoContacts()
 		{
-			//Console.WriteLine( "poke!?" );
+			ExitSinglePoke( ePokeDetail.End_Normal, false );
 		}
 		private void Transition_SinglePoke_MultiPoke()
 		{
+			ExitSinglePoke( ePokeDetail.End_Abort, false );
 			EnterMultiPoke();
 		}
 		private void Transition_SingleDrag_MultiDrag()
@@ -263,76 +392,6 @@ namespace XNARTS
 		}
 		private void Transition_Trivial()
 		{ }
-
-		// update helpers
-		private eContactChange UpdateTouchCount()
-		{
-			int num_touches = mTouches.Count();
-			eContactCount prev_contact_count = mContactCount;
-			eContactChange count_change = eContactChange.NoChange;
-
-			eContactCount new_count =   num_touches > 2 ? eContactCount.Many :
-										num_touches > 1 ? eContactCount.Two :
-										num_touches > 0 ? eContactCount.One :
-										eContactCount.Zero;
-
-			if ( prev_contact_count == eContactCount.Zero )
-			{
-				count_change =	new_count == eContactCount.One ? eContactChange.ZeroToOne	:
-								new_count == eContactCount.Two ? eContactChange.ZeroToTwo	:
-								new_count == eContactCount.Many ? eContactChange.ZeroToMany :
-								eContactChange.NoChange										;
-			}
-			else if ( prev_contact_count == eContactCount.One )
-			{
-				count_change =	new_count == eContactCount.Zero ? eContactChange.OneToZero	:
-								new_count == eContactCount.Two ? eContactChange.OneToTwo	:
-								new_count == eContactCount.Many ? eContactChange.OneToMany	:
-								eContactChange.NoChange										;
-			}
-			else if ( prev_contact_count == eContactCount.Two )
-			{
-				count_change =	new_count == eContactCount.Zero ? eContactChange.TwoToZero	:
-								new_count == eContactCount.One ? eContactChange.TwoToOne	:
-								new_count == eContactCount.Many ? eContactChange.TwoToMany	:
-								eContactChange.NoChange										;
-			}
-			else if ( prev_contact_count == eContactCount.Many )
-			{
-				count_change =	new_count == eContactCount.Zero ? eContactChange.ManyToZero	:
-								new_count == eContactCount.One ? eContactChange.ManyToOne	:
-								new_count == eContactCount.Two ? eContactChange.ManyToTwo	:
-								eContactChange.NoChange										;
-			}
-			else if ( prev_contact_count == eContactCount.Unknown )
-			{
-				count_change = (new_count == eContactCount.Zero) ?
-								eContactChange.NoInitialContacts :
-								eContactChange.InitialContacts;
-			}
-			else
-			{
-				XUtils.Assert( false );
-			}
-
-			mContactCount = new_count;
-			return count_change;
-		}
-		private void LogTouches()
-		{
-			var count = mTouches.Count();
-
-			if ( count > 0 )
-			{
-				Console.WriteLine( "touches" );
-				Console.WriteLine( count.ToString() );
-			}
-
-			for ( int i = 0; i < count; ++i )
-			{
-				Console.WriteLine( mTouches[ i ].ToString() );
-			}
-		}
 
 		public void Init()
 		{
@@ -357,7 +416,7 @@ namespace XNARTS
 			mStateMachine.CreateTransition( tracking_single_poke, tracking_single_drag, eContactChange.StillToMoving, Transition_SinglePoke_SingleDrag );
 			mStateMachine.CreateTransition( tracking_single_poke, no_contacts, eContactChange.OneToZero, Transition_SinglePoke_NoContacts );
 			mStateMachine.CreateTransition( tracking_single_poke, tracking_multi_poke, eContactChange.OneToTwo, Transition_SinglePoke_MultiPoke );
-			mStateMachine.CreateTransition( tracking_single_poke, ignoring_contacts, eContactChange.OneToMany, Transition_Trivial );
+			mStateMachine.CreateTransition( tracking_single_poke, ignoring_contacts, eContactChange.OneToMany, Transition_SinglePoke_IgnoringContacts );
 
 			mStateMachine.CreateTransition( tracking_single_drag, tracking_multi_drag, eContactChange.SingleDragToMultiDrag, Transition_SingleDrag_MultiDrag );
 			mStateMachine.CreateTransition( tracking_single_drag, no_contacts, eContactChange.OneToZero, Transition_SingleDrag_NoContacts );
