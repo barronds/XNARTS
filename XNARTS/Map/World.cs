@@ -23,14 +23,12 @@ namespace XNARTS
 		Num
 	}
 
-
 	public struct xMapCell
 	{
 		public xeTerrainType    mTerrain;
 		public Color			mColor;
 		public Color            mBlendedColor;
 	}
-
 
 	// maybe promote this to utility class
 	public class XSafeGrid<T> where T : struct
@@ -65,22 +63,19 @@ namespace XNARTS
 		}
 	}
 
-
-	public class XWorld : XSingleton< XWorld >
+	public class XWorld : XSingleton< XWorld >, XIBroadcaster< XWorld.WorldRegenerated >
 	{
 		public class WorldRegenerated
 		{ }
 
-		public XBroadcaster< WorldRegenerated >	mBroadcaster_WorldRegenerated { get; }
-		private bool							mRendered;
-		private XWorldGen                       mGen;
-		private XWorldGen.Set                   mGenSet;
-		private int								mMapScale;
-		private XWorldGen.eMapType              mMapType;
-		private XSafeGrid< xMapCell >			mMap;
-		private XListener< XKeyInput.KeyUp >    mListenter_KeyUp;
-
-
+		private XBroadcaster< WorldRegenerated >    mBroadcaster_WorldRegenerated;
+		private bool								mRendered;
+		private XWorldGen							mGen;
+		private XWorldGen.Set						mGenSet;
+		private int									mMapScale;
+		private XWorldGen.eMapType					mMapType;
+		private XSafeGrid< xMapCell >				mMap;
+		private XListener< XKeyInput.KeyUp >		mListenter_KeyUp;
 
 		// private constructor as per XSingleton
 		private XWorld()
@@ -92,17 +87,20 @@ namespace XNARTS
 			mMapScale = 2;
 		}
 
-
 		public void Init()
 		{
 			mRendered = false;
 
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
-			XKeyInput.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
+			((XIBroadcaster<XKeyInput.KeyUp>)XKeyInput.Instance()).GetBroadcaster().Subscribe( mListenter_KeyUp );
 
 			Generate();
 		}
 
+		XBroadcaster< WorldRegenerated > XIBroadcaster< WorldRegenerated >.GetBroadcaster()
+		{
+			return mBroadcaster_WorldRegenerated;
+		}
 
 		public xCoord GetMapSize()
 		{
@@ -220,7 +218,6 @@ namespace XNARTS
 			return new Color( v.X, v.Y, v.Z );
 		}
 
-
 		private void Generate_Physical()
 		{
 			// set up the grid
@@ -324,8 +321,6 @@ namespace XNARTS
 
 			mGenSet.mPostProcess( mMap );
 		}
-
-
 		private void Generate_AssignTerrainColors()
 		{
 			Color[] terrain_colors = new Color[ (int)xeTerrainType.Num ];
@@ -342,8 +337,6 @@ namespace XNARTS
 				grid.mData[ x, y ].mColor = terrain_colors[ (int)(grid.mData[ x, y ].mTerrain) ];
 			} );
 		}
-
-
 		private void Generate_BlendColors()
 		{
 			const int k_num_color_blend_passes = 0; // 0 is disabled
@@ -400,8 +393,6 @@ namespace XNARTS
 				} );
 			}
 		}
-
-
 		private void Generate_ColorLerp()
 		{
 			const bool k_do_color_lerp = true;
@@ -416,8 +407,6 @@ namespace XNARTS
 				} );
 			}
 		}
-
-
 		private void Generate_Checkerboard()
 		{
 			const bool k_do_checkerboard = true;
@@ -434,8 +423,6 @@ namespace XNARTS
 				} );
 			}
 		}
-
-
 		private void Generate()
 		{
 			Generate_Physical();
@@ -444,7 +431,5 @@ namespace XNARTS
 			Generate_ColorLerp();
 			Generate_Checkerboard();
 		}
-
-
 	}
 }

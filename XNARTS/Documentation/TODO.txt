@@ -13,7 +13,5 @@
 
 - do the right inheritence with events
 
-- get touch poke working
-
 - have state machine states and transitions return possible triggers and process that in touch.
 - have state machine update take incoming trigger, and hook that up in touch.

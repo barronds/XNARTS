@@ -8,8 +8,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNARTS
 {
-	public class XKeyInput : XSingleton<XKeyInput>
-	{
+	public class XKeyInput :	XSingleton		< XKeyInput >, 
+								XIBroadcaster	< XKeyInput.KeyDown >,
+								XIBroadcaster	< XKeyInput.KeyUp >,
+								XIBroadcaster	< XKeyInput.KeyHeld >
+		{
 		public struct KeyDown
 		{
 			public Keys mKey;
@@ -23,9 +26,22 @@ namespace XNARTS
 			public Keys mKey;
 		}
 
-		public XBroadcaster< KeyDown >	mBroadcaster_KeyDown;
-		public XBroadcaster< KeyUp >	mBroadcaster_KeyUp;
-		public XBroadcaster< KeyHeld >	mBroadcaster_KeyHeld;
+		private XBroadcaster< KeyDown >	mBroadcaster_KeyDown;
+		private XBroadcaster< KeyUp >	mBroadcaster_KeyUp;
+		private XBroadcaster< KeyHeld >	mBroadcaster_KeyHeld;
+
+		XBroadcaster<KeyDown> XIBroadcaster<KeyDown>.GetBroadcaster()
+		{
+			return mBroadcaster_KeyDown;
+		}
+		XBroadcaster<KeyUp> XIBroadcaster<KeyUp>.GetBroadcaster()
+		{
+			return mBroadcaster_KeyUp;
+		}
+		XBroadcaster<KeyHeld> XIBroadcaster<KeyHeld>.GetBroadcaster()
+		{
+			return mBroadcaster_KeyHeld;
+		}
 
 		private List< Keys > mPrevPressedKeys;
 

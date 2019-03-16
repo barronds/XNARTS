@@ -32,7 +32,6 @@ namespace XNARTS
 		private XTouch.MultiDragData    mMultiDragPrev;
 		float                           mDampedMaxScreenSeparation;
 
-
 		public XWorldCam( xCoord screen_dim )
 		{
 			mScreenDim = screen_dim;
@@ -40,12 +39,11 @@ namespace XNARTS
 			InitFromWorld();
 
 			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
-			XTouch.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
+			((XIBroadcaster<XTouch.MultiDragData>)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_MultiDrag );
 
 			mListener_WorldRegenerated = new XListener<XWorld.WorldRegenerated>( 1, eEventQueueFullBehaviour.IgnoreOldest );
-			XWorld.Instance().mBroadcaster_WorldRegenerated.Subscribe( mListener_WorldRegenerated );
+			((XIBroadcaster<XWorld.WorldRegenerated>)XWorld.Instance()).GetBroadcaster().Subscribe( mListener_WorldRegenerated );
 		}
-
 
 		private void InitFromWorld()
 		{
@@ -128,7 +126,6 @@ namespace XNARTS
 
 			return new xAABB2( min, max );
 		}
-
 
 		void XICamera.Update( GameTime game_time )
 		{

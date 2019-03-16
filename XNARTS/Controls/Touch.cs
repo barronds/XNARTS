@@ -8,7 +8,9 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public class XTouch : XSingleton< XTouch >
+	public class XTouch :	XSingleton< XTouch >, 
+							XIBroadcaster< XTouch.MultiDragData >,
+							XIBroadcaster< XTouch.SinglePokeData >
 	{
 		public enum ePokeDetail
 		{
@@ -82,8 +84,17 @@ namespace XNARTS
 		}
 
 		// broadcasters
-		public XBroadcaster<MultiDragData>	mBroadcaster_MultiDrag { get; }
-		public XBroadcaster<SinglePokeData> mBroadcaster_SinglePoke { get; }
+		private XBroadcaster<MultiDragData>		mBroadcaster_MultiDrag { get; }
+		private XBroadcaster<SinglePokeData>	mBroadcaster_SinglePoke { get; }
+
+		XBroadcaster< MultiDragData > XIBroadcaster< MultiDragData >.GetBroadcaster()
+		{
+			return mBroadcaster_MultiDrag;
+		}
+		XBroadcaster< SinglePokeData > XIBroadcaster< SinglePokeData >.GetBroadcaster()
+		{
+			return mBroadcaster_SinglePoke;
+		}
 
 		private enum eContactChange
 		{
@@ -456,6 +467,5 @@ namespace XNARTS
 			// update state machine last, possibly in new state
 			mStateMachine.Update();
 		}
-
 	}
 }

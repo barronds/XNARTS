@@ -12,7 +12,6 @@ namespace XNARTS
 	// listener objects subscribe and unsuscribe as needed using XBroadcaster<T>.
 	// XBroadcaster<T> objects will have to be publicly available to XListener<T>.
 
-
 	public enum eEventQueueFullBehaviour
 	{
 		Invalid = -1,
@@ -28,7 +27,6 @@ namespace XNARTS
 		private eEventQueueFullBehaviour	mFullBehaviour;
 		private int                         mMaxCapacity;
 
-
 		public XListener( int max_capacity = 1, eEventQueueFullBehaviour full_behaviour = eEventQueueFullBehaviour.Assert )
 		{
 			// initial_capacity is just a hint as the queue can scale.
@@ -39,7 +37,6 @@ namespace XNARTS
 			mMaxCapacity = max_capacity;
 			mEvents = new Queue<EventData>( initial_capacity );
 		}
-
 
 		// called by broadcaster
 		public void Post( EventData e )
@@ -64,15 +61,12 @@ namespace XNARTS
 			}
 		}
 
-
 		// owner of this mailbox calls this then iterates through using ReadNext().
 		// TODO: change this to an iterator?
 		public int GetNumEvents()
 		{
 			return mEvents.Count;
 		}
-
-
 		public EventData ReadNext()
 		{
 			XUtils.Assert( GetNumEvents() > 0, "trying to read no events" );
@@ -81,10 +75,15 @@ namespace XNARTS
 	}
 
 
+	public interface XIBroadcaster< EventData >
+	{
+		XBroadcaster<EventData> GetBroadcaster();
+	}
+
+
 	public class XBroadcaster< EventData >
 	{
 		private List< XListener< EventData > > mListeners;
-
 
 		public XBroadcaster()
 		{
@@ -92,15 +91,12 @@ namespace XNARTS
 			mListeners = new List< XListener< EventData >>( initial_capacity );
 		}
 
-
 		public void Subscribe( XListener< EventData > listener )
 		{
 			// TODO: maybe add returns number added, so avoid 'contains'
 			XUtils.Assert( !mListeners.Contains( listener ), "this listener already subscribed" );
 			mListeners.Add( listener );
 		}
-
-
 		public void Unsubscribe( XListener<EventData> listener )
 		{
 			// TODO: maybe remove returns number removed, so avoid 'contains'
@@ -108,14 +104,11 @@ namespace XNARTS
 			mListeners.Remove( listener );
 		}
 
-
 		// hopefully not many if any systems need to rely on this
 		public bool IsSubscribed( XListener<EventData> listener )
 		{
 			return mListeners.Contains( listener );
 		}
-
-
 		public void Post( EventData e )
 		{
 			// send to each listener
