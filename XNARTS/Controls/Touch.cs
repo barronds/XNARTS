@@ -286,11 +286,12 @@ namespace XNARTS
 		}
 
 		// state update functions
-		private void State_NoContacts()
+		private eContactChange State_NoContacts()
 		{
 			//Console.WriteLine( "no contacts" );
+			return eContactChange.NoChange;
 		}
-		private void State_SinglePoke()
+		private eContactChange State_SinglePoke()
 		{
 			double k_drift_thresh_sqr = XMath.Sqr( 45d );
 			Vector2 current_pos = GetSingleTouchPos();
@@ -298,16 +299,17 @@ namespace XNARTS
 
 			if( drift.LengthSquared() > k_drift_thresh_sqr )
 			{
-				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
-				return;
+				return eContactChange.StillToMoving;
 			}
 
 			ePokeDetail detail = mSinglePoke_FrameCount == 0 ? ePokeDetail.Start : ePokeDetail.Hold;
 			SinglePokeData data = new SinglePokeData( detail, mSinglePoke_StartPos, current_pos, mSinglePoke_FrameCount );
 			mBroadcaster_SinglePoke.Post( data );
 			++mSinglePoke_FrameCount;
+
+			return eContactChange.NoChange;
 		}
-		private void State_SingleDrag()
+		private eContactChange State_SingleDrag()
 		{
 			// we can go quickly to multidrag but if in single drag deliberately, then no
 			const double k_thresh_seconds = 0.1;
@@ -320,10 +322,12 @@ namespace XNARTS
 										eContactChange.SingleDragToMultiDragTooSlow :
 										eContactChange.SingleDragToMultiDrag        ;
 
-				mStateMachine.ProcessTrigger( change );
+				return change;
 			}
+
+			return eContactChange.NoChange;
 		}
-		private void State_MultiPoke()
+		private eContactChange State_MultiPoke()
 		{
 			//Console.WriteLine( "tracking multi poke" );
 
@@ -333,9 +337,7 @@ namespace XNARTS
 
 			if( (pos - mMultiPoke_StartPos).LengthSquared() > kDragMoveDist * kDragMoveDist )
 			{
-				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
-				//Console.WriteLine( "dist" );
-				return;
+				return eContactChange.StillToMoving;
 			}
 
 			const double kDragSeparationChange = 12.0;
@@ -343,22 +345,26 @@ namespace XNARTS
 
 			if( Math.Abs( separation - mMultiPoke_StartMaxSeparation ) > kDragSeparationChange )
 			{
-				mStateMachine.ProcessTrigger( eContactChange.StillToMoving );
-				//Console.WriteLine( "spread" );
-
-				return;
+				return eContactChange.StillToMoving;
 			}
+
+			return eContactChange.NoChange;
 		}
-		private void State_MultiDrag()
+		private eContactChange State_MultiDrag()
 		{
 			var data = new MultiDragData( CalcAvgTouchPos(), CalcMaxSeparation(), mMultiDrag_FrameCount );
 			mBroadcaster_MultiDrag.Post( data );
 			++mMultiDrag_FrameCount;
+			return eContactChange.NoChange;
 		}
-		private void State_IgnoringContacts()
-		{ }
-		private void State_Start()
-		{ }
+		private eContactChange State_IgnoringContacts()
+		{
+			return eContactChange.NoChange;
+		}
+		private eContactChange State_Start()
+		{
+			return eContactChange.NoChange;
+		}
 
 		// transition functions
 		private void Transition_NoContacts_SinglePoke()
@@ -399,7 +405,6 @@ namespace XNARTS
 		{ }
 		private void Transition_MultiPoke_NoContacts()
 		{
-			//Console.WriteLine( "multi poke?!" );
 		}
 		private void Transition_Trivial()
 		{ }
@@ -410,7 +415,7 @@ namespace XNARTS
 			mContactCount = eContactCount.Unknown;
 			mMultiPoke_StartMaxSeparation = 0d;
 			mMultiPoke_StartMaxSeparation = 0d;
-			mStateMachine = new XStateMachine<eContactChange>();
+			mStateMachine = new XStateMachine<eContactChange>( eContactChange.NoChange );
 
 			txStateID start =                   mStateMachine.CreateState( State_Start );
 			txStateID no_contacts =				mStateMachine.CreateState( State_NoContacts );
@@ -462,10 +467,9 @@ namespace XNARTS
 
 			// gather what is needed to update triggers first
 			eContactChange count_change = UpdateTouchCount();
-			mStateMachine.ProcessTrigger( count_change );
 
 			// update state machine last, possibly in new state
-			mStateMachine.Update();
+			mStateMachine.Update( count_change );
 		}
 	}
 }

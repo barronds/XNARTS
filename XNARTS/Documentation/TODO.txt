@@ -9,9 +9,3 @@
 
 - gui system
 - get fonts rendering in screenspace
-- get touch working for taps, holds
-
-- do the right inheritence with events
-
-- have state machine states and transitions return possible triggers and process that in touch.
-- have state machine update take incoming trigger, and hook that up in touch.

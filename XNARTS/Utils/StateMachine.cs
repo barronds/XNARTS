@@ -88,15 +88,18 @@ namespace XNARTS
 		// holds the context object associated with the callbacks.
 		private XState mCurrentState;
 		private bool mLocked;
+		private Trigger mNeverTransitionValue;
 		private SortedDictionary< txStateID, XState > mStates;
 
-		public delegate void Callback();
+		public delegate void TransitionCallback();
+		public delegate Trigger StateCallback();
 
 
-		public XStateMachine()
+		public XStateMachine( Trigger never_transition_value )
 		{
 			mCurrentState = null;
 			mLocked = false;
+			mNeverTransitionValue = never_transition_value;
 			mStates = new SortedDictionary<txStateID, XState>();
 		}
 
@@ -112,19 +115,21 @@ namespace XNARTS
 		public class XState
 		{
 			public txStateID mStateID;
-			private Callback mUpdateCallback;
+			private StateCallback mStateCallback;
+			private Trigger mNeverTransitionValue;
 			private SortedDictionary< Trigger, XTransition > mTransitions;
 
 
-			public XState( Callback callback )
+			public XState( StateCallback callback, Trigger never_transition_value )
 			{
 				mStateID.Init();
-				mUpdateCallback = callback;
+				mStateCallback = callback;
+				mNeverTransitionValue = never_transition_value;
 				mTransitions = new SortedDictionary<Trigger, XTransition>();
 			}
 
 
-			public void Add( Trigger trigger, XState to_state, Callback callback )
+			public void Add( Trigger trigger, XState to_state, TransitionCallback callback )
 			{
 				XUtils.Assert( !mTransitions.ContainsKey( trigger ) );
 				XTransition transition = new XTransition( to_state, callback );
@@ -160,9 +165,9 @@ namespace XNARTS
 			}
 
 
-			public void Update()
+			public Trigger Update()
 			{
-				mUpdateCallback?.Invoke();
+				return (mStateCallback != null) ? mStateCallback() : mNeverTransitionValue;
 			}
 
 
@@ -199,7 +204,7 @@ namespace XNARTS
 				return	"State: " + 
 						mStateID.ToString() + 
 						", Update Callback: " + 
-						(mUpdateCallback != null ? mUpdateCallback.Method.ToString() : "null");
+						(mStateCallback != null ? mStateCallback.Method.ToString() : "null");
 			}
 		}
 
@@ -207,10 +212,10 @@ namespace XNARTS
 		public class XTransition
 		{
 			private XState mToState;
-			private Callback mTransitionCallback;
+			private TransitionCallback mTransitionCallback;
 
 
-			public XTransition( XState to_state, Callback callback )
+			public XTransition( XState to_state, TransitionCallback callback )
 			{
 				mToState = to_state;
 				mTransitionCallback = callback;
@@ -237,10 +242,10 @@ namespace XNARTS
 		}
 
 
-		public txStateID CreateState( Callback callback )
+		public txStateID CreateState( StateCallback callback )
 		{
 			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
-			XState state = new XState( callback );
+			XState state = new XState( callback, mNeverTransitionValue );
 			mStates.Add( state.mStateID, state );
 			return state.mStateID;
 		}
@@ -290,7 +295,7 @@ namespace XNARTS
 
 
 		// TODO: templatize this to improve what is passed in for trigger, cast it to int
-		public void CreateTransition( txStateID from, txStateID to, Trigger trigger, Callback callback )
+		public void CreateTransition( txStateID from, txStateID to, Trigger trigger, TransitionCallback callback )
 		{
 			XUtils.Assert( !mLocked, "Modifying state machine while in use not allowed." );
 
@@ -316,13 +321,34 @@ namespace XNARTS
 		}
 
 
-		public void Update()
+		// pass in a trigger (optionally the value that guarantees no transition)
+		// that trigger transitions the state machine if applicable
+		// current state updates
+		// that state returns a transition (maybe nothing) which is then acted upon.
+		// in this model, state maching owners can produce relevant per-frame triggers
+		// before updating whatever the state is in case the state should change first.
+		// secondly, if a state update wants to trigger a change, that functionality is 
+		// built in and the owner doesn't have to check for and process triggers.  those
+		// update triggers represent a different opportunity than pre-update triggers.
+		// so, the state machine can start in one state in a frame, move to another at 
+		// the call to update, and move to a third after the update.  
+		// if an owner wants, more triggers can be processed in a frame, and a state 
+		// machine could be updated more than once if needed.  also, organization of the 
+		// states can provide fine grained control as well.  this model makes it easiest
+		// on owners in the way of checking for when transitions should happen.
+		public void Update( Trigger input )
 		{
+			ProcessTrigger( input );
 			mLocked = true;
 
 			if( mCurrentState != null )
 			{
-				mCurrentState.Update();
+				Trigger state_trigger = mCurrentState.Update();
+
+				if( !state_trigger.Equals( mNeverTransitionValue ) )
+				{
+					ProcessTrigger( state_trigger );
+				}
 			}
 
 			mLocked = false;
@@ -399,8 +425,9 @@ namespace XNARTS
 		{ }
 
 
-		enum eTriggers
+		public enum eTriggers
 		{
+			None,
 			Jump,
 			Poke
 		}
@@ -418,22 +445,30 @@ namespace XNARTS
 		}
 
 
-		public static void Cb3()
+		public eTriggers Cb2State()
+		{
+			//Console.WriteLine( "Cb2 state" );
+			return eTriggers.None;
+		}
+
+
+		public static eTriggers Cb3()
 		{
 			//Console.WriteLine( "Cb3" );
+			return eTriggers.None;
 		}
 
 		public static void UnitTest()
 		{
 			GameTime t = new GameTime();
 			sUnitTest = new XStateMachineUnitTest();
-			var sm = new XStateMachine< eTriggers >();
+			var sm = new XStateMachine< eTriggers >( eTriggers.None );
 
 			//sm.Log( "empty" );
 
 			txStateID s1 = sm.CreateState( null );
 			sm.SetStartingState( s1 );
-			sm.Update();
+			sm.Update( eTriggers.None );
 
 			sm.CreateTransition( s1, s1, eTriggers.Jump, sUnitTest.Cb1 );
 			sm.ProcessTrigger( eTriggers.Jump );
@@ -460,7 +495,7 @@ namespace XNARTS
 
 			sm.RemoveState( s1, txStateID.kNone );
 
-			sm.Update();
+			sm.Update( eTriggers.None );
 			sm.ProcessTrigger( eTriggers.Poke );
 
 			// sm.SetStartingState( txStateID.kNone );  // correctly asserts illegal starting state
@@ -471,20 +506,20 @@ namespace XNARTS
 			//Console.WriteLine( "testing non trivial transitions and static callbacks" );
 
 			txStateID s2 = sm.CreateState( Cb3 );
-			txStateID s3 = sm.CreateState( sUnitTest.Cb2 );
+			txStateID s3 = sm.CreateState( sUnitTest.Cb2State );
 			sm.SetStartingState( s2 );
 
 			sm.CreateTransition( s2, s3, eTriggers.Jump, sUnitTest.Cb1 );
 			sm.CreateTransition( s3, s2, eTriggers.Poke, sUnitTest.Cb1 );
 
-			sm.Update();
+			sm.Update( eTriggers.None );
 			sm.ProcessTrigger( eTriggers.Jump );
-			sm.Update();
+			sm.Update( eTriggers.None );
 			sm.ProcessTrigger( eTriggers.Poke );
-			sm.Update();
+			sm.Update( eTriggers.None );
 			sm.ProcessTrigger( eTriggers.Jump );
 			sm.ProcessTrigger( eTriggers.Poke );
-			sm.Update();
+			sm.Update( eTriggers.None );
 
 			//sm.Log();
 
@@ -497,7 +532,7 @@ namespace XNARTS
 
 			//Console.WriteLine( "testing non trivial remove state, not the current" );
 
-			txStateID s4 = sm.CreateState( sUnitTest.Cb1 );
+			txStateID s4 = sm.CreateState( sUnitTest.Cb2State );
 			sm.CreateTransition( s3, s4, eTriggers.Poke, sUnitTest.Cb1 );
 			sm.CreateTransition( s4, s3, eTriggers.Poke, sUnitTest.Cb1 );
 
