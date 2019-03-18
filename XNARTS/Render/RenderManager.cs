@@ -21,8 +21,7 @@ namespace XNARTS
 		BasicEffect				mBasicEffect_World;
 		BasicEffect				mBasicEffect_Screen;
 
-		SpriteFont mSpriteFont_DebugText;
-		SpriteBatch mSpriteBatch;
+		SpriteBatch				mSpriteBatch;
 
 		public xCoord			mScreenDim;
 		private XICamera		mMainWorldCam;
@@ -41,6 +40,8 @@ namespace XNARTS
 			mGraphicsDeviceManager = graphics_device_manager;
 			mGraphicsDevice = graphics_device;
 			mContentManager = content_manager;
+
+			XFontDraw.CreateInstance().Init( graphics_device, content_manager );
 
 			var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 			mScreenDim = new xCoord( current_display_mode.Width, current_display_mode.Height );
@@ -90,8 +91,10 @@ namespace XNARTS
 			mBasicEffect_Screen = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_Screen.World = Matrix.Identity;
 
+			// sprite batch, not used yet
 			mSpriteBatch = new SpriteBatch( mGraphicsDevice );
-			mSpriteFont_DebugText = mContentManager.Load<SpriteFont>( "DebugText" );
+
+			XFontDraw.Instance().LoadContent();
 
 			UpdateCameras();
 		}
@@ -160,9 +163,11 @@ namespace XNARTS
 				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
 			}
 
-			mSpriteBatch.Begin();
-			mSpriteBatch.DrawString( mSpriteFont_DebugText, "Hello", new Vector2( 100, 100 ), Color.Black );
-			mSpriteBatch.End();
+			//mSpriteBatch.Begin();
+			// do sprite batch rendering here
+			//mSpriteBatch.End();
+
+			XFontDraw.Instance().Draw();
 		}
 	}
 }

@@ -52,6 +52,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\Camera.cs" />
+    <Compile Include="Render\FontDraw.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SimpleDraw.cs" />
     <Compile Include="UI\UI.cs" />
