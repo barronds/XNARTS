@@ -7,9 +7,13 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public class XUI : XSingleton< XUI >
+	public class XUI : XSingleton< XUI >, XIBroadcaster< XUI.ButtonEvent >
 	{
-		public XBroadcaster< ButtonEvent > mBroadcaster_ButtonEvent;
+		private XBroadcaster< ButtonEvent > mBroadcaster_ButtonEvent;
+		XBroadcaster<ButtonEvent> XIBroadcaster<ButtonEvent>.GetBroadcaster()
+		{
+			return mBroadcaster_ButtonEvent;
+		}
 
 		public class ElementID : IEquatable< ElementID >
 		{

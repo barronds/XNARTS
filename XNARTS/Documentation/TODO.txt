@@ -9,3 +9,5 @@
 
 - gui system
 - get fonts rendering in screenspace
+
+- octaves and features to map

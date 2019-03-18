@@ -20,7 +20,6 @@ namespace XNARTS
     {
 		GraphicsDeviceManager mGraphicsDeviceManager;
 
-
 		public Game1()
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
@@ -47,7 +46,7 @@ namespace XNARTS
 			XWorld.Instance().Init();
 			XMouse.Instance().Init();
 			XUI.Instance().Init();
-			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager );
+			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager, Content );
 
 			base.Initialize();
         }

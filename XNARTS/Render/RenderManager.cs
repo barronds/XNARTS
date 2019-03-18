@@ -16,9 +16,13 @@ namespace XNARTS
 	{
 		GraphicsDeviceManager	mGraphicsDeviceManager;
 		GraphicsDevice			mGraphicsDevice;
+		ContentManager          mContentManager;
 
 		BasicEffect				mBasicEffect_World;
 		BasicEffect				mBasicEffect_Screen;
+
+		SpriteFont mSpriteFont_DebugText;
+		SpriteBatch mSpriteBatch;
 
 		public xCoord			mScreenDim;
 		private XICamera		mMainWorldCam;
@@ -30,10 +34,13 @@ namespace XNARTS
 		{}
 
 
-		public void Initialize( GraphicsDevice graphics_device, GraphicsDeviceManager graphics_device_manager )
+		public void Initialize( GraphicsDevice graphics_device, 
+								GraphicsDeviceManager graphics_device_manager, 
+								ContentManager content_manager )
 		{
 			mGraphicsDeviceManager = graphics_device_manager;
 			mGraphicsDevice = graphics_device;
+			mContentManager = content_manager;
 
 			var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 			mScreenDim = new xCoord( current_display_mode.Width, current_display_mode.Height );
@@ -82,6 +89,9 @@ namespace XNARTS
 			// screen space rendering setup
 			mBasicEffect_Screen = new BasicEffect( mGraphicsDevice );
 			mBasicEffect_Screen.World = Matrix.Identity;
+
+			mSpriteBatch = new SpriteBatch( mGraphicsDevice );
+			mSpriteFont_DebugText = mContentManager.Load<SpriteFont>( "DebugText" );
 
 			UpdateCameras();
 		}
@@ -149,6 +159,10 @@ namespace XNARTS
 
 				// render clients who do their own rendering.  they should probably have pre-renders like simple draw, especially if there is more than one pass.
 			}
+
+			mSpriteBatch.Begin();
+			mSpriteBatch.DrawString( mSpriteFont_DebugText, "Hello", new Vector2( 100, 100 ), Color.Black );
+			mSpriteBatch.End();
 		}
 	}
 }
