@@ -11,13 +11,46 @@ namespace XNARTS
 {
 	class XFontDraw : XSingleton< XFontDraw >
 	{
-		GraphicsDevice	mGraphicsDevice;
-		ContentManager	mContentManager;
-		SpriteFont		mSpriteFont_DebugText;
-		SpriteBatch		mSpriteBatch;
+		public enum eFont
+		{
+			Invalid = -1,
+
+			Consolas16,
+
+			Num
+		}
+
+		GraphicsDevice					mGraphicsDevice;
+		ContentManager					mContentManager;
+		SpriteBatch						mSpriteBatch;
+		List< DrawRequest >				mRequests;
+		Dictionary< int, SpriteFont >	mFontSpriteMap;
+
+		private class DrawRequest
+		{
+			public DrawRequest( eFont font, Vector2 screen_pos, Color color, String s )
+			{
+				mFont = font;
+				mScreenPos = screen_pos;
+				mColor = color;
+				mString = s;
+			}
+
+			public eFont	mFont;
+			public Vector2	mScreenPos;
+			public Color	mColor;
+			public String   mString;
+		}
+
+		public void DrawString( eFont font, Vector2 screen_pos, Color color, String s )
+		{
+			mRequests.Add( new DrawRequest( font, screen_pos, color, s ) );
+		}
 
 		private XFontDraw()
 		{
+			mRequests = new List<DrawRequest>();
+			mFontSpriteMap = new Dictionary<int, SpriteFont>();
 		}
 
 		public void Init( GraphicsDevice device, ContentManager content_manager )
@@ -29,14 +62,29 @@ namespace XNARTS
 		public void LoadContent()
 		{
 			mSpriteBatch = new SpriteBatch( mGraphicsDevice );
-			mSpriteFont_DebugText = mContentManager.Load<SpriteFont>( "DebugText" );
+
+			for( int i = 0; i < (int)eFont.Num; ++i )
+			{
+				mFontSpriteMap.Add( i, mContentManager.Load<SpriteFont>( ((eFont)i).ToString() ) );
+			}
 		}
 
 		public void Draw()
 		{
 			mSpriteBatch.Begin();
-			mSpriteBatch.DrawString( mSpriteFont_DebugText, "Hello", new Vector2( 100, 100 ), Color.Black );
+
+			for( int i = 0; i < mRequests.Count; ++i )
+			{
+				SpriteFont sprite_font = mFontSpriteMap[ (int)(mRequests[ i ].mFont) ];
+				String s = mRequests[ i ].mString;
+				Vector2 pos = mRequests[ i ].mScreenPos;
+				Color color = mRequests[ i ].mColor;
+
+				mSpriteBatch.DrawString( sprite_font, s, pos, color );
+			}
+
 			mSpriteBatch.End();
+			mRequests.Clear();
 		}
 	}
 }

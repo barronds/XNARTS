@@ -199,6 +199,8 @@ namespace XNARTS
 
 		public void Update( GameTime t )
 		{
+			XFontDraw.Instance().DrawString( XFontDraw.eFont.Consolas16, new Vector2( 200, 200 ), Color.White, "Hello!" );
+
 			/*
 			if( mListener_SinglePoke.GetNumEvents() > 0 )
 			{
