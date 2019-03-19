@@ -9,61 +9,22 @@ namespace XNARTS
 {
 	public class XUI : XSingleton< XUI >, XIBroadcaster< XUI.ButtonEvent >
 	{
-		private XBroadcaster< ButtonEvent > mBroadcaster_ButtonEvent;
 		XBroadcaster<ButtonEvent> XIBroadcaster<ButtonEvent>.GetBroadcaster()
 		{
 			return mBroadcaster_ButtonEvent;
 		}
 
-		public class ElementID : IEquatable< ElementID >
-		{
-			private long mID;
-			private static long sNext = 1;
+		private XBroadcaster< ButtonEvent > mBroadcaster_ButtonEvent;
+		private XSimpleDraw					mSimpleDraw;
+		private SortedList< long, IButton >	mButtons;
+		private static long                 sPrevID = 0;
 
-			public ElementID()
-			{
-				mID = sNext;
-				++sNext;
-			}
-
-			public bool Equals( ElementID other )
-			{
-				return mID == other.mID;
-			}
-
-			public static bool operator==( ElementID lhs, ElementID rhs )
-			{
-				return lhs.Equals( rhs );
-			}
-
-			public static bool operator !=( ElementID lhs, ElementID rhs )
-			{
-				return !(lhs.Equals( rhs ));
-			}
-
-			public override bool Equals( Object obj )
-			{
-				if ( (obj == null) || !this.GetType().Equals( obj.GetType() ) )
-				{
-					return false;
-				}
-				else
-				{
-					ElementID e = (ElementID)obj;
-					return e == this;
-				}
-			}
-
-			public override int GetHashCode()
-			{
-				return (int)mID;
-			}
-		}
 		public interface IButton
 		{
-			bool		Contains( Vector2 point );
-			ElementID	GetID();
+			bool Contains( Vector2 point );
+			long GetID();
 		}
+
 		public class ButtonEvent
 		{
 			public enum Type
@@ -77,53 +38,96 @@ namespace XNARTS
 				Num
 			}
 
-			public ButtonEvent( Type type, ElementID id )
+			public ButtonEvent( Type type, long id )
 			{
 				mType = type;
 				mID = id;
 			}
 
-			public Type			mType;
-			public ElementID	mID;
+			public Type	mType;
+			public long	mID;
 
 		}
 
 		public IButton CreateRoundButton(	Vector2 pos, 
 											double radius, 
-											String text, 
-											Color color, 
+											String text,
+											eFont font,
+											Vector2 text_offset,
+											Color text_color,
+											Color background_color, 
 											Color pressed_color,
 											Color border_color, 
 											double border_width )
 		{
-			return new RoundButton( pos, radius, text, color, pressed_color, border_color, border_width );
+			IButton button = new RoundButton(	pos, radius, text, font, text_offset, text_color, background_color, 
+												pressed_color, border_color, border_width, NextID() );
+			mButtons.Add( button.GetID(), button );
+			return button;
 		}
 
+		public IButton CreateRectangularButton( Vector2 pos,
+												Vector2 size,
+												String text,
+												eFont font,
+												Vector2 text_offset,
+												Color text_color,
+												Color background_color,
+												Color pressed_color,
+												Color border_color,
+												double border_width )
+		{
+			IButton button = new RectangularButton(	pos, size, text, font, text_offset, text_color, background_color, 
+													pressed_color, border_color, border_width, NextID() );
+			mButtons.Add( button.GetID(), button );
+			return button;
+		}
 
 		private class ButtonCore
 		{
+			public Vector2 mPos;
 			public String mText;
-			public Color mColor;
+			public eFont  mFont;
+			public Vector2 mTextOffset;
+			public Color mTextColor;
+			public Color mBackgroundColor;
 			public Color mPressedColor;
 			public Color mBorderColor;
 			public double mBorderWidth;
-			public ElementID mID;
+			public long mID;
 
-			public ButtonCore( String text, Color color, Color pressed_color, Color border_color, double border_width )
+			public ButtonCore(	Vector2 pos,
+								String text, 
+								eFont font,
+								Vector2 text_offset,
+								Color text_color,
+								Color background_color, 
+								Color pressed_color, 
+								Color border_color, 
+								double border_width,
+								long id)
 			{
+				mPos = pos;
 				mText = text;
-				mColor = color;
+				mFont = font;
+				mTextOffset = text_offset;
+				mTextColor = text_color;
+				mBackgroundColor = background_color;
 				mPressedColor = pressed_color;
 				mBorderColor = border_color;
 				mBorderWidth = border_width;
-				mID = new ElementID();
+				mID = id;
+			}
+
+			public void Draw()
+			{
+				XSimpleDraw.GetInstance( xeSimpleDrawType.ScreenSpace_Transient );
 			}
 		}
 
 
 		private class RoundButton : IButton
 		{
-			private Vector2 mPos;
 			private double mRadius;
 			private double mRadiusSqr;
 			private ButtonCore mButtonCore;
@@ -131,25 +135,29 @@ namespace XNARTS
 			public RoundButton( Vector2 pos, 
 								double radius,	 
 								String text, 
-								Color color, 
+								eFont font,
+								Vector2 text_offset,
+								Color text_color,
+								Color background_color, 
 								Color pressed_color, 
 								Color border_color, 
-								double border_width )
+								double border_width, 
+								long id )
 			{
-				mPos = pos;
 				mRadius = radius;
 				mRadiusSqr = radius * radius;
-				mButtonCore = new ButtonCore( text, color, pressed_color, border_color, border_width );
+				mButtonCore = new ButtonCore(	pos, text, font, text_offset, text_color, background_color, 
+												pressed_color, border_color, border_width, id );
 			}
 
-			ElementID IButton.GetID()
+			long IButton.GetID()
 			{
 				return mButtonCore.mID;
 			}
 
 			bool IButton.Contains(Vector2 point)
 			{
-				Vector2 d = point - mPos;
+				Vector2 d = point - mButtonCore.mPos;
 				double dist_sqr = d.LengthSquared();
 				return dist_sqr < mRadiusSqr;
 			}
@@ -160,19 +168,24 @@ namespace XNARTS
 			private xAABB2 mAABB;
 			private ButtonCore mButtonCore;
 
-			public RectangularButton(	Vector2 lo,
-										Vector2 hi,
+			public RectangularButton(	Vector2 pos,
+										Vector2 size,
 										String text,
-										Color color,
+										eFont font,
+										Vector2 text_offset,
+										Color text_color,
+										Color background_color,
 										Color pressed_color,
 										Color border_color,
-										double border_width )
+										double border_width,
+										long id )
 			{
-				mAABB = new xAABB2( lo, hi );
-				mButtonCore = new ButtonCore( text, color, pressed_color, border_color, border_width );
+				mAABB = new xAABB2( pos, pos + size );
+				mButtonCore = new ButtonCore(	pos, text, font, text_offset, text_color, background_color, 
+												pressed_color, border_color, border_width, id );
 			}
 
-			ElementID IButton.GetID()
+			long IButton.GetID()
 			{
 				return mButtonCore.mID;
 			}
@@ -190,16 +203,18 @@ namespace XNARTS
 			// private constructor as per singleton
 			mBroadcaster_ButtonEvent = new XBroadcaster<ButtonEvent>();
 			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>();
+			mButtons = new SortedList<long, IButton>();
 		}
 
 		public void Init()
 		{
+			mSimpleDraw = XSimpleDraw.GetInstance( xeSimpleDrawType.ScreenSpace_Transient );
 			// XTouch.Instance().mBroadcaster_SinglePoke.Subscribe( mListener_SinglePoke );
 		}
 
 		public void Update( GameTime t )
 		{
-			XFontDraw.Instance().DrawString( XFontDraw.eFont.Consolas16, new Vector2( 200, 200 ), Color.White, "Hello!" );
+			XFontDraw.Instance().DrawString( eFont.Consolas16, new Vector2( 200, 200 ), Color.White, "Hello!" );
 
 			/*
 			if( mListener_SinglePoke.GetNumEvents() > 0 )
@@ -208,6 +223,17 @@ namespace XNARTS
 				data.Log();
 			}
 			*/
+		}
+
+		public void Draw()
+		{
+
+		}
+
+		private long NextID()
+		{
+			++sPrevID;
+			return sPrevID;
 		}
 	}
 }

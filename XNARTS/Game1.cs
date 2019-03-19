@@ -45,8 +45,8 @@ namespace XNARTS
 			XKeyInput.Instance().Init();
 			XWorld.Instance().Init();
 			XMouse.Instance().Init();
-			XUI.Instance().Init();
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager, Content );
+			XUI.Instance().Init();
 
 			base.Initialize();
         }

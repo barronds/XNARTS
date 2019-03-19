@@ -9,17 +9,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace XNARTS
 {
+	public enum eFont
+	{
+		Invalid = -1,
+
+		Consolas16,
+
+		Num
+	}
+
 	class XFontDraw : XSingleton< XFontDraw >
 	{
-		public enum eFont
-		{
-			Invalid = -1,
-
-			Consolas16,
-
-			Num
-		}
-
 		GraphicsDevice					mGraphicsDevice;
 		ContentManager					mContentManager;
 		SpriteBatch						mSpriteBatch;
