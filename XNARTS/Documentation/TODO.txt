@@ -3,13 +3,12 @@
 
 - make input manager that abstracts away touch vs mouse controls, maybe encapsulates unit selection, commands
 - have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.  (not sure how to do this actually).
-- extend event system to allow immediate callback over messages. 
+- extend event system to allow immediate callback in addition to messages. 
 
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
 
-- 
-- debug text service
-
 - octaves and features to map
+- try map lines instead of checkerboard
 
+- button click with callback and color change (state)
 - see through buttons

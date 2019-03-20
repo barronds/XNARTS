@@ -410,7 +410,7 @@ namespace XNARTS
 		private void Generate_Checkerboard()
 		{
 			const bool k_do_checkerboard = true;
-			const float k_checkerboard_scalar = 0.985f;
+			const float k_checkerboard_scalar = 0.94f; // 0.985f was good before Mar18, added font, maybe alpha premultiply
 
 			if ( k_do_checkerboard )
 			{
