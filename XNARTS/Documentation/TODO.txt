@@ -11,8 +11,7 @@
 - octaves and features to map
 - try map lines instead of checkerboard
 
-- see through buttons
-- remove button functionality.  mind currently pressed
+- selector
 
 - find sudden zoom bug
 

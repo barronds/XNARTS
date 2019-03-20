@@ -55,6 +55,7 @@
     <Compile Include="Render\FontDraw.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SimpleDraw.cs" />
+    <Compile Include="UI\Buttons.cs" />
     <Compile Include="UI\UI.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
     <Compile Include="Utils\Assert.cs" />
