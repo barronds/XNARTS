@@ -127,6 +127,7 @@ namespace XNARTS
 			XMouse mouse = XMouse.Instance();
 			mouse.RenderWorld( game_time );
 			mouse.RenderScreen( game_time );
+			XUI.Instance().Draw();
 
 			mBasicEffect_World.VertexColorEnabled = true;
 

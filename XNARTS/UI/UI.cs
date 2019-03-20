@@ -18,11 +18,13 @@ namespace XNARTS
 		private XSimpleDraw					mSimpleDraw;
 		private SortedList< long, IButton >	mButtons;
 		private static long                 sPrevID = 0;
+		private IButton                     mTestButton;
 
 		public interface IButton
 		{
 			bool Contains( Vector2 point );
 			long GetID();
+			void Draw( XSimpleDraw simple_draw );
 		}
 
 		public class ButtonEvent
@@ -119,9 +121,10 @@ namespace XNARTS
 				mID = id;
 			}
 
-			public void Draw()
+			public void Draw( XSimpleDraw simple_draw )
 			{
-				XSimpleDraw.GetInstance( xeSimpleDrawType.ScreenSpace_Transient );
+				// draw the text
+				XFontDraw.Instance().DrawString( mFont, mPos + mTextOffset, mTextColor, mText );
 			}
 		}
 
@@ -161,6 +164,12 @@ namespace XNARTS
 				double dist_sqr = d.LengthSquared();
 				return dist_sqr < mRadiusSqr;
 			}
+
+			void IButton.Draw( XSimpleDraw simple_draw )
+			{
+				// draw border and background, then draw core
+				mButtonCore.Draw( simple_draw );
+			}
 		}
 
 		private class RectangularButton : IButton
@@ -194,6 +203,15 @@ namespace XNARTS
 			{
 				return mAABB.Contains( point );
 			}
+
+			void IButton.Draw( XSimpleDraw simple_draw )
+			{
+				// draw border and background, then draw core
+				Vector3 lo = new Vector3( mAABB.GetMin(), 2 ); // zero might not be right z
+				Vector3 hi = new Vector3( mAABB.GetMax(), 2 );
+				simple_draw.DrawQuad( lo, hi, mButtonCore.mBackgroundColor );
+				mButtonCore.Draw( simple_draw );
+			}
 		}
 
 		private XListener< XTouch.SinglePokeData > mListener_SinglePoke;
@@ -209,25 +227,29 @@ namespace XNARTS
 		public void Init()
 		{
 			mSimpleDraw = XSimpleDraw.GetInstance( xeSimpleDrawType.ScreenSpace_Transient );
-			// XTouch.Instance().mBroadcaster_SinglePoke.Subscribe( mListener_SinglePoke );
+			((XIBroadcaster< XTouch.SinglePokeData >)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_SinglePoke );
+
+			mTestButton = CreateRectangularButton(	new Vector2( 400, 400 ), new Vector2( 200, 65 ), "First Button",
+													eFont.Consolas16, new Vector2( 30, 20 ), Color.White, Color.Brown,
+													Color.Beige, Color.White, 1 );
 		}
 
 		public void Update( GameTime t )
 		{
-			XFontDraw.Instance().DrawString( eFont.Consolas16, new Vector2( 200, 200 ), Color.White, "Hello!" );
-
-			/*
 			if( mListener_SinglePoke.GetNumEvents() > 0 )
 			{
 				XTouch.SinglePokeData data = mListener_SinglePoke.ReadNext();
-				data.Log();
 			}
-			*/
 		}
 
 		public void Draw()
 		{
-
+			var enumerator = mButtons.GetEnumerator();
+			
+			while( enumerator.MoveNext() )
+			{
+				enumerator.Current.Value.Draw( mSimpleDraw );
+			}
 		}
 
 		private long NextID()

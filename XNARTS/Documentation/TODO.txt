@@ -11,3 +11,5 @@
 - debug text service
 
 - octaves and features to map
+
+- see through buttons

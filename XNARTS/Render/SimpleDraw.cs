@@ -112,8 +112,19 @@ namespace XNARTS
 
         public void DrawAllPrimitives()
         {
-            // lines
-            if( mNumLines > 0 )
+			// triangles
+			if ( mNumTriangles > 0 )
+			{
+				mGraphicsDevice.DrawUserPrimitives( PrimitiveType.TriangleList, mTriangles, 0, mNumTriangles );
+
+				if ( !mPersistent )
+				{
+					mNumTriangles = 0;
+				}
+			}
+
+			// lines
+			if ( mNumLines > 0 )
             {
                 mGraphicsDevice.DrawUserPrimitives( PrimitiveType.LineList, mLines, 0, mNumLines );
 
@@ -122,17 +133,6 @@ namespace XNARTS
 				    mNumLines = 0;
 				}
             }
-
-			// triangles
-			if( mNumTriangles > 0 )
-			{
-				mGraphicsDevice.DrawUserPrimitives( PrimitiveType.TriangleList, mTriangles, 0, mNumTriangles );
-
-				if( !mPersistent )
-				{
-					mNumTriangles = 0;
-				}
-			}
         }
 
 
