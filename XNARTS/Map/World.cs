@@ -114,11 +114,6 @@ namespace XNARTS
 			mMapSizeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 220 ), "Change Map Size", 
 																		eFont.Consolas16, Color.White, 
 																		new Color( Color.Green, k_button_alpha ), Color.White );
-
-			XUI.Instance().CreateRectangularButton(	new Vector2( 30, 500 ),
-													"0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", 
-													eFont.Consolas16, Color.White, new Color( Color.Green, k_button_alpha ), 
-													Color.White );
 			Generate();
 		}
 
