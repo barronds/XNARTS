@@ -15,3 +15,5 @@
 - remove button functionality.  mind currently pressed
 
 - find sudden zoom bug
+
+- add circles to simple draw

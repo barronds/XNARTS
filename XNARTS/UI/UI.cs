@@ -9,11 +9,12 @@ namespace XNARTS
 {
 	public class XUI : XSingleton< XUI >, XIBroadcaster< XUI.ButtonEvent >
 	{
-		private XBroadcaster< ButtonEvent > mBroadcaster_ButtonEvent;
-		private XSimpleDraw					mSimpleDraw;
-		private SortedList< long, IButton >	mButtons;
-		private static long                 sPrevID = 0;
-		private IButton                     mCurrentlyPressed;
+		private XBroadcaster< ButtonEvent >		mBroadcaster_ButtonEvent;
+		private XSimpleDraw						mSimpleDraw;
+		private SortedList< long, IButton >		mButtons;
+		private static long						sPrevID = 0;
+		private IButton							mCurrentlyPressed;
+		private Dictionary< eFont, Vector2 >    mFontSizes;
 
 		XBroadcaster<ButtonEvent> XIBroadcaster<ButtonEvent>.GetBroadcaster()
 		{
@@ -55,30 +56,26 @@ namespace XNARTS
 											double radius, 
 											String text,
 											eFont font,
-											Vector2 text_offset,
 											Color text_color,
 											Color background_color, 
 											Color pressed_color,
-											Color border_color, 
-											double border_width )
+											Color border_color )
 		{
-			IButton button = new RoundButton(	pos, radius, text, font, text_offset, text_color, background_color, 
-												border_color, NextID() );
+			IButton button = new RoundButton(	pos, radius, text, font, text_color, background_color, 
+												border_color, NextID(), mFontSizes[ font ] );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
 
 		public IButton CreateRectangularButton( Vector2 pos,
-												Vector2 size,
 												String text,
 												eFont font,
-												Vector2 text_offset,
 												Color text_color,
 												Color background_color,
 												Color border_color )
 		{
-			IButton button = new RectangularButton(	pos, size, text, font, text_offset, text_color, background_color, 
-													border_color, NextID() );
+			IButton button = new RectangularButton(	pos, text, font, text_color, background_color, 
+													border_color, NextID(), mFontSizes[ font ] );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
@@ -147,16 +144,16 @@ namespace XNARTS
 								double radius,	 
 								String text, 
 								eFont font,
-								Vector2 text_offset,
 								Color text_color,
 								Color background_color, 
 								Color border_color, 
-								long id )
+								long id, 
+								Vector2 font_size )
 			{
 				mRadius = radius;
 				mRadiusSqr = radius * radius;
-				mButtonCore = new ButtonCore(	pos, text, font, text_offset, text_color, background_color, 
-												border_color, id );
+				// TODO: not finished, place text calculation
+				mButtonCore = new ButtonCore( pos, text, font, new Vector2( 0, 0 ), text_color, background_color, border_color, id );
 			}
 
 			long IButton.GetID()
@@ -173,7 +170,8 @@ namespace XNARTS
 
 			void IButton.Draw( XSimpleDraw simple_draw )
 			{
-				// draw border and background, then draw core
+				// draw border and background, then draw 
+				// TODO: circle part, add circles to simple draw
 				mButtonCore.Draw( simple_draw );
 			}
 
@@ -191,19 +189,26 @@ namespace XNARTS
 			private ButtonCore mButtonCore;
 
 			public RectangularButton(	Vector2 pos,
-										Vector2 size,
 										String text,
 										eFont font,
-										Vector2 text_offset,
 										Color text_color,
 										Color background_color,
 										Color border_color,
-										long id )
+										long id,
+										Vector2 font_size )
 			{
-				mAABB = new xAABB2( pos, pos + size );
-				mCorner2 = new Vector3( pos.X + size.X, pos.Y, 2 );
-				mCorner3 = new Vector3( pos.X, pos.Y + size.Y, 2 );
-				mButtonCore = new ButtonCore(	pos, text, font, text_offset, text_color, background_color, 
+				// padding calculated, and button size and offset
+				const float k_padding_scalar = 0.65f;
+				float k_padding = k_padding_scalar * (font_size.X + font_size.Y);
+				Vector2 new_text_offset = new Vector2( k_padding, k_padding );
+				float button_width = text.Length * font_size.X + 2 * k_padding;
+				float button_height = font_size.Y + 2 * k_padding;
+				Vector2 new_size = new Vector2( button_width, button_height );
+				mAABB = new xAABB2( pos, pos + new_size );
+				mCorner2 = new Vector3( pos.X + new_size.X, pos.Y, 2 );
+				mCorner3 = new Vector3( pos.X, pos.Y + new_size.Y, 2 );
+
+				mButtonCore = new ButtonCore(	pos, text, font, new_text_offset, text_color, background_color, 
 												border_color, id );
 			}
 
@@ -246,6 +251,10 @@ namespace XNARTS
 			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>();
 			mButtons = new SortedList<long, IButton>();
 			mCurrentlyPressed = null;
+
+			// manually stock the font sizes dictionary with emperically determined sizes
+			mFontSizes = new Dictionary<eFont, Vector2>();
+			mFontSizes.Add( eFont.Consolas16, new Vector2( 12.0f, 19.0f ) );
 		}
 
 		public void Init()

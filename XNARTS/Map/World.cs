@@ -103,20 +103,22 @@ namespace XNARTS
 
 			const float k_button_alpha = 0.25f;
 
-			mRegnerateMapButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 30 ), new Vector2( 224, 65 ), 
-																			"Regenerate Map", eFont.Consolas16, 
-																			new Vector2( 30, 20 ), Color.White,
+			mRegnerateMapButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 30 ), "Regenerate Map", 
+																			eFont.Consolas16, Color.White,
 																			new Color( Color.Red, k_button_alpha ), Color.White );
 
-			mMapTypeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 125 ), new Vector2( 232, 65 ), 
-																		"Change Map Type", eFont.Consolas16, 
-																		new Vector2( 30, 20 ), Color.White, 
+			mMapTypeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 125 ), "Change Map Type", 
+																		eFont.Consolas16, Color.White, 
 																		new Color( Color.Blue, k_button_alpha ), Color.White );
 
-			mMapSizeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 220 ), new Vector2( 232, 65 ),
-																		"Change Map Size", eFont.Consolas16,
-																		new Vector2( 30, 20 ), Color.White, 
+			mMapSizeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 220 ), "Change Map Size", 
+																		eFont.Consolas16, Color.White, 
 																		new Color( Color.Green, k_button_alpha ), Color.White );
+
+			XUI.Instance().CreateRectangularButton(	new Vector2( 30, 500 ),
+													"0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", 
+													eFont.Consolas16, Color.White, new Color( Color.Green, k_button_alpha ), 
+													Color.White );
 			Generate();
 		}
 
