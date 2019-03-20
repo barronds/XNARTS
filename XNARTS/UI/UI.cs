@@ -19,7 +19,6 @@ namespace XNARTS
 		private SortedList< long, IButton >	mButtons;
 		private static long                 sPrevID = 0;
 		private IButton                     mCurrentlyPressed;
-		private IButton                     mTestButton;
 
 		public interface IButton
 		{
@@ -253,10 +252,6 @@ namespace XNARTS
 		{
 			mSimpleDraw = XSimpleDraw.GetInstance( xeSimpleDrawType.ScreenSpace_Transient );
 			((XIBroadcaster< XTouch.SinglePokeData >)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_SinglePoke );
-
-			mTestButton = CreateRectangularButton(	new Vector2( 400, 400 ), new Vector2( 200, 65 ), "First Button",
-													eFont.Consolas16, new Vector2( 30, 20 ), Color.White, Color.Brown,
-													Color.Pink, Color.White, 1 );
 		}
 
 		private void SendButtonEvent( ButtonEvent.Type type )

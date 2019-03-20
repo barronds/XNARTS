@@ -76,6 +76,10 @@ namespace XNARTS
 		private XWorldGen.eMapType					mMapType;
 		private XSafeGrid< xMapCell >				mMap;
 		private XListener< XKeyInput.KeyUp >		mListenter_KeyUp;
+		private XListener< XUI.ButtonEvent >        mListener_Button;
+		private XUI.IButton							mRegnerateMapButton;
+		private XUI.IButton                         mMapTypeButton;
+		private XUI.IButton                         mMapSizeButton;
 
 		// private constructor as per XSingleton
 		private XWorld()
@@ -94,6 +98,23 @@ namespace XNARTS
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
 			((XIBroadcaster<XKeyInput.KeyUp>)XKeyInput.Instance()).GetBroadcaster().Subscribe( mListenter_KeyUp );
 
+			mListener_Button = new XListener<XUI.ButtonEvent>( 1, eEventQueueFullBehaviour.Ignore );
+			((XIBroadcaster<XUI.ButtonEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_Button );
+
+			mRegnerateMapButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 30 ), new Vector2( 224, 65 ), 
+																			"Regenerate Map", eFont.Consolas16, 
+																			new Vector2( 30, 20 ), Color.White, Color.Red,
+																			Color.Pink, Color.White, 1 );
+
+			mMapTypeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 125 ), new Vector2( 232, 65 ), 
+																		"Change Map Type", eFont.Consolas16, 
+																		new Vector2( 30, 20 ), Color.White, Color.Blue,
+																		Color.LightBlue, Color.White, 1 );
+
+			mMapSizeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 220 ), new Vector2( 232, 65 ),
+																		"Change Map Size", eFont.Consolas16,
+																		new Vector2( 30, 20 ), Color.White, Color.Green,
+																		Color.LightGreen, Color.White, 1 );
 			Generate();
 		}
 
@@ -169,6 +190,8 @@ namespace XNARTS
 		private void ProcessInput()
 		{
 			bool generate_map = false;
+			bool resize_map = false;
+			bool change_map_type = false;
 
 			if ( mListenter_KeyUp.GetNumEvents() > 0 )
 			{
@@ -180,20 +203,51 @@ namespace XNARTS
 				}
 				else if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
 				{
-					// loop through map types
-					mMapType = (XWorldGen.eMapType)(((int)mMapType + 1) % (int)XWorldGen.eMapType.Num);
-					mGenSet = mGen.GetTuningSet( mMapType );
-					generate_map = true;
+					change_map_type = true;
 				}
 				else if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.S )
 				{
-					++mMapScale;
-					generate_map = true;
+					resize_map = true;
+				}
+			}
 
-					if( mMapScale > mGen.GetMaxMapScale() )
+			if( mListener_Button.GetNumEvents() > 0 )
+			{
+				XUI.ButtonEvent button_event = mListener_Button.ReadNext();
+
+				if( button_event.mType == XUI.ButtonEvent.Type.Up )
+				{
+					if ( button_event.mID == mRegnerateMapButton.GetID() )
 					{
-						mMapScale = 1;
+						generate_map = true;
 					}
+					else if ( button_event.mID == mMapTypeButton.GetID() )
+					{
+						change_map_type = true;
+					}
+					else if ( button_event.mID == mMapSizeButton.GetID() )
+					{
+						resize_map = true;
+					}
+				}
+			}
+
+			if ( change_map_type )
+			{
+				// loop through map types
+				mMapType = (XWorldGen.eMapType)(((int)mMapType + 1) % (int)XWorldGen.eMapType.Num);
+				mGenSet = mGen.GetTuningSet( mMapType );
+				generate_map = true;
+			}
+
+			if( resize_map )
+			{
+				++mMapScale;
+				generate_map = true;
+
+				if ( mMapScale > mGen.GetMaxMapScale() )
+				{
+					mMapScale = 1;
 				}
 			}
 
