@@ -63,7 +63,7 @@ namespace XNARTS
 											double border_width )
 		{
 			IButton button = new RoundButton(	pos, radius, text, font, text_offset, text_color, background_color, 
-												pressed_color, border_color, border_width, NextID() );
+												border_color, NextID() );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
@@ -75,12 +75,10 @@ namespace XNARTS
 												Vector2 text_offset,
 												Color text_color,
 												Color background_color,
-												Color pressed_color,
-												Color border_color,
-												double border_width )
+												Color border_color )
 		{
 			IButton button = new RectangularButton(	pos, size, text, font, text_offset, text_color, background_color, 
-													pressed_color, border_color, border_width, NextID() );
+													border_color, NextID() );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
@@ -103,9 +101,8 @@ namespace XNARTS
 			public Vector2 mTextOffset;
 			public Color mTextColor;
 			public Color mBackgroundColor;
-			public Color mPressedColor;
 			public Color mBorderColor;
-			public double mBorderWidth;
+			public Color mPressedColor;
 			public long mID;
 			public bool mPressed;
 
@@ -115,10 +112,8 @@ namespace XNARTS
 								Vector2 text_offset,
 								Color text_color,
 								Color background_color, 
-								Color pressed_color, 
-								Color border_color, 
-								double border_width,
-								long id)
+								Color border_color,
+								long id )
 			{
 				mPos = pos;
 				mText = text;
@@ -126,11 +121,12 @@ namespace XNARTS
 				mTextOffset = text_offset;
 				mTextColor = text_color;
 				mBackgroundColor = background_color;
-				mPressedColor = pressed_color;
 				mBorderColor = border_color;
-				mBorderWidth = border_width;
 				mID = id;
 				mPressed = false;
+
+				const float k_pressed_blend = 0.37f;
+				mPressedColor = Color.Lerp( mBackgroundColor, Color.White, k_pressed_blend );
 			}
 
 			public void Draw( XSimpleDraw simple_draw )
@@ -154,15 +150,13 @@ namespace XNARTS
 								Vector2 text_offset,
 								Color text_color,
 								Color background_color, 
-								Color pressed_color, 
 								Color border_color, 
-								double border_width, 
 								long id )
 			{
 				mRadius = radius;
 				mRadiusSqr = radius * radius;
 				mButtonCore = new ButtonCore(	pos, text, font, text_offset, text_color, background_color, 
-												pressed_color, border_color, border_width, id );
+												border_color, id );
 			}
 
 			long IButton.GetID()
@@ -203,16 +197,14 @@ namespace XNARTS
 										Vector2 text_offset,
 										Color text_color,
 										Color background_color,
-										Color pressed_color,
 										Color border_color,
-										double border_width,
 										long id )
 			{
 				mAABB = new xAABB2( pos, pos + size );
 				mCorner2 = new Vector3( pos.X + size.X, pos.Y, 2 );
 				mCorner3 = new Vector3( pos.X, pos.Y + size.Y, 2 );
 				mButtonCore = new ButtonCore(	pos, text, font, text_offset, text_color, background_color, 
-												pressed_color, border_color, border_width, id );
+												border_color, id );
 			}
 
 			long IButton.GetID()
