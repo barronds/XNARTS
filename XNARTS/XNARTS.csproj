@@ -51,10 +51,10 @@
     <Compile Include="Math\Helpers.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Render\Camera.cs" />
-    <Compile Include="Render\FontDraw.cs" />
-    <Compile Include="Render\RenderManager.cs" />
-    <Compile Include="Render\SimpleDraw.cs" />
+    <Compile Include="Documentation\Render\Camera.cs" />
+    <Compile Include="Documentation\Render\FontDraw.cs" />
+    <Compile Include="Documentation\Render\RenderManager.cs" />
+    <Compile Include="Documentation\Render\SimpleDraw.cs" />
     <Compile Include="UI\UI.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
     <Compile Include="Utils\Assert.cs" />

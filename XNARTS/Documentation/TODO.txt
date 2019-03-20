@@ -12,3 +12,7 @@
 
 - button click with callback and color change (state)
 - see through buttons
+- remove button functionality.  mind currently pressed
+
+- find sudden zoom bug
+- find button size change bug
