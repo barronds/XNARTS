@@ -9,17 +9,16 @@ namespace XNARTS
 {
 	public class XUI : XSingleton< XUI >, XIBroadcaster< XUI.ButtonEvent >
 	{
-		XBroadcaster<ButtonEvent> XIBroadcaster<ButtonEvent>.GetBroadcaster()
-		{
-			return mBroadcaster_ButtonEvent;
-		}
-
 		private XBroadcaster< ButtonEvent > mBroadcaster_ButtonEvent;
 		private XSimpleDraw					mSimpleDraw;
 		private SortedList< long, IButton >	mButtons;
 		private static long                 sPrevID = 0;
 		private IButton                     mCurrentlyPressed;
 
+		XBroadcaster<ButtonEvent> XIBroadcaster<ButtonEvent>.GetBroadcaster()
+		{
+			return mBroadcaster_ButtonEvent;
+		}
 		public interface IButton
 		{
 			bool Contains( Vector2 point );
@@ -27,7 +26,6 @@ namespace XNARTS
 			void Draw( XSimpleDraw simple_draw );
 			void SetPressed( bool pressed );
 		}
-
 		public class ButtonEvent
 		{
 			public enum Type
@@ -85,6 +83,16 @@ namespace XNARTS
 													pressed_color, border_color, border_width, NextID() );
 			mButtons.Add( button.GetID(), button );
 			return button;
+		}
+
+		public void DestroyButton( IButton button )
+		{
+			if( mCurrentlyPressed != null && mCurrentlyPressed.GetID() == button.GetID() )
+			{
+				SendButtonEvent( ButtonEvent.Type.Abort );
+			}
+
+			mButtons.Remove( button.GetID() );
 		}
 
 		private class ButtonCore
