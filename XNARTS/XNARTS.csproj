@@ -56,6 +56,11 @@
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SimpleDraw.cs" />
     <Compile Include="UI\Buttons.cs" />
+    <Compile Include="UI\Fonts.cs" />
+    <Compile Include="UI\Input.cs" />
+    <Compile Include="UI\Render.cs" />
+    <Compile Include="UI\Selector.cs" />
+    <Compile Include="UI\Style.cs" />
     <Compile Include="UI\UI.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
     <Compile Include="Utils\Assert.cs" />

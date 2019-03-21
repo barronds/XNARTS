@@ -7,10 +7,11 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public partial class XUI
+	public partial class XUI : XIBroadcaster<XUI.ButtonEvent>
 	{
-		private SortedList< long, IButton >     mButtons;
-		private IButton                         mCurrentlyPressed;
+		private XBroadcaster< ButtonEvent >	mBroadcaster_ButtonEvent;
+		private SortedList< long, IButton >	mButtons;
+		private IButton						mCurrentlyPressed;
 
 		XBroadcaster<ButtonEvent> XIBroadcaster<ButtonEvent>.GetBroadcaster()
 		{
@@ -48,13 +49,12 @@ namespace XNARTS
 
 		}
 
-		public IButton CreateRoundButton( Vector2 pos,
+		public IButton CreateRoundButton(	Vector2 pos,
 											double radius,
 											String text,
 											eFont font,
 											Color text_color,
 											Color background_color,
-											Color pressed_color,
 											Color border_color )
 		{
 			IButton button = new RoundButton(   pos, radius, text, font, text_color, background_color,
@@ -249,6 +249,23 @@ namespace XNARTS
 			if ( !pressed )
 			{
 				mCurrentlyPressed = null;
+			}
+		}
+
+		private void Constructor_Buttons()
+		{
+			mBroadcaster_ButtonEvent = new XBroadcaster<ButtonEvent>();
+			mButtons = new SortedList<long, IButton>();
+			mCurrentlyPressed = null;
+		}
+
+		private void Draw_Buttons()
+		{
+			var enumerator = mButtons.GetEnumerator();
+
+			while ( enumerator.MoveNext() )
+			{
+				enumerator.Current.Value.Draw( mSimpleDraw );
 			}
 		}
 	}

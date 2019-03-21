@@ -11,8 +11,11 @@
 - octaves and features to map
 - try map lines instead of checkerboard
 
+- ui style
 - selector
 
 - find sudden zoom bug
 
 - add circles to simple draw
+
+- button push while generating map, undesirable
