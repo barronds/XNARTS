@@ -11,9 +11,20 @@ namespace XNARTS
 {
 	public enum eFont
 	{
+		Not_Available = -2,
 		Invalid = -1,
 
+		Consolas13,
 		Consolas16,
+		Consolas24,
+		Consolas36,
+
+		LucidaConsole8,
+		LucidaConsole10,
+		LucidaConsole12,
+		LucidaConsole16,
+		LucidaConsole24,
+		LucidaConsole36,
 
 		Num
 	}
