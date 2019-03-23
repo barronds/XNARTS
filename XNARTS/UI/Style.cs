@@ -20,7 +20,7 @@ namespace XNARTS
 			Num
 		}
 
-		private class Style
+		public class Style
 		{
 			public Style(	eFont huge, eFont large, eFont medium, eFont small, eFont tiny, eFont very_tiny, 
 							Color text, Color widget, Color button, Color border )
@@ -51,6 +51,10 @@ namespace XNARTS
 
 		private Dictionary< eStyle, Style > mStyles;
 
+		public Style GetStyle( eStyle style )
+		{
+			return mStyles[ style ];
+		}
 		private void AddStyle( eStyle key, Style value )
 		{
 			mStyles.Add( key, value );

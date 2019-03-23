@@ -16,6 +16,8 @@ namespace XNARTS
 			// manually stock the font sizes dictionary with emperically determined sizes
 			mFontSizes = new Dictionary<eFont, Vector2>();
 			mFontSizes.Add( eFont.Consolas16, new Vector2( 12.0f, 19.0f ) );
+			mFontSizes.Add( eFont.LucidaConsole16, new Vector2( 13, 19 ) );
+
 		}
 	}
 }

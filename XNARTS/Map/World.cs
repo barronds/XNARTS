@@ -100,20 +100,12 @@ namespace XNARTS
 
 			mListener_Button = new XListener<XUI.ButtonEvent>( 1, eEventQueueFullBehaviour.Ignore );
 			((XIBroadcaster<XUI.ButtonEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_Button );
+			XUI ui = XUI.Instance();
 
-			const float k_button_alpha = 0.25f;
+			mRegnerateMapButton = ui.CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
+			mMapTypeButton = ui.CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
+			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
 
-			mRegnerateMapButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 30 ), "Regenerate Map", 
-																			eFont.Consolas16, Color.White,
-																			new Color( Color.Red, k_button_alpha ), Color.White );
-
-			mMapTypeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 125 ), "Change Map Type", 
-																		eFont.Consolas16, Color.White, 
-																		new Color( Color.Blue, k_button_alpha ), Color.White );
-
-			mMapSizeButton = XUI.Instance().CreateRectangularButton(	new Vector2( 30, 220 ), "Change Map Size", 
-																		eFont.Consolas16, Color.White, 
-																		new Color( Color.Green, k_button_alpha ), Color.White );
 			Generate();
 		}
 
