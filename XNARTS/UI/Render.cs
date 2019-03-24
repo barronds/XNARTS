@@ -18,6 +18,7 @@ namespace XNARTS
 
 		public void Draw()
 		{
+			Draw_Selector();	
 			Draw_Buttons();
 		}
 	}

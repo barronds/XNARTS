@@ -38,10 +38,12 @@ namespace XNARTS
 			mAspect = ((float)(screen_dim.y)) / screen_dim.x;
 			InitFromWorld();
 
-			mListener_MultiDrag = new XListener<XTouch.MultiDragData>( 1, eEventQueueFullBehaviour.IgnoreOldest );
+			mListener_MultiDrag = new XListener<XTouch.MultiDragData>(	1, eEventQueueFullBehaviour.IgnoreOldest, 
+																		"worldcammultidrag" );
 			((XIBroadcaster<XTouch.MultiDragData>)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_MultiDrag );
 
-			mListener_WorldRegenerated = new XListener<XWorld.WorldRegenerated>( 1, eEventQueueFullBehaviour.IgnoreOldest );
+			mListener_WorldRegenerated = new XListener<XWorld.WorldRegenerated>(	1, eEventQueueFullBehaviour.IgnoreOldest, 
+																					"worldcamworldregenerated" );
 			((XIBroadcaster<XWorld.WorldRegenerated>)XWorld.Instance()).GetBroadcaster().Subscribe( mListener_WorldRegenerated );
 		}
 

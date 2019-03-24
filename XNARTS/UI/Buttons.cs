@@ -71,6 +71,7 @@ namespace XNARTS
 			return button;
 		}
 
+
 		public void DestroyButton( IButton button )
 		{
 			if ( mCurrentlyPressed != null && mCurrentlyPressed.GetID() == button.GetID() )

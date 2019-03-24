@@ -13,7 +13,7 @@ namespace XNARTS
 
 		private void Constructor_Input()
 		{
-			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>();
+			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>( 1, eEventQueueFullBehaviour.Assert, "XUIinputsinglepoke" );
 		}
 
 		private void Init_Input()

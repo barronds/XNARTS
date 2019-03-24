@@ -17,11 +17,13 @@ namespace XNARTS
 			Constructor_Fonts();
 			Constructor_Style();
 			Constructor_Buttons();
+			Constructor_Selector();
 			Constructor_Input();
 		}
 
 		public void Init()
 		{
+			Init_Selector();
 			Init_Input();
 			Init_Render();
 		}

@@ -69,14 +69,13 @@ namespace XNARTS
 
 			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas36, eFont.Consolas24, eFont.Consolas16, eFont.Consolas13, 
 													eFont.Not_Available, eFont.Not_Available, Color.White, 
-													new Color( Color.Gray, k_UI_alpha ), new Color( Color.Red, k_UI_alpha ), 
+													new Color( Color.Gray, k_UI_alpha ), new Color( Color.Black, k_UI_alpha ), 
 													Color.White ) );
 
 			AddStyle( eStyle.Tactical, new Style(	eFont.LucidaConsole36, eFont.LucidaConsole24, eFont.LucidaConsole16, 
 													eFont.LucidaConsole12, eFont.LucidaConsole10, eFont.LucidaConsole8, 
-													new Color( Color.White, k_Tactical_Alpha ), 
-													Color.Transparent, Color.Transparent,
-													new Color( Color.White, k_Tactical_Alpha ) ) );
+													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent, 
+													Color.Transparent, 	new Color( Color.White, k_Tactical_Alpha ) ) );
 
 			AddStyle( eStyle.Frontend, new Style(	eFont.Consolas36, eFont.Consolas24, eFont.Consolas16, eFont.Consolas13, 
 													eFont.Consolas13, eFont.Consolas13, Color.White, Color.DarkKhaki, 

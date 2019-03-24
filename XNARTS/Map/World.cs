@@ -95,10 +95,10 @@ namespace XNARTS
 		{
 			mRendered = false;
 
-			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore );
+			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "WorldKeyUp" );
 			((XIBroadcaster<XKeyInput.KeyUp>)XKeyInput.Instance()).GetBroadcaster().Subscribe( mListenter_KeyUp );
 
-			mListener_Button = new XListener<XUI.ButtonEvent>( 1, eEventQueueFullBehaviour.Ignore );
+			mListener_Button = new XListener<XUI.ButtonEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
 			((XIBroadcaster<XUI.ButtonEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_Button );
 			XUI ui = XUI.Instance();
 

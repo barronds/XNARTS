@@ -26,8 +26,9 @@ namespace XNARTS
 		private Queue< EventData >			mEvents;
 		private eEventQueueFullBehaviour	mFullBehaviour;
 		private int                         mMaxCapacity;
+		private String                      mDebugName;
 
-		public XListener( int max_capacity = 1, eEventQueueFullBehaviour full_behaviour = eEventQueueFullBehaviour.Assert )
+		public XListener( int max_capacity, eEventQueueFullBehaviour full_behaviour, String debug_name )
 		{
 			// initial_capacity is just a hint as the queue can scale.
 			// for most systems, one event will be broadcast for each consumption so 1 is often enough
@@ -35,6 +36,7 @@ namespace XNARTS
 			const int initial_capacity = 1;
 			mFullBehaviour = full_behaviour;
 			mMaxCapacity = max_capacity;
+			mDebugName = debug_name;
 			mEvents = new Queue<EventData>( initial_capacity );
 		}
 
@@ -149,9 +151,9 @@ namespace XNARTS
 
 			public TestListener()
 			{
-				mMailbox1 = new XListener<tEvent1>();
-				mMailbox2 = new XListener<tEvent2>( 2, eEventQueueFullBehaviour.IgnoreOldest );
-				mMailbox3 = new XListener<tEvent3>( 1, eEventQueueFullBehaviour.Ignore );
+				mMailbox1 = new XListener<tEvent1>( 1, eEventQueueFullBehaviour.Assert, "testmailbox1" );
+				mMailbox2 = new XListener<tEvent2>( 2, eEventQueueFullBehaviour.IgnoreOldest, "testmailbox2" );
+				mMailbox3 = new XListener<tEvent3>( 1, eEventQueueFullBehaviour.Ignore, "testmailbox3" );
 			}
 		}
 

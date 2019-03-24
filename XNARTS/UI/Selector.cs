@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public partial class XUI
+	public partial class XUI : XIBroadcaster< XUI.SelectorEvent >
 	{
 		public interface ISelector
 		{
@@ -15,13 +15,80 @@ namespace XNARTS
 			void Draw();
 		}
 
-		public ISelector CreateSelector( String title, eFont title_font, Vector2 location)
+		private XBroadcaster< SelectorEvent >	mBroadcaster_SelectorEvent;
+		private XListener< ButtonEvent >        mListener_ButtonEvent;
+		private Dictionary< long, ISelector >   mSelectors;
+
+		private void Constructor_Selector()
+		{
+			mBroadcaster_SelectorEvent = new XBroadcaster<SelectorEvent>();
+			mListener_ButtonEvent = new XListener<ButtonEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIselectorbutton" );
+			mSelectors = new Dictionary<long, ISelector>();
+		}
+
+		private void Init_Selector()
+		{
+			//mBroadcaster_ButtonEvent.Subscribe( mListener_ButtonEvent );
+		}
+
+		XBroadcaster<SelectorEvent> XIBroadcaster<SelectorEvent>.GetBroadcaster()
+		{
+			return mBroadcaster_SelectorEvent;
+		}
+		public class SelectorEvent
+		{
+			public SelectorEvent( int index_selected, long id )
+			{
+				mIndexSelected = index_selected;
+				mID = id;
+			}
+
+			public int mIndexSelected;
+			public long mID;
+		}
+
+		public ISelector CreateSelector( String title, eStyle style, Vector2 location, String[] texts )
 		{
 			return null;
 		}
 
-		public class Selector
+		private void Draw_Selector()
 		{
+			var enumerator = mSelectors.GetEnumerator();
+
+			while( enumerator.MoveNext() )
+			{
+				enumerator.Current.Value.Draw();
+			}
+		}
+
+		public class Selector : ISelector
+		{
+			private bool mRenderEnabled;
+			private long mID;
+
+			public Selector( long id )
+			{
+				mRenderEnabled = true;
+				mID = id;
+			}
+
+			public void SetRenderEnabled( bool value )
+			{
+				mRenderEnabled = value;
+			}
+			long ISelector.GetID()
+			{
+				return mID;
+			}
+
+			void ISelector.Draw()
+			{
+				if( mRenderEnabled )
+				{
+
+				}
+			}
 		}
 	}
 
