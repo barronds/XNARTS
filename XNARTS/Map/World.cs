@@ -76,7 +76,7 @@ namespace XNARTS
 		private XWorldGen.eMapType					mMapType;
 		private XSafeGrid< xMapCell >				mMap;
 		private XListener< XKeyInput.KeyUp >		mListenter_KeyUp;
-		private XListener< XUI.ButtonEvent >        mListener_Button;
+		private XListener< XUI.ButtonUpEvent >		mListener_Button;
 		private XUI.IButton							mRegnerateMapButton;
 		private XUI.IButton                         mMapTypeButton;
 		private XUI.IButton                         mMapSizeButton;
@@ -98,8 +98,8 @@ namespace XNARTS
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "WorldKeyUp" );
 			((XIBroadcaster<XKeyInput.KeyUp>)XKeyInput.Instance()).GetBroadcaster().Subscribe( mListenter_KeyUp );
 
-			mListener_Button = new XListener<XUI.ButtonEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
-			((XIBroadcaster<XUI.ButtonEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_Button );
+			mListener_Button = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
+			((XIBroadcaster<XUI.ButtonUpEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_Button );
 			XUI ui = XUI.Instance();
 
 			mRegnerateMapButton = ui.CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
@@ -204,22 +204,19 @@ namespace XNARTS
 
 			if( mListener_Button.GetNumEvents() > 0 )
 			{
-				XUI.ButtonEvent button_event = mListener_Button.ReadNext();
+				XUI.ButtonUpEvent button_event = mListener_Button.ReadNext();
 
-				if( button_event.mType == XUI.ButtonEvent.Type.Up )
+				if ( button_event.mID == mRegnerateMapButton.GetID() )
 				{
-					if ( button_event.mID == mRegnerateMapButton.GetID() )
-					{
-						generate_map = true;
-					}
-					else if ( button_event.mID == mMapTypeButton.GetID() )
-					{
-						change_map_type = true;
-					}
-					else if ( button_event.mID == mMapSizeButton.GetID() )
-					{
-						resize_map = true;
-					}
+					generate_map = true;
+				}
+				else if ( button_event.mID == mMapTypeButton.GetID() )
+				{
+					change_map_type = true;
+				}
+				else if ( button_event.mID == mMapSizeButton.GetID() )
+				{
+					resize_map = true;
 				}
 			}
 

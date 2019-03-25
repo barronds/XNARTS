@@ -20,5 +20,3 @@
 - add circles to simple draw
 
 - button push while generating map, undesirable
-
-- consolasfont sizes that work: Consolas 13, 16, 24, 36, Lucida Console 8, 10, 12, 16, 24, 36

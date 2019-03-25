@@ -16,13 +16,13 @@ namespace XNARTS
 		}
 
 		private XBroadcaster< SelectorEvent >	mBroadcaster_SelectorEvent;
-		private XListener< ButtonEvent >        mListener_ButtonEvent;
+		private XListener< ButtonUpEvent >		mListener_ButtonUpEvent;
 		private Dictionary< long, ISelector >   mSelectors;
 
 		private void Constructor_Selector()
 		{
 			mBroadcaster_SelectorEvent = new XBroadcaster<SelectorEvent>();
-			mListener_ButtonEvent = new XListener<ButtonEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIselectorbutton" );
+			mListener_ButtonUpEvent = new XListener<ButtonUpEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIselectorbutton" );
 			mSelectors = new Dictionary<long, ISelector>();
 		}
 

@@ -42,23 +42,23 @@ namespace XNARTS
 					if ( mCurrentlyPressed.Contains( data.mCurrentPos ) )
 					{
 						// pressed is still pressed
-						SendButtonEvent( ButtonEvent.Type.Held );
+						SendButtonHeldEvent();
 					}
 					else
 					{
 						// have strayed off button with a hold, un-press
-						SendButtonEvent( ButtonEvent.Type.Abort );
+						SendButtonAbortEvent();
 					}
 				}
 				else if ( data.mDetail == XTouch.ePokeDetail.End_Abort )
 				{
 					// touch decided this gesture is no good, un-press
-					SendButtonEvent( ButtonEvent.Type.Abort );
+					SendButtonAbortEvent();
 				}
 				else if ( data.mDetail == XTouch.ePokeDetail.End_Normal )
 				{
 					// this is a pressed button
-					SendButtonEvent( ButtonEvent.Type.Up );
+					SendButtonUpEvent();
 				}
 				else
 				{
@@ -75,7 +75,7 @@ namespace XNARTS
 					if ( enumerator.Current.Value.Contains( data.mCurrentPos ) )
 					{
 						mCurrentlyPressed = enumerator.Current.Value;
-						SendButtonEvent( ButtonEvent.Type.Down );
+						SendButtonDownEvent();
 						break;
 					}
 				}
