@@ -250,35 +250,32 @@ namespace XNARTS
 			}
 		}
 
-		private void SendButtonUpEvent()
+		private void SendButtonEvent< T >( bool pressed_now, XBroadcaster< T > b, T e )
 		{
 			XUtils.Assert( mCurrentlyPressed != null );
-			mCurrentlyPressed.SetPressed( false );
-			ButtonUpEvent e = new ButtonUpEvent( mCurrentlyPressed.GetID() );
-			mBroadcaster_ButtonUpEvent.Post( e );
-			mCurrentlyPressed = null;
+			mCurrentlyPressed.SetPressed( pressed_now );
+			b.Post( e );
+
+			if( !pressed_now )
+			{
+				mCurrentlyPressed = null;
+			}
+		}
+		private void SendButtonUpEvent()
+		{
+			SendButtonEvent( false, mBroadcaster_ButtonUpEvent, new ButtonUpEvent( mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonDownEvent()
 		{
-			XUtils.Assert( mCurrentlyPressed != null );
-			mCurrentlyPressed.SetPressed( true );
-			ButtonDownEvent e = new ButtonDownEvent( mCurrentlyPressed.GetID() );
-			mBroadcaster_ButtonDownEvent.Post( e );
+			SendButtonEvent( true, mBroadcaster_ButtonDownEvent, new ButtonDownEvent( mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonHeldEvent()
 		{
-			XUtils.Assert( mCurrentlyPressed != null );
-			mCurrentlyPressed.SetPressed( true );
-			ButtonHeldEvent e = new ButtonHeldEvent( mCurrentlyPressed.GetID() );
-			mBroadcaster_ButtonHeldEvent.Post( e );
+			SendButtonEvent( true, mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonAbortEvent()
 		{
-			XUtils.Assert( mCurrentlyPressed != null );
-			mCurrentlyPressed.SetPressed( false );
-			ButtonAbortEvent e = new ButtonAbortEvent( mCurrentlyPressed.GetID() );
-			mBroadcaster_ButtonAbortEvent.Post( e );
-			mCurrentlyPressed = null;
+			SendButtonEvent( false, mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( mCurrentlyPressed.GetID() ) );
 		}
 
 		private void Constructor_Buttons()
@@ -286,6 +283,7 @@ namespace XNARTS
 			mBroadcaster_ButtonUpEvent = new XBroadcaster<ButtonUpEvent>();
 			mBroadcaster_ButtonDownEvent = new XBroadcaster<ButtonDownEvent>();
 			mBroadcaster_ButtonHeldEvent = new XBroadcaster<ButtonHeldEvent>();
+			mBroadcaster_ButtonAbortEvent = new XBroadcaster<ButtonAbortEvent>();
 			mButtons = new SortedList<long, IButton>();
 			mCurrentlyPressed = null;
 		}
