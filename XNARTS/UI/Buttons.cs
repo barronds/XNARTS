@@ -250,7 +250,7 @@ namespace XNARTS
 			}
 		}
 
-		private void SendButtonEvent< T >( bool pressed_now, XBroadcaster< T > b, T e )
+		private void SendButtonEvent< T >( bool pressed_now, XBroadcaster< T > b, T e ) where T : class
 		{
 			XUtils.Assert( mCurrentlyPressed != null );
 			mCurrentlyPressed.SetPressed( pressed_now );

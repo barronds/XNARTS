@@ -13,15 +13,15 @@ namespace XNARTS
 								XIBroadcaster	< XKeyInput.KeyUp >,
 								XIBroadcaster	< XKeyInput.KeyHeld >
 		{
-		public struct KeyDown
+		public class KeyDown
 		{
 			public Keys mKey;
 		}
-		public struct KeyUp
+		public class KeyUp
 		{
 			public Keys mKey;
 		}
-		public struct KeyHeld
+		public class KeyHeld
 		{
 			public Keys mKey;
 		}

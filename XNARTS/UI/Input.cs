@@ -28,10 +28,7 @@ namespace XNARTS
 			// - currently pressed button might get aborted by touch gesture or drift
 			// - curretnly pressed button might still be pressed
 			// - on press start, a new button may be pressed
-
-			XTouch.SinglePokeData data =    (mListener_SinglePoke.GetNumEvents() > 0)   ?
-											mListener_SinglePoke.ReadNext()             :
-											null                                        ;
+			XTouch.SinglePokeData data = mListener_SinglePoke.GetEnumerator().MoveNext();
 
 			if ( mCurrentlyPressed != null )
 			{

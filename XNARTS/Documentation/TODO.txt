@@ -7,12 +7,10 @@
 - extend event system to allow immediate callback in addition to messages. 
 
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
-- augment events interface to have optional enumerator
 
 - octaves and features to map
 - try map lines instead of checkerboard
 
-- split up button events into kinds
 - selector
 
 - find sudden zoom bug

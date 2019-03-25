@@ -184,37 +184,39 @@ namespace XNARTS
 			bool resize_map = false;
 			bool change_map_type = false;
 
-			if ( mListenter_KeyUp.GetNumEvents() > 0 )
-			{
-				XKeyInput.KeyUp msg = mListenter_KeyUp.ReadNext();
+			var key_enumerator = mListenter_KeyUp.GetEnumerator();
+			XKeyInput.KeyUp key_msg = null;
 
-				if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
+			while( (key_msg = key_enumerator.MoveNext()) != null )
+			{
+				if ( key_msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
 				{
 					generate_map = true;
 				}
-				else if ( msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
+				else if ( key_msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
 				{
 					change_map_type = true;
 				}
-				else if( msg.mKey == Microsoft.Xna.Framework.Input.Keys.S )
+				else if( key_msg.mKey == Microsoft.Xna.Framework.Input.Keys.S )
 				{
 					resize_map = true;
 				}
 			}
 
-			if( mListener_Button.GetNumEvents() > 0 )
-			{
-				XUI.ButtonUpEvent button_event = mListener_Button.ReadNext();
+			var button_enumerator = mListener_Button.GetEnumerator();
+			XUI.ButtonUpEvent button_msg = null;
 
-				if ( button_event.mID == mRegnerateMapButton.GetID() )
+			while( (button_msg = button_enumerator.MoveNext()) != null )
+			{
+				if ( button_msg.mID == mRegnerateMapButton.GetID() )
 				{
 					generate_map = true;
 				}
-				else if ( button_event.mID == mMapTypeButton.GetID() )
+				else if ( button_msg.mID == mMapTypeButton.GetID() )
 				{
 					change_map_type = true;
 				}
-				else if ( button_event.mID == mMapSizeButton.GetID() )
+				else if ( button_msg.mID == mMapSizeButton.GetID() )
 				{
 					resize_map = true;
 				}
