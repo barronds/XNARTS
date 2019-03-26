@@ -42,6 +42,7 @@ namespace XNARTS
 			void Draw( XSimpleDraw simple_draw );
 			void SetPressed( bool pressed );
 			xAABB2 GetAABB();
+			void Translate( Vector2 d );
 		}
 
 		public class ButtonDownEvent
@@ -140,6 +141,11 @@ namespace XNARTS
 				mPressedColor = Color.Lerp( mStyle.mButtonColor, Color.White, k_pressed_blend );
 			}
 
+			public void Translate( Vector2 d )
+			{
+				mPos += d;
+			}
+
 			public void Draw( XSimpleDraw simple_draw )
 			{
 				// draw the text
@@ -194,6 +200,12 @@ namespace XNARTS
 			{
 				return mAABB;
 			}
+
+			void IButton.Translate( Vector2 d )
+			{
+				mAABB.Translate( d );
+				mButtonCore.Translate( d );
+			}
 		}
 
 		private class RectangularButton : IButton
@@ -227,7 +239,6 @@ namespace XNARTS
 			{
 				return mButtonCore.mID;
 			}
-
 			bool IButton.Contains( Vector2 point )
 			{
 				return mAABB.Contains( point );
@@ -255,6 +266,15 @@ namespace XNARTS
 			xAABB2 IButton.GetAABB()
 			{
 				return mAABB;
+			}
+
+			void IButton.Translate( Vector2 d )
+			{
+				mAABB.Translate( d );
+				Vector3 d3 = new Vector3( d, 0 );
+				mCorner2 += d3;
+				mCorner3 += d3;
+				mButtonCore.Translate( d );
 			}
 		}
 
