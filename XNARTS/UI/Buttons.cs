@@ -41,6 +41,7 @@ namespace XNARTS
 			long GetID();
 			void Draw( XSimpleDraw simple_draw );
 			void SetPressed( bool pressed );
+			xAABB2 GetAABB();
 		}
 
 		public class ButtonDownEvent
@@ -151,6 +152,7 @@ namespace XNARTS
 		{
 			private double mRadius;
 			private double mRadiusSqr;
+			private xAABB2 mAABB;
 			private ButtonCore mButtonCore;
 
 			public RoundButton( Vector2 pos,
@@ -163,6 +165,7 @@ namespace XNARTS
 				float radius = 100;
 				mRadius = radius;
 				mRadiusSqr = radius * radius;
+				mAABB = new xAABB2( pos, radius ); // correct?
 				// TODO: not finished, place text calculation
 				mButtonCore = new ButtonCore( pos, text, style, new Vector2( 0, 0 ), id );
 			}
@@ -171,24 +174,25 @@ namespace XNARTS
 			{
 				return mButtonCore.mID;
 			}
-
 			bool IButton.Contains( Vector2 point )
 			{
 				Vector2 d = point - mButtonCore.mPos;
 				double dist_sqr = d.LengthSquared();
 				return dist_sqr < mRadiusSqr;
 			}
-
 			void IButton.Draw( XSimpleDraw simple_draw )
 			{
 				// draw border and background, then draw 
 				// TODO: circle part, add circles to simple draw
 				mButtonCore.Draw( simple_draw );
 			}
-
 			void IButton.SetPressed( bool pressed )
 			{
 				mButtonCore.mPressed = pressed;
+			}
+			xAABB2 IButton.GetAABB()
+			{
+				return mAABB;
 			}
 		}
 
@@ -247,6 +251,10 @@ namespace XNARTS
 			void IButton.SetPressed( bool pressed )
 			{
 				mButtonCore.mPressed = pressed;
+			}
+			xAABB2 IButton.GetAABB()
+			{
+				return mAABB;
 			}
 		}
 
