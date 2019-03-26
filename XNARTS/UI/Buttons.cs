@@ -316,14 +316,5 @@ namespace XNARTS
 			mCurrentlyPressed = null;
 		}
 
-		private void Draw_Buttons()
-		{
-			var enumerator = mButtons.GetEnumerator();
-
-			while ( enumerator.MoveNext() )
-			{
-				enumerator.Current.Value.Draw( mSimpleDraw );
-			}
-		}
 	}
 }

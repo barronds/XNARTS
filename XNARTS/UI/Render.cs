@@ -21,5 +21,24 @@ namespace XNARTS
 			Draw_Selector();	
 			Draw_Buttons();
 		}
+
+		private void Draw_Buttons()
+		{
+			var enumerator = mButtons.GetEnumerator();
+
+			while ( enumerator.MoveNext() )
+			{
+				enumerator.Current.Value.Draw( mSimpleDraw );
+			}
+		}
+		private void Draw_Selector()
+		{
+			var enumerator = mSelectors.GetEnumerator();
+
+			while ( enumerator.MoveNext() )
+			{
+				enumerator.Current.Value.Draw( mSimpleDraw );
+			}
+		}
 	}
 }

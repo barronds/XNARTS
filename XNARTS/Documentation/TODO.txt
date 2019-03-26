@@ -12,6 +12,8 @@
 - try map lines instead of checkerboard
 
 - selector
+- map types on selector
+- map sizes on selector
 
 - find sudden zoom bug
 

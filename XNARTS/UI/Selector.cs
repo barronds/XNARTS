@@ -12,7 +12,7 @@ namespace XNARTS
 		public interface ISelector
 		{
 			long GetID();
-			void Draw();
+			void Draw( XSimpleDraw simple_draw );
 		}
 
 		private XBroadcaster< SelectorEvent >	mBroadcaster_SelectorEvent;
@@ -54,25 +54,22 @@ namespace XNARTS
 			return selector;
 		}
 
-		private void Draw_Selector()
-		{
-			var enumerator = mSelectors.GetEnumerator();
-
-			while( enumerator.MoveNext() )
-			{
-				enumerator.Current.Value.Draw();
-			}
-		}
-
 		public class Selector : ISelector
 		{
 			private bool mRenderEnabled;
 			private long mID;
+			private String mTitle;
+			private eStyle mStyle;
+			private Vector2 mPos;
+			private xAABB2 mAABB;
 
 			public Selector( Vector2 pos, String title, eStyle style, long id, String[] texts )
 			{
 				mRenderEnabled = true;
 				mID = id;
+				mPos = pos;
+				mTitle = title;
+				mStyle = style;
 
 				// create a default button to see how big it is vertically
 				// size and position border accordingly
@@ -85,7 +82,7 @@ namespace XNARTS
 				float button_size_y = button_size.GetSize().Y;
 				xui_inst.DestroyButton( test );
 
-				const float k_border_padding_scalar = 1.0f;
+				const float k_border_padding_scalar = 0.5f;
 				float border_padding = k_border_padding_scalar * button_size_y;
 
 				const float k_spacing_scalar = 0.2f;
@@ -97,18 +94,32 @@ namespace XNARTS
 				for( int i = 0; i < texts.Length; ++i )
 				{
 					Vector2 button_pos = pos;
-					button_pos.Y += 2 * border_padding + (spacing + button_size_y) * i;
+					button_pos.X += border_padding;
+					button_pos.Y += border_padding + (spacing + button_size_y) * i;
 					buttons[ i ] = xui_inst.CreateRectangularButton( button_pos, texts[ i ], style );
 					float size_x = buttons[ i ].GetAABB().GetSize().X;
 					largest_x = Math.Max( size_x, largest_x );
 				}
 
-				// translate each button to be centered
-				for( int i = 0; i < buttons.Length; ++i )
+				// calculate aabb
+				const float title_padding_scalar = 1.5f;
+				float title_padding = border_padding * title_padding_scalar;
+				Vector2 title_padding_v = new Vector2( 0, title_padding );
+				float full_width = largest_x + 2 * border_padding;
+
+				float full_height = button_size_y * buttons.Length +
+									(buttons.Length - 1) * spacing +
+									2 * border_padding +
+									title_padding;
+
+				mAABB.Set( pos, pos + new Vector2( full_width, full_height ) );
+
+				// translate each button to be centered, and account for title
+				for ( int i = 0; i < buttons.Length; ++i )
 				{
 					float size_x = buttons[ i ].GetAABB().GetSize().X;
 					float shift = (largest_x - size_x) * 0.5f;
-					buttons[ i ].Translate( new Vector2( shift, 0 ) );
+					buttons[ i ].Translate( new Vector2( shift, title_padding ) );
 				}
 			}
 
@@ -121,11 +132,13 @@ namespace XNARTS
 				return mID;
 			}
 
-			void ISelector.Draw()
+			void ISelector.Draw( XSimpleDraw simple_draw )
 			{
 				if( mRenderEnabled )
 				{
 					// draw the title and background, buttons will draw themselves
+					Color widget_color = XUI.Instance().GetStyle( mStyle ).mWidgetColor;
+					simple_draw.DrawQuad( new Vector3( mAABB.GetMin(), 1 ), new Vector3( mAABB.GetMax(), 1 ), widget_color );
 				}
 			}
 		}
