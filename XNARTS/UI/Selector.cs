@@ -92,12 +92,23 @@ namespace XNARTS
 				float spacing = k_spacing_scalar * button_size_y;
 
 				IButton[] buttons = new IButton[ texts.Length ];
+				float largest_x = 0;
 
 				for( int i = 0; i < texts.Length; ++i )
 				{
 					Vector2 button_pos = pos;
 					button_pos.Y += 2 * border_padding + (spacing + button_size_y) * i;
 					buttons[ i ] = xui_inst.CreateRectangularButton( button_pos, texts[ i ], style );
+					float size_x = buttons[ i ].GetAABB().GetSize().X;
+					largest_x = Math.Max( size_x, largest_x );
+				}
+
+				// translate each button to be centered
+				for( int i = 0; i < buttons.Length; ++i )
+				{
+					float size_x = buttons[ i ].GetAABB().GetSize().X;
+					float shift = (largest_x - size_x) * 0.5f;
+					buttons[ i ].Translate( new Vector2( shift, 0 ) );
 				}
 			}
 
