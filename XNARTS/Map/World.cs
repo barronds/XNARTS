@@ -107,7 +107,7 @@ namespace XNARTS
 			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
 
 			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 315 ),
-				"Hy0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789", 
+				"Hy0123456789012345678901234567890123456789", 
 				XUI.eStyle.Frontend );
 
 			String[] texts = { "Hello", "Goodbye", "Meatball Soup", "Four", "5" };

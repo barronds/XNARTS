@@ -79,9 +79,9 @@ namespace XNARTS
 													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent, 
 													Color.Transparent, new Color( Color.White, k_Tactical_Alpha ), 0.65f ) );
 
-			AddStyle( eStyle.Frontend, new Style(	eFont.Not_Available, eFont.Consolas36, eFont.ArialBlack24, eFont.Not_Available, 
+			AddStyle( eStyle.Frontend, new Style(	eFont.Not_Available, eFont.Consolas36, eFont.Consolas36, eFont.Not_Available, 
 													eFont.Not_Available, eFont.Not_Available, Color.White, Color.DarkViolet, 
-													Color.DarkViolet, Color.DarkViolet, 0.0f ) );
+													Color.DarkViolet, Color.Black, 0.0f ) );
 		}
 	}
 }

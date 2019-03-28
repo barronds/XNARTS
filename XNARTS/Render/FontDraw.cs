@@ -17,7 +17,6 @@ namespace XNARTS
 		Consolas13,
 		Consolas16,
 		Consolas24,
-		ArialBlack24,
 		Consolas36,
 
 		LucidaConsole8,
@@ -83,7 +82,7 @@ namespace XNARTS
 			mFontInfos = new Dictionary<eFont, FontInfo>();
 			mFontInfos.Add( eFont.Consolas16, new FontInfo( new Vector2( 12.0f, 19.0f ), Vector2.Zero ) );
 			mFontInfos.Add( eFont.Consolas24, new FontInfo( new Vector2( 18, 29 ), Vector2.Zero ) );
-			mFontInfos.Add( eFont.ArialBlack24, new FontInfo( new Vector2( 21, 29 ), new Vector2( -3, -12 ) ) );
+			mFontInfos.Add( eFont.Consolas36, new FontInfo( new Vector2( 26, 45 ), Vector2.Zero ) );
 			mFontInfos.Add( eFont.LucidaConsole16, new FontInfo( new Vector2( 13, 19 ), Vector2.Zero ) );
 		}
 		public void Init( GraphicsDevice device, ContentManager content_manager )
