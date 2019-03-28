@@ -23,7 +23,7 @@ namespace XNARTS
 		public class Style
 		{
 			public Style(	eFont huge, eFont large, eFont medium, eFont small, eFont tiny, eFont very_tiny, 
-							Color text, Color widget, Color button, Color border )
+							Color text, Color widget, Color button, Color border, float button_padding_scalar )
 			{
 				mHugeFont = huge;
 				mLargeFont = large;
@@ -35,6 +35,7 @@ namespace XNARTS
 				mWidgetColor = widget;
 				mButtonColor = button;
 				mBorderColor = border;
+				mButtonPaddingScalar = button_padding_scalar;
 			}
 
 			public eFont mHugeFont;
@@ -47,6 +48,7 @@ namespace XNARTS
 			public Color mWidgetColor;
 			public Color mButtonColor;
 			public Color mBorderColor;
+			public float mButtonPaddingScalar;
 		}
 
 		private Dictionary< eStyle, Style > mStyles;
@@ -70,16 +72,16 @@ namespace XNARTS
 			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas36, eFont.Consolas24, eFont.Consolas16, eFont.Consolas13, 
 													eFont.Not_Available, eFont.Not_Available, Color.White, 
 													new Color( Color.Gray, k_UI_alpha ), new Color( Color.Black, k_UI_alpha ), 
-													Color.White ) );
+													Color.White, 0.65f ) );
 
 			AddStyle( eStyle.Tactical, new Style(	eFont.LucidaConsole36, eFont.LucidaConsole24, eFont.LucidaConsole16, 
 													eFont.LucidaConsole12, eFont.LucidaConsole10, eFont.LucidaConsole8, 
 													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent, 
-													Color.Transparent, 	new Color( Color.White, k_Tactical_Alpha ) ) );
+													Color.Transparent, new Color( Color.White, k_Tactical_Alpha ), 0.65f ) );
 
-			AddStyle( eStyle.Frontend, new Style(	eFont.Consolas36, eFont.Consolas24, eFont.Consolas16, eFont.Consolas13, 
-													eFont.Consolas13, eFont.Consolas13, Color.White, Color.DarkKhaki, 
-													Color.Red, Color.White ) );
+			AddStyle( eStyle.Frontend, new Style(	eFont.Not_Available, eFont.Consolas36, eFont.ArialBlack24, eFont.Not_Available, 
+													eFont.Not_Available, eFont.Not_Available, Color.White, Color.DarkViolet, 
+													Color.DarkViolet, Color.DarkViolet, 0.0f ) );
 		}
 	}
 }

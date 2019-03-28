@@ -14,7 +14,6 @@ namespace XNARTS
 		private XUI()
 		{
 			// private constructor as per singleton
-			Constructor_Fonts();
 			Constructor_Style();
 			Constructor_Buttons();
 			Constructor_Selector();

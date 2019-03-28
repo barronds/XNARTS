@@ -41,8 +41,6 @@ namespace XNARTS
 			mGraphicsDevice = graphics_device;
 			mContentManager = content_manager;
 
-			XFontDraw.CreateInstance().Init( graphics_device, content_manager );
-
 			var current_display_mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 			mScreenDim = new xCoord( current_display_mode.Width, current_display_mode.Height );
 

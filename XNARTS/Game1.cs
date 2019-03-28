@@ -24,6 +24,7 @@ namespace XNARTS
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
 			Content.RootDirectory = "Content";
+			XFontDraw.CreateInstance();
 			XRenderManager.CreateInstance();
 			XTouch.CreateInstance();
 			XKeyInput.CreateInstance();
@@ -45,6 +46,7 @@ namespace XNARTS
 			XKeyInput.Instance().Init();
 			XWorld.Instance().Init();
 			XMouse.Instance().Init();
+			XFontDraw.Instance().Init( GraphicsDevice, Content );
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager, Content );
 			XUI.Instance().Init();
 

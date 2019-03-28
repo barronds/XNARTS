@@ -87,7 +87,8 @@ namespace XNARTS
 											eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
-			Vector2 font_size = mFontSizes[ s.mMediumFont ];
+			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mMediumFont );
+			Vector2 font_size = info.mSize;
 			IButton button = new RoundButton( pos, text, s, NextID(), font_size );
 			mButtons.Add( button.GetID(), button );
 			return button;
@@ -98,7 +99,8 @@ namespace XNARTS
 												eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
-			Vector2 font_size = mFontSizes[ s.mMediumFont ];
+			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mMediumFont );
+			Vector2 font_size = info.mSize;
 			IButton button = new RectangularButton( pos, text, s, NextID(), font_size );
 			mButtons.Add( button.GetID(), button );
 			return button;
@@ -149,6 +151,10 @@ namespace XNARTS
 			public void Draw( XSimpleDraw simple_draw )
 			{
 				// draw the text
+				if( mText.Length > 50 )
+				{
+					Console.WriteLine( mTextOffset + ", " + mText );
+				}
 				XFontDraw.Instance().DrawString( mStyle.mMediumFont, mPos + mTextOffset, mStyle.mTextColor, mText );
 			}
 		}
@@ -222,8 +228,7 @@ namespace XNARTS
 										Vector2 font_size )
 			{
 				// padding calculated, and button size and offset
-				const float k_padding_scalar = 0.65f;
-				float k_padding = k_padding_scalar * (font_size.X + font_size.Y);
+				float k_padding = style.mButtonPaddingScalar * (font_size.X + font_size.Y);
 				Vector2 new_text_offset = new Vector2( k_padding, k_padding );
 				float button_width = text.Length * font_size.X + 2 * k_padding;
 				float button_height = font_size.Y + 2 * k_padding;

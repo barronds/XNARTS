@@ -14,6 +14,8 @@
 - selector
 - map types on selector
 - map sizes on selector
+- refactor style to have just one font
+- add text offset correction
 
 - find sudden zoom bug
 
