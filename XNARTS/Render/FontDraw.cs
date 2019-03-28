@@ -83,7 +83,7 @@ namespace XNARTS
 			mFontInfos = new Dictionary<eFont, FontInfo>();
 			mFontInfos.Add( eFont.Consolas16, new FontInfo( new Vector2( 12.0f, 19.0f ), Vector2.Zero ) );
 			mFontInfos.Add( eFont.Consolas24, new FontInfo( new Vector2( 18, 29 ), Vector2.Zero ) );
-			mFontInfos.Add( eFont.ArialBlack24, new FontInfo( new Vector2( 21, 29 ), new Vector2( -2, -6 ) ) );
+			mFontInfos.Add( eFont.ArialBlack24, new FontInfo( new Vector2( 21, 29 ), new Vector2( -3, -12 ) ) );
 			mFontInfos.Add( eFont.LucidaConsole16, new FontInfo( new Vector2( 13, 19 ), Vector2.Zero ) );
 		}
 		public void Init( GraphicsDevice device, ContentManager content_manager )
@@ -108,8 +108,9 @@ namespace XNARTS
 			for( int i = 0; i < mRequests.Count; ++i )
 			{
 				SpriteFont sprite_font = mFontSpriteMap[ (int)(mRequests[ i ].mFont) ];
+				FontInfo info = mFontInfos[ mRequests[ i ].mFont ];
 				String s = mRequests[ i ].mString;
-				Vector2 pos = mRequests[ i ].mScreenPos;
+				Vector2 pos = mRequests[ i ].mScreenPos + info.mOffset;
 				Color color = mRequests[ i ].mColor;
 
 				mSpriteBatch.DrawString( sprite_font, s, pos, color );
