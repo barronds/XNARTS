@@ -13,6 +13,7 @@ namespace XNARTS
 		{
 			Invalid = -1,
 
+			FontTest,
 			GameplayUI,
 			Tactical,
 			Frontend,
@@ -68,6 +69,11 @@ namespace XNARTS
 			mStyles = new Dictionary<eStyle, Style>();
 			const float k_UI_alpha = 0.25f;
 			const float k_Tactical_Alpha = 0.5f;
+
+			// fonttest: make a button with this to tune (discover) size and offset
+			AddStyle( eStyle.FontTest, new Style(	eFont.Not_Available, eFont.Not_Available, eFont.Consolas36, eFont.Not_Available,
+													eFont.Not_Available, eFont.Not_Available, Color.White, Color.DarkViolet,
+													Color.DarkViolet, Color.Black, 0.0f ) );
 
 			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas36, eFont.Consolas24, eFont.Consolas16, eFont.Consolas13, 
 													eFont.Not_Available, eFont.Not_Available, Color.White, 
