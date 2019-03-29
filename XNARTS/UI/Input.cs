@@ -32,6 +32,13 @@ namespace XNARTS
 
 			if ( mCurrentlyPressed != null )
 			{
+				// first check if button disabled before considering input
+				if( !mCurrentlyPressed.IsActive() )
+				{
+					SendButtonAbortEvent();
+					return;
+				}
+
 				XUtils.Assert( data != null, "should have hold, end, or abort" );
 
 				if ( data.mDetail == XTouch.ePokeDetail.Hold )
@@ -40,29 +47,33 @@ namespace XNARTS
 					{
 						// pressed is still pressed
 						SendButtonHeldEvent();
+						return;
 					}
-					else
-					{
-						// have strayed off button with a hold, un-press
-						SendButtonAbortEvent();
-					}
+
+					// have strayed off button with a hold, un-press
+					SendButtonAbortEvent();
+					return;
 				}
-				else if ( data.mDetail == XTouch.ePokeDetail.End_Abort )
+
+				if ( data.mDetail == XTouch.ePokeDetail.End_Abort )
 				{
 					// touch decided this gesture is no good, un-press
 					SendButtonAbortEvent();
+					return;
 				}
-				else if ( data.mDetail == XTouch.ePokeDetail.End_Normal )
+
+				if ( data.mDetail == XTouch.ePokeDetail.End_Normal )
 				{
 					// this is a pressed button
 					SendButtonUpEvent();
+					return;
 				}
-				else
-				{
-					XUtils.Assert( false, "not expecting another state when mCurrentlyPressed is valid" );
-				}
+
+				XUtils.Assert( false, "not expecting another state when mCurrentlyPressed is valid" );
+				return;
 			}
-			else if ( data != null && data.mDetail == XTouch.ePokeDetail.Start )
+
+			if( data != null && data.mDetail == XTouch.ePokeDetail.Start )
 			{
 				// new press, let's see if it hits a button
 				var enumerator = mButtons.GetEnumerator();

@@ -41,6 +41,8 @@ namespace XNARTS
 			long GetID();
 			void Draw( XSimpleDraw simple_draw );
 			void SetPressed( bool pressed );
+			void SetActive( bool active );
+			bool IsActive();
 			xAABB2 GetAABB();
 			void Translate( Vector2 d );
 		}
@@ -125,6 +127,7 @@ namespace XNARTS
 			public Color mPressedColor;
 			public long mID;
 			public bool mPressed;
+			public bool mActive;
 
 			public ButtonCore( Vector2 pos,
 								String text,
@@ -138,6 +141,7 @@ namespace XNARTS
 				mTextOffset = text_offset;
 				mID = id;
 				mPressed = false;
+				mActive = true;
 
 				const float k_pressed_blend = 0.37f;
 				mPressedColor = Color.Lerp( mStyle.mBackgroundColor, Color.White, k_pressed_blend );
@@ -201,6 +205,14 @@ namespace XNARTS
 			void IButton.SetPressed( bool pressed )
 			{
 				mButtonCore.mPressed = pressed;
+			}
+			void IButton.SetActive( bool active )
+			{
+				mButtonCore.mActive = active;
+			}
+			bool IButton.IsActive()
+			{
+				return mButtonCore.mActive;
 			}
 			xAABB2 IButton.GetAABB()
 			{
@@ -271,6 +283,14 @@ namespace XNARTS
 			void IButton.SetPressed( bool pressed )
 			{
 				mButtonCore.mPressed = pressed;
+			}
+			void IButton.SetActive( bool active )
+			{
+				mButtonCore.mActive = active;
+			}
+			bool IButton.IsActive()
+			{
+				return mButtonCore.mActive;
 			}
 			xAABB2 IButton.GetAABB()
 			{
