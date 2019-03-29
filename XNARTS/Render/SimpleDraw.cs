@@ -61,7 +61,7 @@ namespace XNARTS
         }
 
 
-        public void DrawLine( Vector3 start_pos, Vector3 end_pos, Color start_color, Color end_color )
+        public void DrawLine( Vector3 start_pos, Vector3 end_pos, Color color )
         {
             if ( mNumLines == mMaxLines )
             {
@@ -69,8 +69,8 @@ namespace XNARTS
                 return;
             }
 
-            VertexPositionColor start = new VertexPositionColor( start_pos, start_color );
-            VertexPositionColor end = new VertexPositionColor( end_pos, end_color );
+            VertexPositionColor start = new VertexPositionColor( start_pos, color );
+            VertexPositionColor end = new VertexPositionColor( end_pos, color );
 
             int start_vert = 2 * mNumLines;
             mLines[ start_vert ] = start;

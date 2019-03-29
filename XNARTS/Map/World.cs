@@ -135,6 +135,8 @@ namespace XNARTS
 
 		public void RenderWorldLines( GameTime game_time )
 		{
+			XUtils.Assert( false, "under construction" );
+
 			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
 
 			Vector3 start = new Vector3();
@@ -149,7 +151,7 @@ namespace XNARTS
 				start.X = x;
 				end.X = x;
 
-				simple_draw_world.DrawLine( start, end, Color.Yellow, Color.Black );
+				simple_draw_world.DrawLine( start, end, Color.Yellow );
 			}
 
 			start.X = 0;
@@ -160,7 +162,7 @@ namespace XNARTS
 				start.Y = y;
 				end.Y = y;
 
-				simple_draw_world.DrawLine( start, end, Color.DarkGreen, Color.White );
+				simple_draw_world.DrawLine( start, end, Color.White );
 			}
 		}
 		public void RenderWorld( GameTime game_time )

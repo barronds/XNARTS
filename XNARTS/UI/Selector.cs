@@ -163,8 +163,23 @@ namespace XNARTS
 				if( mRenderEnabled )
 				{
 					// draw the title and background, buttons will draw themselves
-					Color widget_color = XUI.Instance().GetStyle( mStyle ).mBackgroundColor;
-					simple_draw.DrawQuad( new Vector3( mAABB.GetMin(), 1 ), new Vector3( mAABB.GetMax(), 1 ), widget_color );
+					Style style = XUI.Instance().GetStyle( mStyle );
+					Color widget_color = style.mBackgroundColor;
+					Color border_color = style.mBorderColor;
+
+					Vector3 lo_x_lo_y = new Vector3( mAABB.GetMin(), 1 );
+					Vector3 hi_x_hi_y = new Vector3( mAABB.GetMax(), 1 );
+
+					Vector2 size = mAABB.GetSize();
+					Vector3 lo_x_hi_y = lo_x_lo_y + new Vector3( 0, size.Y, 0 );
+					Vector3 hi_x_lo_y = lo_x_lo_y + new Vector3( size.X, 0, 0 );
+
+					simple_draw.DrawQuad( lo_x_lo_y, hi_x_hi_y, widget_color );
+
+					simple_draw.DrawLine( lo_x_lo_y, hi_x_lo_y, border_color );
+					simple_draw.DrawLine( hi_x_lo_y, hi_x_hi_y, border_color );
+					simple_draw.DrawLine( hi_x_hi_y, lo_x_hi_y, border_color );
+					simple_draw.DrawLine( lo_x_hi_y, lo_x_lo_y, border_color );
 				}
 			}
 		}

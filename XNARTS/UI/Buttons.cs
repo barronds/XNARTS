@@ -254,13 +254,17 @@ namespace XNARTS
 				// draw border and background, then draw core
 				Vector3 lo = new Vector3( mAABB.GetMin(), 2 ); // zero might not be right z
 				Vector3 hi = new Vector3( mAABB.GetMax(), 2 );
+
 				Color body_color = mButtonCore.mPressed ? mButtonCore.mPressedColor : mButtonCore.mStyle.mBackgroundColor;
-				simple_draw.DrawQuad( lo, hi, body_color );
 				Color border_color = mButtonCore.mStyle.mBorderColor;
-				simple_draw.DrawLine( lo, mCorner2, border_color, border_color );
-				simple_draw.DrawLine( mCorner2, hi, border_color, border_color );
-				simple_draw.DrawLine( hi, mCorner3, border_color, border_color );
-				simple_draw.DrawLine( mCorner3, lo, border_color, border_color );
+
+				simple_draw.DrawQuad( lo, hi, body_color );
+
+				simple_draw.DrawLine( lo, mCorner2, border_color );
+				simple_draw.DrawLine( mCorner2, hi, border_color );
+				simple_draw.DrawLine( hi, mCorner3, border_color );
+				simple_draw.DrawLine( mCorner3, lo, border_color );
+
 				mButtonCore.Draw( simple_draw );
 			}
 
