@@ -23,31 +23,20 @@ namespace XNARTS
 
 		public class Style
 		{
-			public Style(	eFont huge, eFont large, eFont medium, eFont small, eFont tiny, eFont very_tiny, 
-							Color text, Color widget, Color button, Color border, float button_padding_scalar )
+			public Style( eFont normal, eFont title, Color text, Color background, Color border, float button_padding_scalar )
 			{
-				mHugeFont = huge;
-				mLargeFont = large;
-				mMediumFont = medium;
-				mSmallFont = small;
-				mTinyFont = tiny;
-				mVeryTinyFont = very_tiny;
+				mNormalFont = normal;
+				mTitleFont = title;
 				mTextColor = text;
-				mWidgetColor = widget;
-				mButtonColor = button;
+				mBackgroundColor = background;
 				mBorderColor = border;
 				mButtonPaddingScalar = button_padding_scalar;
 			}
 
-			public eFont mHugeFont;
-			public eFont mLargeFont;
-			public eFont mMediumFont;
-			public eFont mSmallFont;
-			public eFont mTinyFont;
-			public eFont mVeryTinyFont;
+			public eFont mNormalFont;
+			public eFont mTitleFont;
 			public Color mTextColor;
-			public Color mWidgetColor;
-			public Color mButtonColor;
+			public Color mBackgroundColor;
 			public Color mBorderColor;
 			public float mButtonPaddingScalar;
 		}
@@ -69,25 +58,21 @@ namespace XNARTS
 			mStyles = new Dictionary<eStyle, Style>();
 			const float k_UI_alpha = 0.25f;
 			const float k_Tactical_Alpha = 0.5f;
+			Color ui_background = new Color( 0.35f, 0.35f, 0.35f, 1.0f );
 
 			// fonttest: make a button with this to tune (discover) size and offset (change the font)
-			AddStyle( eStyle.FontTest, new Style(	eFont.Not_Available, eFont.Not_Available, eFont.Consolas48, eFont.Not_Available,
-													eFont.Not_Available, eFont.Not_Available, Color.White, Color.DarkViolet,
+			AddStyle( eStyle.FontTest, new Style(	eFont.Consolas48, eFont.Not_Available, Color.White, 
 													Color.DarkViolet, Color.Black, 0.0f ) );
 
-			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas36, eFont.Consolas24, eFont.Consolas16, eFont.Consolas13, 
-													eFont.Not_Available, eFont.Not_Available, Color.White, 
-													new Color( Color.Gray, k_UI_alpha ), new Color( Color.Black, k_UI_alpha ), 
-													Color.White, 0.65f ) );
+			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas16, eFont.Consolas24, Color.White, 
+													new Color( Color.Black, k_UI_alpha ), Color.White, 0.65f ) );
 
-			AddStyle( eStyle.Tactical, new Style(	eFont.LucidaConsole36, eFont.LucidaConsole24, eFont.LucidaConsole16, 
-													eFont.LucidaConsole12, eFont.LucidaConsole10, eFont.LucidaConsole8, 
-													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent, 
-													Color.Transparent, new Color( Color.White, k_Tactical_Alpha ), 0.65f ) );
+			AddStyle( eStyle.Tactical, new Style(	eFont.LucidaConsole16, eFont.LucidaConsole24, 
+													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent,
+													new Color( Color.White, k_Tactical_Alpha ), 0.65f ) );
 
-			AddStyle( eStyle.Frontend, new Style(	eFont.Not_Available, eFont.Consolas36, eFont.Consolas36, eFont.Not_Available, 
-													eFont.Not_Available, eFont.Not_Available, Color.White, Color.DarkViolet, 
-													Color.DarkViolet, Color.Black, 0.0f ) );
+			AddStyle( eStyle.Frontend, new Style(	eFont.Consolas36, eFont.Consolas48, Color.White,
+													ui_background, Color.White, 0.0f ) );
 		}
 	}
 }

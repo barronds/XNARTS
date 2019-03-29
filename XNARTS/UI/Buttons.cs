@@ -87,7 +87,7 @@ namespace XNARTS
 											eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
-			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mMediumFont );
+			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
 			IButton button = new RoundButton( pos, text, s, NextID(), font_size );
 			mButtons.Add( button.GetID(), button );
@@ -99,7 +99,7 @@ namespace XNARTS
 												eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
-			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mMediumFont );
+			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
 			IButton button = new RectangularButton( pos, text, s, NextID(), font_size );
 			mButtons.Add( button.GetID(), button );
@@ -140,7 +140,7 @@ namespace XNARTS
 				mPressed = false;
 
 				const float k_pressed_blend = 0.37f;
-				mPressedColor = Color.Lerp( mStyle.mButtonColor, Color.White, k_pressed_blend );
+				mPressedColor = Color.Lerp( mStyle.mBackgroundColor, Color.White, k_pressed_blend );
 			}
 
 			public void Translate( Vector2 d )
@@ -155,7 +155,7 @@ namespace XNARTS
 				{
 					Console.WriteLine( mTextOffset + ", " + mText );
 				}
-				XFontDraw.Instance().DrawString( mStyle.mMediumFont, mPos + mTextOffset, mStyle.mTextColor, mText );
+				XFontDraw.Instance().DrawString( mStyle.mNormalFont, mPos + mTextOffset, mStyle.mTextColor, mText );
 			}
 		}
 
@@ -254,7 +254,7 @@ namespace XNARTS
 				// draw border and background, then draw core
 				Vector3 lo = new Vector3( mAABB.GetMin(), 2 ); // zero might not be right z
 				Vector3 hi = new Vector3( mAABB.GetMax(), 2 );
-				Color body_color = mButtonCore.mPressed ? mButtonCore.mPressedColor : mButtonCore.mStyle.mButtonColor;
+				Color body_color = mButtonCore.mPressed ? mButtonCore.mPressedColor : mButtonCore.mStyle.mBackgroundColor;
 				simple_draw.DrawQuad( lo, hi, body_color );
 				Color border_color = mButtonCore.mStyle.mBorderColor;
 				simple_draw.DrawLine( lo, mCorner2, border_color, border_color );

@@ -137,7 +137,7 @@ namespace XNARTS
 				if( mRenderEnabled )
 				{
 					// draw the title and background, buttons will draw themselves
-					Color widget_color = XUI.Instance().GetStyle( mStyle ).mWidgetColor;
+					Color widget_color = XUI.Instance().GetStyle( mStyle ).mBackgroundColor;
 					simple_draw.DrawQuad( new Vector3( mAABB.GetMin(), 1 ), new Vector3( mAABB.GetMax(), 1 ), widget_color );
 				}
 			}
