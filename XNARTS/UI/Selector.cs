@@ -102,7 +102,7 @@ namespace XNARTS
 				}
 
 				// calculate aabb
-				const float title_padding_scalar = 1.5f;
+				const float title_padding_scalar = 4.0f;
 				float title_padding = border_padding * title_padding_scalar;
 				Vector2 title_padding_v = new Vector2( 0, title_padding );
 				float full_width = largest_x + 2 * border_padding;

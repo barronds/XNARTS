@@ -106,9 +106,11 @@ namespace XNARTS
 			mMapTypeButton = ui.CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
 			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
 
+			/*
 			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 315 ),
 				"Hy0123456789012345678901234567890123456789", 
 				XUI.eStyle.FontTest );
+			*/
 
 			String[] texts = { "Hello", "Goodbye", "Meatball Soup", "Four", "5" };
 			ui.CreateSelector( new Vector2( 1000, 400 ), "missing", XUI.eStyle.Frontend, texts );

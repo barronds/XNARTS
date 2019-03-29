@@ -83,3 +83,10 @@
 /processorParam:TextureFormat=Compressed
 /build:LucidaConsole36.spritefont
 
+#begin Consolas48.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Consolas48.spritefont
+
