@@ -47,9 +47,9 @@ namespace XNARTS
 			public long mID;
 		}
 
-		public ISelector CreateSelector( Vector2 pos, String title, eStyle style, String[] texts )
+		public ISelector CreateSelector( Vector2 pos, String title, eStyle style, eStyle button_style, String[] texts )
 		{
-			ISelector selector = new Selector( pos, title, style, NextID(), texts );
+			ISelector selector = new Selector( pos, title, style, button_style, NextID(), texts );
 			mSelectors.Add( selector.GetID(), selector );
 			return selector;
 		}
@@ -60,16 +60,18 @@ namespace XNARTS
 			private long mID;
 			private String mTitle;
 			private eStyle mStyle;
+			private eStyle mButtonStyle;
 			private Vector2 mPos;
 			private xAABB2 mAABB;
 
-			public Selector( Vector2 pos, String title, eStyle style, long id, String[] texts )
+			public Selector( Vector2 pos, String title, eStyle style, eStyle button_style, long id, String[] texts )
 			{
 				mRenderEnabled = true;
 				mID = id;
 				mPos = pos;
 				mTitle = title;
 				mStyle = style;
+				mButtonStyle = button_style;
 
 				// create a default button to see how big it is vertically
 				// size and position border accordingly
@@ -120,7 +122,7 @@ namespace XNARTS
 					Vector2 button_pos = pos;
 					button_pos.X += border_padding;
 					button_pos.Y += border_padding + (spacing + button_size_y) * i;
-					buttons[ i ] = xui_inst.CreateRectangularButton( button_pos, texts[ i ], style );
+					buttons[ i ] = xui_inst.CreateRectangularButton( button_pos, texts[ i ], button_style );
 					float size_x = buttons[ i ].GetAABB().GetSize().X;
 					largest_x = Math.Max( size_x, largest_x );
 				}

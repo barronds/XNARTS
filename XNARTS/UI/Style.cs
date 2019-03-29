@@ -17,6 +17,7 @@ namespace XNARTS
 			GameplayUI,
 			Tactical,
 			Frontend,
+			FrontendButton,
 
 			Num
 		}
@@ -73,6 +74,9 @@ namespace XNARTS
 
 			AddStyle( eStyle.Frontend, new Style(	eFont.Consolas36, eFont.Consolas48, Color.White,
 													ui_background, Color.White, 0.0f ) );
+
+			AddStyle( eStyle.FrontendButton, new Style( eFont.Consolas36, eFont.Consolas48, Color.White,
+														ui_background, ui_background, 0.0f ) );
 		}
 	}
 }

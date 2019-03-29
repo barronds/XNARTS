@@ -113,7 +113,7 @@ namespace XNARTS
 			*/
 
 			String[] texts = { "Hello", "Goodbye", "Meatball Soup", "Four", "5" };
-			ui.CreateSelector( new Vector2( 1000, 400 ), "missing", XUI.eStyle.Frontend, texts );
+			ui.CreateSelector( new Vector2( 1000, 400 ), "missing", XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, texts );
 
 			Generate();
 		}
