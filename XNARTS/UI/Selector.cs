@@ -88,10 +88,34 @@ namespace XNARTS
 				const float k_spacing_scalar = 0.2f;
 				float spacing = k_spacing_scalar * button_size_y;
 
+				// pad out the text strings so the buttons can be wide if the text is small
+				int longest = 0;
+
+				for( int i = 0; i < texts.Length; ++i )
+				{
+					longest = Math.Max( longest, texts[ i ].Length );
+				}
+
+				for( int i = 0; i < texts.Length; ++i )
+				{
+					int length = texts[ i ].Length;
+					int shortfall = longest - length;
+					int even_floor_half_shortfall = shortfall / 2;
+					String padding = XUtils.GetNSpaces( even_floor_half_shortfall );
+					texts[ i ] = padding + texts[ i ] + padding;
+
+					// this code would make buttons all the same size but sacrifice perfect centering of text.
+					//if( texts[ i ].Length < longest )
+					//{
+					//	texts[ i ] += " ";
+					//}
+				}
+
+				// create buttons and track largest
 				IButton[] buttons = new IButton[ texts.Length ];
 				float largest_x = 0;
 
-				for( int i = 0; i < texts.Length; ++i )
+				for ( int i = 0; i < texts.Length; ++i )
 				{
 					Vector2 button_pos = pos;
 					button_pos.X += border_padding;

@@ -67,6 +67,7 @@
     <Compile Include="Utils\Pluralton.cs" />
     <Compile Include="Utils\Singleton.cs" />
     <Compile Include="Utils\StateMachine.cs" />
+    <Compile Include="Utils\Strings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
