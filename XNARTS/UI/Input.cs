@@ -78,9 +78,9 @@ namespace XNARTS
 				// new press, let's see if it hits a button
 				var enumerator = mButtons.GetEnumerator();
 
-				while ( enumerator.MoveNext() )
+				while( enumerator.MoveNext() )
 				{
-					if ( enumerator.Current.Value.Contains( data.mCurrentPos ) )
+					if( enumerator.Current.Value.Contains( data.mCurrentPos ) && enumerator.Current.Value.IsActive() )
 					{
 						mCurrentlyPressed = enumerator.Current.Value;
 						SendButtonDownEvent();

@@ -47,9 +47,9 @@ namespace XNARTS
 			public long mID;
 		}
 
-		public ISelector CreateSelector( Vector2 pos, String title, eStyle style, eStyle button_style, String[] texts )
+		public ISelector CreateSelector( Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, String[] texts )
 		{
-			ISelector selector = new Selector( pos, title, style, button_style, NextID(), texts );
+			ISelector selector = new Selector( pos, title, style, button_style, title_style, NextID(), texts );
 			mSelectors.Add( selector.GetID(), selector );
 			return selector;
 		}
@@ -61,10 +61,11 @@ namespace XNARTS
 			private String mTitle;
 			private eStyle mStyle;
 			private eStyle mButtonStyle;
+			private eStyle mTitleStyle;
 			private Vector2 mPos;
 			private xAABB2 mAABB;
 
-			public Selector( Vector2 pos, String title, eStyle style, eStyle button_style, long id, String[] texts )
+			public Selector( Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, long id, String[] texts )
 			{
 				mRenderEnabled = true;
 				mID = id;
@@ -72,11 +73,13 @@ namespace XNARTS
 				mTitle = title;
 				mStyle = style;
 				mButtonStyle = button_style;
+				mTitleStyle = title_style;
 
 				// create a default button to see how big it is vertically
-				// size and position border accordingly
+				// size and position border accordingly, factoring in width of largest button including title
 				// destroy that button
 				// create all the proper buttons in the right spot
+				// create title 'button' as disabled button
 				XUI xui_inst = XUI.Instance();
 
 				IButton test = xui_inst.CreateRectangularButton( Vector2.Zero, "Test", style );
@@ -127,6 +130,12 @@ namespace XNARTS
 					largest_x = Math.Max( size_x, largest_x );
 				}
 
+				// create title button (non-functional) and see if it's the largest
+				Vector2 title_pos = pos + new Vector2( border_padding, border_padding );
+				IButton title_button = xui_inst.CreateRectangularButton( title_pos, title, title_style );
+				title_button.SetActive( false );
+				largest_x = Math.Max( largest_x, title_button.GetAABB().GetSize().X );
+
 				// calculate aabb
 				const float title_padding_scalar = 4.0f;
 				float title_padding = border_padding * title_padding_scalar;
@@ -143,12 +152,18 @@ namespace XNARTS
 				// translate each button to be centered, and account for title
 				for ( int i = 0; i < buttons.Length; ++i )
 				{
-					float size_x = buttons[ i ].GetAABB().GetSize().X;
-					float shift = (largest_x - size_x) * 0.5f;
-					buttons[ i ].Translate( new Vector2( shift, title_padding ) );
+					CenterButton( buttons[ i ], largest_x, title_padding );
 				}
+
+				CenterButton( title_button, largest_x, 0 );
 			}
 
+			private void CenterButton( IButton button, float largest, float title_padding )
+			{
+				float size_x = button.GetAABB().GetSize().X;
+				float shift = (largest - size_x) * 0.5f;
+				button.Translate( new Vector2( shift, title_padding ) );
+			}
 			public void SetRenderEnabled( bool value )
 			{
 				mRenderEnabled = value;
