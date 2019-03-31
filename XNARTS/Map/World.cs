@@ -112,9 +112,12 @@ namespace XNARTS
 				XUI.eStyle.FontTest );
 			*/
 
+			/*
 			String[] texts = { "Hello", "Goodbye", "Meatball Soup", "Four", "5" };
+			String[] controls = { "Back", "Exit Game", "Quit Program, not really, i'm having fun" };
 			ui.CreateSelector(	new Vector2( 1000, 400 ), "missing everything", XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
-								XUI.eStyle.FrontendTitle, texts );
+								XUI.eStyle.FrontendTitle, XUI.eStyle.FrontendControl, texts, controls );
+			*/
 
 			Generate();
 		}

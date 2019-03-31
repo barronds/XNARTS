@@ -19,6 +19,7 @@ namespace XNARTS
 			Frontend,
 			FrontendButton,
 			FrontendTitle,
+			FrontendControl,
 
 			Num
 		}
@@ -61,6 +62,7 @@ namespace XNARTS
 			const float k_UI_alpha = 0.25f;
 			const float k_Tactical_Alpha = 0.5f;
 			Color ui_background = new Color( 0.35f, 0.35f, 0.35f, 1.0f );
+			Color ui_meta = Color.Lerp( ui_background, Color.White, 0.5f );
 
 			// fonttest: make a button with this to tune (discover) size and offset (change the font)
 			AddStyle( eStyle.FontTest, new Style(	eFont.Consolas48, eFont.Not_Available, Color.White, 
@@ -79,8 +81,11 @@ namespace XNARTS
 			AddStyle( eStyle.FrontendButton, new Style( eFont.Consolas36, eFont.Consolas48, Color.White,
 														ui_background, ui_background, 0.0f ) );
 
-			AddStyle( eStyle.FrontendTitle, new Style(	eFont.Consolas48, eFont.Not_Available, Color.White,
+			AddStyle( eStyle.FrontendTitle, new Style(	eFont.Consolas48, eFont.Not_Available, ui_meta,
 														ui_background, ui_background, 0.0f ) );
+
+			AddStyle( eStyle.FrontendControl, new Style(	eFont.Consolas36, eFont.Not_Available, ui_meta,
+															ui_background, ui_background, 0.0f ) );
 		}
 	}
 }

@@ -47,9 +47,12 @@ namespace XNARTS
 			public long mID;
 		}
 
-		public ISelector CreateSelector( Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, String[] texts )
+		public ISelector CreateSelector(	Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
+											eStyle control_style, String[] texts, String[] controls )
 		{
-			ISelector selector = new Selector( pos, title, style, button_style, title_style, NextID(), texts );
+			ISelector selector = new Selector(	pos, title, style, button_style, title_style, control_style, NextID(), 
+												texts, controls );
+
 			mSelectors.Add( selector.GetID(), selector );
 			return selector;
 		}
@@ -62,10 +65,12 @@ namespace XNARTS
 			private eStyle mStyle;
 			private eStyle mButtonStyle;
 			private eStyle mTitleStyle;
+			private eStyle mControlStyle;
 			private Vector2 mPos;
 			private xAABB2 mAABB;
 
-			public Selector( Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, long id, String[] texts )
+			public Selector(	Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
+								eStyle control_style, long id, String[] texts, String[] controls )
 			{
 				mRenderEnabled = true;
 				mID = id;
@@ -74,6 +79,7 @@ namespace XNARTS
 				mStyle = style;
 				mButtonStyle = button_style;
 				mTitleStyle = title_style;
+				mControlStyle = control_style;
 
 				// create a default button to see how big it is vertically
 				// size and position border accordingly, factoring in width of largest button including title
@@ -101,32 +107,41 @@ namespace XNARTS
 					longest = Math.Max( longest, texts[ i ].Length );
 				}
 
-				for( int i = 0; i < texts.Length; ++i )
+				for ( int i = 0; i < controls.Length; ++i )
 				{
-					int length = texts[ i ].Length;
-					int shortfall = longest - length;
-					int even_floor_half_shortfall = shortfall / 2;
-					String padding = XUtils.GetNSpaces( even_floor_half_shortfall );
-					texts[ i ] = padding + texts[ i ] + padding;
+					longest = Math.Max( longest, controls[ i ].Length );
+				}
 
-					// this code would make buttons all the same size but sacrifice perfect centering of text.
-					//if( texts[ i ].Length < longest )
-					//{
-					//	texts[ i ] += " ";
-					//}
+				for ( int i = 0; i < texts.Length; ++i )
+				{
+					texts[ i ] = PadButtonText( texts[ i ], longest );
+				}
+
+				for ( int i = 0; i < controls.Length; ++i )
+				{
+					controls[ i ] = PadButtonText( controls[ i ], longest );
 				}
 
 				// create buttons and track largest
-				IButton[] buttons = new IButton[ texts.Length ];
+				IButton[] text_buttons = new IButton[ texts.Length ];
+				IButton[] control_buttons = new IButton[ controls.Length ];
 				float largest_x = 0;
 
 				for ( int i = 0; i < texts.Length; ++i )
 				{
-					Vector2 button_pos = pos;
-					button_pos.X += border_padding;
-					button_pos.Y += border_padding + (spacing + button_size_y) * i;
-					buttons[ i ] = xui_inst.CreateRectangularButton( button_pos, texts[ i ], button_style );
-					float size_x = buttons[ i ].GetAABB().GetSize().X;
+					text_buttons[ i ] = PositionAndCreateButton( pos, border_padding, spacing, button_size_y,
+						button_style, i, texts[ i ] );
+
+					float size_x = text_buttons[ i ].GetAABB().GetSize().X;
+					largest_x = Math.Max( size_x, largest_x );
+				}
+
+				for ( int i = 0; i < controls.Length; ++i )
+				{
+					control_buttons[ i ] = PositionAndCreateButton( pos, border_padding, spacing, button_size_y,
+						control_style, i + texts.Length, controls[ i ] );
+
+					float size_x = control_buttons[ i ].GetAABB().GetSize().X;
 					largest_x = Math.Max( size_x, largest_x );
 				}
 
@@ -142,22 +157,43 @@ namespace XNARTS
 				Vector2 title_padding_v = new Vector2( 0, title_padding );
 				float full_width = largest_x + 2 * border_padding;
 
-				float full_height = button_size_y * buttons.Length +
-									(buttons.Length - 1) * spacing +
+				float full_height = button_size_y * (text_buttons.Length + control_buttons.Length) +
+									(text_buttons.Length + control_buttons.Length - 1) * spacing +
 									2 * border_padding +
 									title_padding;
 
 				mAABB.Set( pos, pos + new Vector2( full_width, full_height ) );
 
 				// translate each button to be centered, and account for title
-				for ( int i = 0; i < buttons.Length; ++i )
+				for ( int i = 0; i < text_buttons.Length; ++i )
 				{
-					CenterButton( buttons[ i ], largest_x, title_padding );
+					CenterButton( text_buttons[ i ], largest_x, title_padding );
+				}
+
+				for ( int i = 0; i < control_buttons.Length; ++i )
+				{
+					CenterButton( control_buttons[ i ], largest_x, title_padding );
 				}
 
 				CenterButton( title_button, largest_x, 0 );
 			}
 
+			private IButton PositionAndCreateButton(	Vector2 pos, float border_padding, float spacing, 
+														float button_size_y, eStyle button_style, int button_num, String text )
+			{
+				Vector2 button_pos = pos;
+				button_pos.X += border_padding;
+				button_pos.Y += border_padding + (spacing + button_size_y) * button_num;
+				return XUI.Instance().CreateRectangularButton( button_pos, text, button_style );
+			}
+			private String PadButtonText( String text, int longest )
+			{
+				int length = text.Length;
+				int shortfall = longest - length;
+				int even_floor_half_shortfall = shortfall / 2;
+				String padding = XUtils.GetNSpaces( even_floor_half_shortfall );
+				return padding + text + padding;
+			}
 			private void CenterButton( IButton button, float largest, float title_padding )
 			{
 				float size_x = button.GetAABB().GetSize().X;
