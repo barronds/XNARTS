@@ -26,10 +26,9 @@ namespace XNARTS
 
 		public class Style
 		{
-			public Style( eFont normal, eFont title, Color text, Color background, Color border, float button_padding_scalar )
+			public Style( eFont normal, Color text, Color background, Color border, float button_padding_scalar )
 			{
 				mNormalFont = normal;
-				mTitleFont = title;
 				mTextColor = text;
 				mBackgroundColor = background;
 				mBorderColor = border;
@@ -37,7 +36,6 @@ namespace XNARTS
 			}
 
 			public eFont mNormalFont;
-			public eFont mTitleFont;
 			public Color mTextColor;
 			public Color mBackgroundColor;
 			public Color mBorderColor;
@@ -65,27 +63,21 @@ namespace XNARTS
 			Color ui_meta = Color.Lerp( ui_background, Color.White, 0.5f );
 
 			// fonttest: make a button with this to tune (discover) size and offset (change the font)
-			AddStyle( eStyle.FontTest, new Style(	eFont.Consolas48, eFont.Not_Available, Color.White, 
-													Color.DarkViolet, Color.Black, 0.0f ) );
+			AddStyle( eStyle.FontTest, new Style( eFont.Consolas48, Color.White, Color.DarkViolet, Color.Black, 0.0f ) );
 
-			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas16, eFont.Consolas24, Color.White, 
-													new Color( Color.Black, k_UI_alpha ), Color.White, 0.65f ) );
+			AddStyle( eStyle.GameplayUI, new Style(	eFont.Consolas16, Color.White, new Color( Color.Black, k_UI_alpha ), 
+													Color.White, 0.65f ) );
 
-			AddStyle( eStyle.Tactical, new Style(	eFont.LucidaConsole16, eFont.LucidaConsole24, 
-													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent,
-													new Color( Color.White, k_Tactical_Alpha ), 0.65f ) );
+			AddStyle( eStyle.Tactical, new Style(	eFont.LucidaConsole16, new Color( Color.White, k_Tactical_Alpha ), 
+													Color.Transparent, new Color( Color.White, k_Tactical_Alpha ), 0.65f ) );
 
-			AddStyle( eStyle.Frontend, new Style(	eFont.Consolas36, eFont.Consolas48, Color.White,
-													ui_background, Color.White, 0.0f ) );
+			AddStyle( eStyle.Frontend, new Style( eFont.Consolas36, Color.White, ui_background, Color.White, 0.0f ) );
 
-			AddStyle( eStyle.FrontendButton, new Style( eFont.Consolas36, eFont.Consolas48, Color.White,
-														ui_background, ui_background, 0.0f ) );
+			AddStyle( eStyle.FrontendButton, new Style( eFont.Consolas36, Color.White, ui_background, ui_background, 0.0f ) );
 
-			AddStyle( eStyle.FrontendTitle, new Style(	eFont.Consolas48, eFont.Not_Available, ui_meta,
-														ui_background, ui_background, 0.0f ) );
+			AddStyle( eStyle.FrontendTitle, new Style( eFont.Consolas48, ui_meta, ui_background, ui_background, 0.0f ) );
 
-			AddStyle( eStyle.FrontendControl, new Style(	eFont.Consolas36, eFont.Not_Available, ui_meta,
-															ui_background, ui_background, 0.0f ) );
+			AddStyle( eStyle.FrontendControl, new Style( eFont.Consolas36, ui_meta, ui_background, ui_background, 0.0f ) );
 		}
 	}
 }

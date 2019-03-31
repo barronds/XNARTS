@@ -12,12 +12,11 @@
 - try map lines instead of checkerboard
 
 - selector
+- get choices out of selector (differentiate controls vs selections)
 - map types on selector
 - map sizes on selector
 - menu system based on selector
 - destroy selector, and with it buttons and title
-- style down to one font
-- selector title color different
 - selector bigger buttons when title is bigger than all other buttons
 
 - find sudden zoom bug
