@@ -7,12 +7,12 @@
 - extend event system to allow immediate callback in addition to messages. 
 
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
+- change events enumerator to be like Dictionary.  MoveNext returns bool, 'Current' gets you value.
 
 - octaves and features to map
 - try map lines instead of checkerboard
 
 - selector
-- get choices out of selector (differentiate controls vs selections)
 - map types on selector
 - map sizes on selector
 - menu system based on selector

@@ -7,44 +7,62 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public partial class XUI : XIBroadcaster< XUI.SelectorEvent >
+	public partial class XUI :	XIBroadcaster< XUI.SelectorSelectionEvent >,
+								XIBroadcaster< XUI.SelectorControlEvent >
 	{
 		public interface ISelector
 		{
 			long GetID();
 			void Draw( XSimpleDraw simple_draw );
+			int CheckSelections( long id );
+			int CheckControls( long id );
 		}
 
-		private XBroadcaster< SelectorEvent >	mBroadcaster_SelectorEvent;
-		private XListener< ButtonUpEvent >		mListener_ButtonUpEvent;
-		private Dictionary< long, ISelector >   mSelectors;
+		private XBroadcaster< SelectorSelectionEvent >	mBroadcaster_SelectorSelectionEvent;
+		private XBroadcaster< SelectorControlEvent >	mBroadcaster_SelectorControlEvent;
+		private XListener< ButtonUpEvent >				mListener_ButtonUpEvent;
+		private Dictionary< long, ISelector >			mSelectors;
 
 		private void Constructor_Selector()
 		{
-			mBroadcaster_SelectorEvent = new XBroadcaster<SelectorEvent>();
+			mBroadcaster_SelectorSelectionEvent = new XBroadcaster<SelectorSelectionEvent>();
+			mBroadcaster_SelectorControlEvent = new XBroadcaster<SelectorControlEvent>();
 			mListener_ButtonUpEvent = new XListener<ButtonUpEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIselectorbutton" );
 			mSelectors = new Dictionary<long, ISelector>();
 		}
 
 		private void Init_Selector()
 		{
-			//mBroadcaster_ButtonEvent.Subscribe( mListener_ButtonEvent );
+			mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonUpEvent );
 		}
 
-		XBroadcaster<SelectorEvent> XIBroadcaster<SelectorEvent>.GetBroadcaster()
+		XBroadcaster<SelectorSelectionEvent> XIBroadcaster<SelectorSelectionEvent>.GetBroadcaster()
 		{
-			return mBroadcaster_SelectorEvent;
+			return mBroadcaster_SelectorSelectionEvent;
 		}
-		public class SelectorEvent
+		XBroadcaster<SelectorControlEvent> XIBroadcaster<SelectorControlEvent>.GetBroadcaster()
 		{
-			public SelectorEvent( int index_selected, long id )
+			return mBroadcaster_SelectorControlEvent;
+		}
+		public class SelectorSelectionEvent
+		{
+			public SelectorSelectionEvent( long selector_id, int index_selected )
 			{
+				mSelectorID = selector_id;
 				mIndexSelected = index_selected;
-				mID = id;
 			}
-
+			public long mSelectorID;
 			public int mIndexSelected;
-			public long mID;
+		}
+		public class SelectorControlEvent
+		{
+			public SelectorControlEvent( long selector_id, int index_selected )
+			{
+				mSelectorID = selector_id;
+				mIndexSelected = index_selected;
+			}
+			public long mSelectorID;
+			public int mIndexSelected;
 		}
 
 		public ISelector CreateSelector(	Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
@@ -68,6 +86,8 @@ namespace XNARTS
 			private eStyle mControlStyle;
 			private Vector2 mPos;
 			private xAABB2 mAABB;
+			private IButton[] mSelections;
+			private IButton[] mControls;
 
 			public Selector(	Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
 								eStyle control_style, long id, String[] texts, String[] controls )
@@ -80,6 +100,8 @@ namespace XNARTS
 				mButtonStyle = button_style;
 				mTitleStyle = title_style;
 				mControlStyle = control_style;
+				this.mSelections = new IButton[ texts.Length ];
+				this.mControls = new IButton[ controls.Length ];
 
 				// create a default button to see how big it is vertically
 				// size and position border accordingly, factoring in width of largest button including title
@@ -123,25 +145,23 @@ namespace XNARTS
 				}
 
 				// create buttons and track largest
-				IButton[] text_buttons = new IButton[ texts.Length ];
-				IButton[] control_buttons = new IButton[ controls.Length ];
 				float largest_x = 0;
 
 				for ( int i = 0; i < texts.Length; ++i )
 				{
-					text_buttons[ i ] = PositionAndCreateButton( pos, border_padding, spacing, button_size_y,
+					mSelections[ i ] = PositionAndCreateButton( pos, border_padding, spacing, button_size_y,
 						button_style, i, texts[ i ] );
 
-					float size_x = text_buttons[ i ].GetAABB().GetSize().X;
+					float size_x = mSelections[ i ].GetAABB().GetSize().X;
 					largest_x = Math.Max( size_x, largest_x );
 				}
 
 				for ( int i = 0; i < controls.Length; ++i )
 				{
-					control_buttons[ i ] = PositionAndCreateButton( pos, border_padding, spacing, button_size_y,
+					mControls[ i ] = PositionAndCreateButton( pos, border_padding, spacing, button_size_y,
 						control_style, i + texts.Length, controls[ i ] );
 
-					float size_x = control_buttons[ i ].GetAABB().GetSize().X;
+					float size_x = mControls[ i ].GetAABB().GetSize().X;
 					largest_x = Math.Max( size_x, largest_x );
 				}
 
@@ -157,22 +177,22 @@ namespace XNARTS
 				Vector2 title_padding_v = new Vector2( 0, title_padding );
 				float full_width = largest_x + 2 * border_padding;
 
-				float full_height = button_size_y * (text_buttons.Length + control_buttons.Length) +
-									(text_buttons.Length + control_buttons.Length - 1) * spacing +
+				float full_height = button_size_y * (mSelections.Length + mControls.Length) +
+									(mSelections.Length + mControls.Length - 1) * spacing +
 									2 * border_padding +
 									title_padding;
 
 				mAABB.Set( pos, pos + new Vector2( full_width, full_height ) );
 
 				// translate each button to be centered, and account for title
-				for ( int i = 0; i < text_buttons.Length; ++i )
+				for ( int i = 0; i < mSelections.Length; ++i )
 				{
-					CenterButton( text_buttons[ i ], largest_x, title_padding );
+					CenterButton( mSelections[ i ], largest_x, title_padding );
 				}
 
-				for ( int i = 0; i < control_buttons.Length; ++i )
+				for ( int i = 0; i < mControls.Length; ++i )
 				{
-					CenterButton( control_buttons[ i ], largest_x, title_padding );
+					CenterButton( mControls[ i ], largest_x, title_padding );
 				}
 
 				CenterButton( title_button, largest_x, 0 );
@@ -203,6 +223,30 @@ namespace XNARTS
 			public void SetRenderEnabled( bool value )
 			{
 				mRenderEnabled = value;
+			}
+			int ISelector.CheckSelections( long id )
+			{
+				for( int i = 0; i < mSelections.Length; ++i )
+				{
+					if( mSelections[ i ].GetID() == id )
+					{
+						return i;
+					}
+				}
+
+				return -1;
+			}
+			int ISelector.CheckControls( long id )
+			{
+				for ( int i = 0; i < mControls.Length; ++i )
+				{
+					if ( mControls[ i ].GetID() == id )
+					{
+						return i;
+					}
+				}
+
+				return -1;
 			}
 			long ISelector.GetID()
 			{
