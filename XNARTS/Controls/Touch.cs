@@ -436,8 +436,7 @@ namespace XNARTS
 		}
 		private void Transition_5Contacts_Any()
 		{
-			// trigger an event "five finger press"
-			Console.WriteLine( "5 contacts!" );
+			mBroadcaster_FiveContacts.Post( new FiveContacts() );
 		}
 		private void Transition_Trivial()
 		{ }

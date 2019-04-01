@@ -15,7 +15,7 @@
 - map types on selector
 - map sizes on selector
 - menu system based on selector
-- trigger menu system with 5 touch points
+- provide optional screen centering for selector
 - enable/disable or show/hide selector to facilitate layering (menus), ie go back etc.  selector stack better model?
 - selector bigger buttons when title is bigger than all other buttons (optional)
 
