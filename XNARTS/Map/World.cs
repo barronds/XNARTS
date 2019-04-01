@@ -94,13 +94,13 @@ namespace XNARTS
 		public void Init()
 		{
 			mRendered = false;
+			XUI ui = XUI.Instance();
 
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "WorldKeyUp" );
 			((XIBroadcaster<XKeyInput.KeyUp>)XKeyInput.Instance()).GetBroadcaster().Subscribe( mListenter_KeyUp );
 
 			mListener_Button = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
-			((XIBroadcaster<XUI.ButtonUpEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_Button );
-			XUI ui = XUI.Instance();
+			((XIBroadcaster<XUI.ButtonUpEvent>)ui).GetBroadcaster().Subscribe( mListener_Button );
 
 			mRegnerateMapButton = ui.CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
 			mMapTypeButton = ui.CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
@@ -115,7 +115,7 @@ namespace XNARTS
 			/*
 			String[] texts = { "Hello", "Goodbye", "Meatball Soup", "Four", "5" };
 			String[] controls = { "Back", "Exit Game", "Quit Program, not really, i'm having fun" };
-			ui.CreateSelector(	new Vector2( 1000, 400 ), "missing everything", XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
+			mSelector = ui.CreateSelector(	new Vector2( 1000, 400 ), "missing everything", XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
 								XUI.eStyle.FrontendTitle, XUI.eStyle.FrontendControl, texts, controls );
 			*/
 

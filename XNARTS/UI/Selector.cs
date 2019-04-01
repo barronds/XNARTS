@@ -16,6 +16,7 @@ namespace XNARTS
 			void Draw( XSimpleDraw simple_draw );
 			int CheckSelections( long id );
 			int CheckControls( long id );
+			void Destroy();
 		}
 
 		private XBroadcaster< SelectorSelectionEvent >	mBroadcaster_SelectorSelectionEvent;
@@ -75,6 +76,13 @@ namespace XNARTS
 			return selector;
 		}
 
+		public void DestroySelector( long id )
+		{
+			ISelector selector = mSelectors[ id ];
+			selector.Destroy();
+			mSelectors.Remove( id );
+		}
+
 		public class Selector : ISelector
 		{
 			private bool mRenderEnabled;
@@ -88,6 +96,7 @@ namespace XNARTS
 			private xAABB2 mAABB;
 			private IButton[] mSelections;
 			private IButton[] mControls;
+			private IButton mTitleButton;
 
 			public Selector(	Vector2 pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
 								eStyle control_style, long id, String[] texts, String[] controls )
@@ -167,9 +176,9 @@ namespace XNARTS
 
 				// create title button (non-functional) and see if it's the largest
 				Vector2 title_pos = pos + new Vector2( border_padding, border_padding );
-				IButton title_button = xui_inst.CreateRectangularButton( title_pos, title, title_style );
-				title_button.SetActive( false );
-				largest_x = Math.Max( largest_x, title_button.GetAABB().GetSize().X );
+				mTitleButton = xui_inst.CreateRectangularButton( title_pos, title, title_style );
+				mTitleButton.SetActive( false );
+				largest_x = Math.Max( largest_x, mTitleButton.GetAABB().GetSize().X );
 
 				// calculate aabb
 				const float title_padding_scalar = 4.0f;
@@ -195,7 +204,7 @@ namespace XNARTS
 					CenterButton( mControls[ i ], largest_x, title_padding );
 				}
 
-				CenterButton( title_button, largest_x, 0 );
+				CenterButton( mTitleButton, largest_x, 0 );
 			}
 
 			private IButton PositionAndCreateButton(	Vector2 pos, float border_padding, float spacing, 
@@ -206,6 +215,7 @@ namespace XNARTS
 				button_pos.Y += border_padding + (spacing + button_size_y) * button_num;
 				return XUI.Instance().CreateRectangularButton( button_pos, text, button_style );
 			}
+
 			private String PadButtonText( String text, int longest )
 			{
 				int length = text.Length;
@@ -223,6 +233,21 @@ namespace XNARTS
 			public void SetRenderEnabled( bool value )
 			{
 				mRenderEnabled = value;
+			}
+			void ISelector.Destroy()
+			{
+				XUI ui = XUI.Instance();
+				ui.DestroyButton( mTitleButton );
+
+				for( int i = 0; i < mSelections.Length; ++i )
+				{
+					ui.DestroyButton( mSelections[ i ] );
+				}
+
+				for ( int i = 0; i < mControls.Length; ++i )
+				{
+					ui.DestroyButton( mControls[ i ] );
+				}
 			}
 			int ISelector.CheckSelections( long id )
 			{

@@ -12,12 +12,11 @@
 - octaves and features to map
 - try map lines instead of checkerboard
 
-- selector
 - map types on selector
 - map sizes on selector
 - menu system based on selector
-- destroy selector, and with it buttons and title
-- selector bigger buttons when title is bigger than all other buttons
+- enable/disable or show/hide selector to facilitate layering (menus), ie go back etc.  selector stack better model?
+- selector bigger buttons when title is bigger than all other buttons (optional)
 
 - find sudden zoom bug
 
