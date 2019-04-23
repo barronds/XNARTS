@@ -24,3 +24,5 @@
 - add circles to simple draw
 
 - button push while generating map, undesirable
+
+- for listener / broadcaster, have utility functions that shorten the usage

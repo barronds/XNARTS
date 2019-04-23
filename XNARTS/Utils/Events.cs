@@ -65,14 +65,22 @@ namespace XNARTS
 
 		public class Enumerator
 		{
-			private Queue< EventData > mEvents;
+			private Queue< EventData >	mEvents;
+			private EventData			mCurrent;
+
 			public Enumerator( Queue< EventData > events )
 			{
 				mEvents = events;
+				mCurrent = null;
 			}
 			public EventData MoveNext()
 			{
-				return mEvents.Count > 0 ? mEvents.Dequeue() : null;
+				mCurrent = mEvents.Count > 0 ? mEvents.Dequeue() : null;
+				return mCurrent;
+			}
+			public EventData GetCurrent()
+			{
+				return mCurrent;
 			}
 		}
 

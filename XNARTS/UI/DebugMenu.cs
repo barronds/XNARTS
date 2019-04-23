@@ -9,41 +9,110 @@ namespace XNARTS
 {
 	class XDebugMenu : XSingleton< XDebugMenu >
 	{
+		public class MenuSelectionEvent
+		{
+			// this design is not right. ambiguous for listening systems - could be multiple 
+			// different menu items with same name from different menus.
+			// maybe menu entries should be pushed from listener classes. (like realtime plugin)
+			public MenuSelectionEvent( String selection_text )
+			{
+				mSelectionText = selection_text;
+			}
+
+			public String mSelectionText;
+		}
+
 		// just holds the root of the debug menu.  
 		// individual systems should own the rest fo the tree.
-		private XListener< XTouch.FiveContacts >	mListener_FiveContacts;
-		private XUI.ISelector                       mRootSelector;
+		private XListener< XTouch.FiveContacts >		mListener_FiveContacts;
+		private XListener< XUI.SelectorSelectionEvent > mListener_SelectorSelection;
+		private XListener< XUI.SelectorControlEvent >   mListener_SelectorControl;
+		private XBroadcaster< MenuSelectionEvent >      mBroadcaster_MenuSelection;
+		private XUI.ISelector							mRootSelector;
+		private String[]                                mOptions;
+		private String[]                                mControls;
 
 		private XDebugMenu()
 		{
 			mListener_FiveContacts = new XListener<XTouch.FiveContacts>( 1, eEventQueueFullBehaviour.Assert, "5contacts" );
+			mListener_SelectorSelection = new XListener<XUI.SelectorSelectionEvent>( 1, eEventQueueFullBehaviour.Assert, "dmss" );
+			mListener_SelectorControl = new XListener<XUI.SelectorControlEvent>( 1, eEventQueueFullBehaviour.Assert, "dmsc" );
+			mBroadcaster_MenuSelection = new XBroadcaster<MenuSelectionEvent>();
 			mRootSelector = null;
+			mOptions = new String[ 1 ]{ "Map" };
+			mControls = new String[ 1 ]{ "Exit" };
 		}
 
 		public void Init()
 		{
 			((XIBroadcaster<XTouch.FiveContacts>)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_FiveContacts );
+			((XIBroadcaster<XUI.SelectorSelectionEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_SelectorSelection );
+			((XIBroadcaster<XUI.SelectorControlEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_SelectorControl );
 		}
 
 		public void Update()
 		{
-			var enumerator = mListener_FiveContacts.GetEnumerator();
-			XTouch.FiveContacts e = null;
-
-			while( (e = enumerator.MoveNext()) != null )
+			// check for create menu
+			if( mListener_FiveContacts.GetEnumerator().MoveNext() != null )
 			{
-				// intentionally iterate through no matter what to drain listener queue
 				if( mRootSelector == null )
 				{
-					String[] options = { "Map" };
-					String[] controls = { "Exit" };
-
 					mRootSelector = XUI.Instance().CreateSelector( new Vector2( 500, 400 ), "Debug Menu", XUI.eStyle.Frontend,
 																	XUI.eStyle.FrontendButton, XUI.eStyle.FrontendTitle,
-																	XUI.eStyle.FrontendControl, options, controls );
+																	XUI.eStyle.FrontendControl, mOptions, mControls );
 				}
+			}
 
+			// check for menu selection
+			var selection_enumerator = mListener_SelectorSelection.GetEnumerator();
 
+			if ( selection_enumerator.MoveNext() != null )
+			{
+				var data = selection_enumerator.GetCurrent();
+
+				if( data.mSelectorID == mRootSelector.GetID() )
+				{
+					// destroy this selector
+					XUI.Instance().DestroySelector( mRootSelector.GetID() );
+					mRootSelector = null;
+
+					switch( data.mIndexSelected )
+					{
+						case 0:
+							// map selected, sent message for that system to do what it wants
+							Console.WriteLine( "map selected" );
+							mBroadcaster_MenuSelection.Post( new MenuSelectionEvent( mOptions[ 0 ] ) );
+							break;
+						default:
+							// problem
+							break;
+					}
+				}
+			}
+
+			// check for control selection
+			var control_enumerator = mListener_SelectorControl.GetEnumerator();
+
+			if ( control_enumerator.MoveNext() != null )
+			{
+				var data = control_enumerator.GetCurrent();
+
+				if ( data.mSelectorID == mRootSelector.GetID() )
+				{
+					// destroy this selector
+					XUI.Instance().DestroySelector( mRootSelector.GetID() );
+					mRootSelector = null;
+
+					switch ( data.mIndexSelected )
+					{
+						case 0:
+							// exit selected, shut it down
+							break;
+						default:
+							// problem
+							break;
+					}
+				}
 			}
 		}
 	}
