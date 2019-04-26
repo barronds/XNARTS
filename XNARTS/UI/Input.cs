@@ -34,7 +34,9 @@ namespace XNARTS
 			// - currently pressed button might get aborted by touch gesture or drift
 			// - curretnly pressed button might still be pressed
 			// - on press start, a new button may be pressed
-			XTouch.SinglePokeData data = mListener_SinglePoke.GetEnumerator().MoveNext();
+			var single_poke_enumerator = mListener_SinglePoke.CreateEnumerator();
+			single_poke_enumerator.MoveNext();
+			var data = single_poke_enumerator.GetCurrent();
 
 			if ( mCurrentlyPressed != null )
 			{
@@ -99,11 +101,10 @@ namespace XNARTS
 		void Update_Input_Selector()
 		{
 			// go through all selectors and check all button and controls against button_up input
-			var enumerator = mListener_ButtonUpEvent.GetEnumerator();
-			ButtonUpEvent button_up = null;
+			ButtonUpEvent button_up = mListener_ButtonUpEvent.GetMaxOne();
 			int selected_index = -1;
 
-			while( (button_up = enumerator.MoveNext()) != null )
+			if( button_up != null )
 			{
 				var s = mSelectors.GetEnumerator();
 
@@ -121,7 +122,6 @@ namespace XNARTS
 					}
 				}
 			}
-			
 		}
 	}
 }

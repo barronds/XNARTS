@@ -53,7 +53,9 @@ namespace XNARTS
 		public void Update()
 		{
 			// check for create menu
-			if( mListener_FiveContacts.GetEnumerator().MoveNext() != null )
+			var enumerator_fiveContacts = mListener_FiveContacts.CreateEnumerator();
+
+			if ( enumerator_fiveContacts.MoveNext() )
 			{
 				if( mRootSelector == null )
 				{
@@ -64,19 +66,17 @@ namespace XNARTS
 			}
 
 			// check for menu selection
-			var selection_enumerator = mListener_SelectorSelection.GetEnumerator();
+			var selection_data = mListener_SelectorSelection.GetMaxOne();
 
-			if ( selection_enumerator.MoveNext() != null )
+			if ( selection_data != null )
 			{
-				var data = selection_enumerator.GetCurrent();
-
-				if( data.mSelectorID == mRootSelector.GetID() )
+				if( selection_data.mSelectorID == mRootSelector.GetID() )
 				{
 					// destroy this selector
 					XUI.Instance().DestroySelector( mRootSelector.GetID() );
 					mRootSelector = null;
 
-					switch( data.mIndexSelected )
+					switch( selection_data.mIndexSelected )
 					{
 						case 0:
 							// map selected, sent message for that system to do what it wants
@@ -91,19 +91,17 @@ namespace XNARTS
 			}
 
 			// check for control selection
-			var control_enumerator = mListener_SelectorControl.GetEnumerator();
+			var control_data = mListener_SelectorControl.GetMaxOne();
 
-			if ( control_enumerator.MoveNext() != null )
+			if( control_data != null )
 			{
-				var data = control_enumerator.GetCurrent();
-
-				if ( data.mSelectorID == mRootSelector.GetID() )
+				if ( control_data.mSelectorID == mRootSelector.GetID() )
 				{
 					// destroy this selector
 					XUI.Instance().DestroySelector( mRootSelector.GetID() );
 					mRootSelector = null;
 
-					switch ( data.mIndexSelected )
+					switch ( control_data.mIndexSelected )
 					{
 						case 0:
 							// exit selected, shut it down

@@ -73,10 +73,18 @@ namespace XNARTS
 				mEvents = events;
 				mCurrent = null;
 			}
-			public EventData MoveNext()
+			public bool MoveNext()
 			{
-				mCurrent = mEvents.Count > 0 ? mEvents.Dequeue() : null;
-				return mCurrent;
+				if( mEvents.Count > 0 )
+				{
+					mCurrent = mEvents.Dequeue();
+					return true;
+				}
+				else
+				{
+					mCurrent = null;
+					return false;
+				}
 			}
 			public EventData GetCurrent()
 			{
@@ -84,9 +92,26 @@ namespace XNARTS
 			}
 		}
 
-		public Enumerator GetEnumerator()
+		public Enumerator CreateEnumerator()
 		{
 			return new Enumerator( mEvents );
+		}
+		public EventData GetMaxOne()
+		{
+			if( mEvents.Count == 0 )
+			{
+				return null;
+			}
+			else if( mEvents.Count == 1 )
+			{
+				return mEvents.Dequeue();
+			}
+			else
+			{
+				// incorrect assumption about this listener
+				XUtils.Assert( false );
+				return null;
+			}
 		}
 
 		// not of much use other than debugging or enforcing certain timing behaviour
@@ -211,7 +236,9 @@ namespace XNARTS
 
 			broadcaster.mEvent1.Post( event1 );
 			XUtils.Assert( listener.mMailbox1.GetNumEvents() == 1 );
-			tEvent1 event_read = listener.mMailbox1.GetEnumerator().MoveNext();
+			var enumerator_1 = listener.mMailbox1.CreateEnumerator();
+			enumerator_1.MoveNext();
+			tEvent1 event_read = enumerator_1.GetCurrent();
 			XUtils.Assert( listener.mMailbox1.GetNumEvents() == 0 );
 			XUtils.Assert( event_read.a == 2 );
 
@@ -229,7 +256,9 @@ namespace XNARTS
 			broadcaster.mEvent3.Post( event4 );
 			broadcaster.mEvent3.Post( event4 );
 			XUtils.Assert( listener.mMailbox3.GetNumEvents() == 1 );
-			XUtils.Assert( listener.mMailbox3.GetEnumerator().MoveNext().c == 'a' );
+			var enumerator_3 = listener.mMailbox3.CreateEnumerator();
+			enumerator_3.MoveNext();
+			XUtils.Assert( enumerator_3.GetCurrent().c == 'a' );
 
 			var event2 = new tEvent2();
 			var event6 = new tEvent2();
@@ -243,13 +272,16 @@ namespace XNARTS
 			event7.b = 3.0f;
 			broadcaster.mEvent2.Post( event7 );
 			XUtils.Assert( listener.mMailbox2.GetNumEvents() == 2 );
-			var enumerator2 = listener.mMailbox2.GetEnumerator();
-			XUtils.Assert( enumerator2.MoveNext().b == 2.0f );
-			XUtils.Assert( enumerator2.MoveNext().b == 3.0f );
+			var enumerator2 = listener.mMailbox2.CreateEnumerator();
+			enumerator2.MoveNext();
+			XUtils.Assert( enumerator2.GetCurrent().b == 2.0f );
+			enumerator2.MoveNext();
+			XUtils.Assert( enumerator2.GetCurrent().b == 3.0f );
 
 			TestListener listener2 = new TestListener();
 			broadcaster.mEvent1.Subscribe( listener2.mMailbox1 );
-			listener.mMailbox1.GetEnumerator().MoveNext();
+			var e1 = listener.mMailbox1.CreateEnumerator();
+			e1.MoveNext();
 			XUtils.Assert( listener.mMailbox1.GetNumEvents() == 0 );
 			XUtils.Assert( broadcaster.mEvent1.IsSubscribed( listener.mMailbox1 ) );
 			broadcaster.mEvent1.Post( event1 );

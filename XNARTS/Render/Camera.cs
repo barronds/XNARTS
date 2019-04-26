@@ -131,15 +131,15 @@ namespace XNARTS
 
 		void XICamera.Update( GameTime game_time )
 		{
-			if( mListener_WorldRegenerated.GetEnumerator().MoveNext() != null )
+			
+			if( mListener_WorldRegenerated.GetMaxOne() != null )
 			{
 				InitFromWorld();
 			}
 
-			var enumerator = mListener_MultiDrag.GetEnumerator();
-			XTouch.MultiDragData multi_drag_msg = null;
+			XTouch.MultiDragData multi_drag_msg = mListener_MultiDrag.GetMaxOne();
 
-			while( (multi_drag_msg = enumerator.MoveNext()) != null )
+			if( multi_drag_msg != null )
 			{
 				if( multi_drag_msg.mFrameCount == 0 )
 				{

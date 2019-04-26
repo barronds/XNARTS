@@ -199,39 +199,37 @@ namespace XNARTS
 			bool resize_map = false;
 			bool change_map_type = false;
 
-			var key_enumerator = mListenter_KeyUp.GetEnumerator();
-			XKeyInput.KeyUp key_msg = null;
+			var key_enumerator = mListenter_KeyUp.CreateEnumerator();
 
-			while( (key_msg = key_enumerator.MoveNext()) != null )
+			while( key_enumerator.MoveNext() )
 			{
-				if ( key_msg.mKey == Microsoft.Xna.Framework.Input.Keys.W )
+				if ( key_enumerator.GetCurrent().mKey == Microsoft.Xna.Framework.Input.Keys.W )
 				{
 					generate_map = true;
 				}
-				else if ( key_msg.mKey == Microsoft.Xna.Framework.Input.Keys.T )
+				else if ( key_enumerator.GetCurrent().mKey == Microsoft.Xna.Framework.Input.Keys.T )
 				{
 					change_map_type = true;
 				}
-				else if( key_msg.mKey == Microsoft.Xna.Framework.Input.Keys.S )
+				else if( key_enumerator.GetCurrent().mKey == Microsoft.Xna.Framework.Input.Keys.S )
 				{
 					resize_map = true;
 				}
 			}
 
-			var button_enumerator = mListener_Button.GetEnumerator();
-			XUI.ButtonUpEvent button_msg = null;
+			var button_enumerator = mListener_Button.CreateEnumerator();
 
-			while( (button_msg = button_enumerator.MoveNext()) != null )
+			while( button_enumerator.MoveNext() )
 			{
-				if ( button_msg.mID == mRegnerateMapButton.GetID() )
+				if ( button_enumerator.GetCurrent().mID == mRegnerateMapButton.GetID() )
 				{
 					generate_map = true;
 				}
-				else if ( button_msg.mID == mMapTypeButton.GetID() )
+				else if ( button_enumerator.GetCurrent().mID == mMapTypeButton.GetID() )
 				{
 					change_map_type = true;
 				}
-				else if ( button_msg.mID == mMapSizeButton.GetID() )
+				else if ( button_enumerator.GetCurrent().mID == mMapSizeButton.GetID() )
 				{
 					resize_map = true;
 				}
