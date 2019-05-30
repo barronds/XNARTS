@@ -63,7 +63,7 @@ namespace XNARTS
 		}
 	}
 
-	public class XWorld : XSingleton< XWorld >, XIBroadcaster< XWorld.WorldRegenerated >
+	public class XWorld : XSingleton< XWorld >
 	{
 		public class WorldRegenerated
 		{ }
@@ -97,10 +97,10 @@ namespace XNARTS
 			XUI ui = XUI.Instance();
 
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "WorldKeyUp" );
-			((XIBroadcaster<XKeyInput.KeyUp>)XKeyInput.Instance()).GetBroadcaster().Subscribe( mListenter_KeyUp );
+			XKeyInput.Instance().GetBroadcaster_KeyUp().Subscribe( mListenter_KeyUp );
 
 			mListener_Button = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
-			((XIBroadcaster<XUI.ButtonUpEvent>)ui).GetBroadcaster().Subscribe( mListener_Button );
+			ui.GetBroadcaster_ButtonUpEvent().Subscribe( mListener_Button );
 
 			mRegnerateMapButton = ui.CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
 			mMapTypeButton = ui.CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
@@ -122,7 +122,7 @@ namespace XNARTS
 			Generate();
 		}
 
-		XBroadcaster< WorldRegenerated > XIBroadcaster< WorldRegenerated >.GetBroadcaster()
+		public XBroadcaster< WorldRegenerated > GetBroadcaster_WorldRegenerated()
 		{
 			return mBroadcaster_WorldRegenerated;
 		}

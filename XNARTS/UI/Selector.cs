@@ -7,8 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public partial class XUI :	XIBroadcaster< XUI.SelectorSelectionEvent >,
-								XIBroadcaster< XUI.SelectorControlEvent >
+	public partial class XUI
 	{
 		public interface ISelector
 		{
@@ -37,14 +36,15 @@ namespace XNARTS
 			mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonUpEvent );
 		}
 
-		XBroadcaster<SelectorSelectionEvent> XIBroadcaster<SelectorSelectionEvent>.GetBroadcaster()
+		public XBroadcaster<SelectorSelectionEvent> GetBroadcaster_SelectorSelectionEvent()
 		{
 			return mBroadcaster_SelectorSelectionEvent;
 		}
-		XBroadcaster<SelectorControlEvent> XIBroadcaster<SelectorControlEvent>.GetBroadcaster()
+		public XBroadcaster<SelectorControlEvent> GetBroadcaster_SelectorControlEvent()
 		{
 			return mBroadcaster_SelectorControlEvent;
 		}
+
 		public class SelectorSelectionEvent
 		{
 			public SelectorSelectionEvent( long selector_id, int index_selected )

@@ -8,10 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace XNARTS
 {
-	public class XKeyInput :	XSingleton		< XKeyInput >, 
-								XIBroadcaster	< XKeyInput.KeyDown >,
-								XIBroadcaster	< XKeyInput.KeyUp >,
-								XIBroadcaster	< XKeyInput.KeyHeld >
+	public class XKeyInput : XSingleton< XKeyInput >
 		{
 		public class KeyDown
 		{
@@ -30,15 +27,15 @@ namespace XNARTS
 		private XBroadcaster< KeyUp >	mBroadcaster_KeyUp;
 		private XBroadcaster< KeyHeld >	mBroadcaster_KeyHeld;
 
-		XBroadcaster<KeyDown> XIBroadcaster<KeyDown>.GetBroadcaster()
+		public XBroadcaster<KeyDown> GetBroadcaster_KeyDown()
 		{
 			return mBroadcaster_KeyDown;
 		}
-		XBroadcaster<KeyUp> XIBroadcaster<KeyUp>.GetBroadcaster()
+		public XBroadcaster<KeyUp> GetBroadcaster_KeyUp()
 		{
 			return mBroadcaster_KeyUp;
 		}
-		XBroadcaster<KeyHeld> XIBroadcaster<KeyHeld>.GetBroadcaster()
+		public XBroadcaster<KeyHeld> GetBroadcaster_KeyHeld()
 		{
 			return mBroadcaster_KeyHeld;
 		}

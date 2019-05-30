@@ -1,16 +1,20 @@
-﻿- consider simple draw method to draw whole map given array of colors, or index into color map
+﻿Rendering
+
+- consider simple draw method to draw whole map given array of colors, or index into color map
+- add circles to simple draw
+
+Controls
+
 - make the mouse work
-- text based debug command system (maybe)
-
+- text based debug command system (maybe) (debug?)
 - make input manager that abstracts away touch vs mouse controls, maybe encapsulates unit selection, commands
-- have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.  (not sure how to do this actually).
-- extend event system to allow immediate callback in addition to messages. 
 
-- add ordering to events, a globally unique order so that start and end events can be interpreted correctly
-- change events enumerator to be like Dictionary.  MoveNext returns bool, 'Current' gets you value.
+Map
 
 - octaves and features to map
 - try map lines instead of checkerboard
+
+UI
 
 - map types on selector
 - map sizes on selector
@@ -18,11 +22,20 @@
 - provide optional screen centering for selector
 - enable/disable or show/hide selector to facilitate layering (menus), ie go back etc.  selector stack better model?
 - selector bigger buttons when title is bigger than all other buttons (optional)
+- quit program in debug menu
+
+Events
+
+- extend event system to allow immediate callback in addition to messages. 
+- add ordering to events, a globally unique order so that start and end events can be interpreted correctly
+- for listener / broadcaster, have utility functions that shorten the usage
+
+Tests
+
+- have test mode for assert that facilitates unit tests surviving assert.  fix existing tests with commented out tests.  (not sure how to do this actually).
+
+Bugs
 
 - find sudden zoom bug
-
-- add circles to simple draw
-
 - button push while generating map, undesirable
 
-- for listener / broadcaster, have utility functions that shorten the usage

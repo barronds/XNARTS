@@ -7,10 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public partial class XUI :	XIBroadcaster<XUI.ButtonUpEvent>,
-								XIBroadcaster<XUI.ButtonDownEvent>,
-								XIBroadcaster<XUI.ButtonHeldEvent>,
-								XIBroadcaster<XUI.ButtonAbortEvent>
+	public partial class XUI
 	{
 		private XBroadcaster< ButtonUpEvent >		mBroadcaster_ButtonUpEvent;
 		private XBroadcaster< ButtonDownEvent >		mBroadcaster_ButtonDownEvent;
@@ -19,22 +16,23 @@ namespace XNARTS
 		private SortedList< long, IButton >			mButtons;
 		private IButton								mCurrentlyPressed;
 
-		XBroadcaster<ButtonUpEvent> XIBroadcaster<ButtonUpEvent>.GetBroadcaster()
+		public XBroadcaster<ButtonUpEvent> GetBroadcaster_ButtonUpEvent()
 		{
 			return mBroadcaster_ButtonUpEvent;
 		}
-		XBroadcaster<ButtonDownEvent> XIBroadcaster<ButtonDownEvent>.GetBroadcaster()
+		public XBroadcaster<ButtonDownEvent> GetBroadcaster_ButtonDownEvent()
 		{
 			return mBroadcaster_ButtonDownEvent;
 		}
-		XBroadcaster<ButtonHeldEvent> XIBroadcaster<ButtonHeldEvent>.GetBroadcaster()
+		public XBroadcaster<ButtonHeldEvent> GetBroadcaster_ButtonHeldEvent()
 		{
 			return mBroadcaster_ButtonHeldEvent;
 		}
-		XBroadcaster<ButtonAbortEvent> XIBroadcaster<ButtonAbortEvent>.GetBroadcaster()
+		public XBroadcaster<ButtonAbortEvent> GetBroadcaster_ButtonAbortEvent()
 		{
 			return mBroadcaster_ButtonAbortEvent;
 		}
+
 		public interface IButton
 		{
 			bool Contains( Vector2 point );

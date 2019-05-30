@@ -122,13 +122,7 @@ namespace XNARTS
 	}
 
 
-	public interface XIBroadcaster< EventData > where EventData : class
-	{
-		XBroadcaster<EventData> GetBroadcaster();
-	}
-
-
-	public class XBroadcaster< EventData> where EventData : class
+	public class XBroadcaster< EventData > where EventData : class
 	{
 		private List< XListener< EventData > > mListeners;
 

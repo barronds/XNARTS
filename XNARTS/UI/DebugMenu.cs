@@ -45,9 +45,9 @@ namespace XNARTS
 
 		public void Init()
 		{
-			((XIBroadcaster<XTouch.FiveContacts>)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_FiveContacts );
-			((XIBroadcaster<XUI.SelectorSelectionEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_SelectorSelection );
-			((XIBroadcaster<XUI.SelectorControlEvent>)XUI.Instance()).GetBroadcaster().Subscribe( mListener_SelectorControl );
+			XTouch.Instance().GetBroadcaster_FiveContacts().Subscribe( mListener_FiveContacts );
+			XUI.Instance().GetBroadcaster_SelectorSelectionEvent().Subscribe( mListener_SelectorSelection );
+			XUI.Instance().GetBroadcaster_SelectorControlEvent().Subscribe( mListener_SelectorControl );
 		}
 
 		public void Update()

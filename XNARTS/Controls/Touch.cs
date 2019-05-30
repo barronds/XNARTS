@@ -8,10 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public class XTouch :	XSingleton< XTouch >, 
-							XIBroadcaster< XTouch.MultiDragData >,
-							XIBroadcaster< XTouch.SinglePokeData >,
-							XIBroadcaster< XTouch.FiveContacts >
+	public class XTouch : XSingleton< XTouch >
 	{
 		public enum ePokeDetail
 		{
@@ -91,15 +88,15 @@ namespace XNARTS
 		private XBroadcaster<SinglePokeData>    mBroadcaster_SinglePoke;
 		private XBroadcaster< FiveContacts >    mBroadcaster_FiveContacts;
 
-		XBroadcaster< MultiDragData > XIBroadcaster< MultiDragData >.GetBroadcaster()
+		public XBroadcaster< MultiDragData > GetBroadcaster_MultiDrag()
 		{
 			return mBroadcaster_MultiDrag;
 		}
-		XBroadcaster< SinglePokeData > XIBroadcaster< SinglePokeData >.GetBroadcaster()
+		public XBroadcaster< SinglePokeData > GetBroadcaster_SinglePoke()
 		{
 			return mBroadcaster_SinglePoke;
 		}
-		XBroadcaster< FiveContacts > XIBroadcaster< FiveContacts >.GetBroadcaster()
+		public XBroadcaster< FiveContacts > GetBroadcaster_FiveContacts()
 		{
 			return mBroadcaster_FiveContacts;
 		}

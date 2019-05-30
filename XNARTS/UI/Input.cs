@@ -18,7 +18,7 @@ namespace XNARTS
 
 		private void Init_Input()
 		{
-			((XIBroadcaster<XTouch.SinglePokeData>)XTouch.Instance()).GetBroadcaster().Subscribe( mListener_SinglePoke );
+			XTouch.Instance().GetBroadcaster_SinglePoke().Subscribe( mListener_SinglePoke );
 		}
 
 		private void Update_Input()
