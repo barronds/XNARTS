@@ -11,6 +11,7 @@ namespace XNARTS
 {
 	public interface XICamera
 	{
+		xAABB2	GetViewAABB			();
 		Matrix	GetViewMatrix		();
 		Matrix	GetProjectionMatrix	();
 		void	Update				( GameTime dt );
@@ -78,6 +79,10 @@ namespace XNARTS
 			const float far = -1;
 
 			mProjectionMatrix = Matrix.CreateOrthographicOffCenter( left, right, bottom, top, near, far );
+		}
+		xAABB2 XICamera.GetViewAABB()
+		{
+			return mWorldView;
 		}
 		Matrix XICamera.GetViewMatrix()
 		{
@@ -190,12 +195,20 @@ namespace XNARTS
 	public class XScreenCam : XICamera
 	{
 		private Matrix mView;
+		private xAABB2 mViewAABB;
 		private Matrix mProjection;
 
 		public XScreenCam( xCoord screen_dim )
 		{
+			Vector2 min = new Vector2( 0, 0 );
+			Vector2 max = new Vector2( screen_dim.x, screen_dim.y );
+			mViewAABB = new xAABB2( min, max );
 			mView = Matrix.CreateLookAt( new Vector3( 0f, 0f, 1f ), new Vector3( 0f, 0f, 0f ), new Vector3( 0f, 1f, 0f ) );
-			mProjection = Matrix.CreateOrthographicOffCenter( 0, screen_dim.x, screen_dim.y, 0, -1f, 1f );
+			mProjection = Matrix.CreateOrthographicOffCenter( min.X, max.X, max.Y, min.Y, -1f, 1f );
+		}
+		xAABB2 XICamera.GetViewAABB()
+		{
+			return mViewAABB;
 		}
 		Matrix XICamera.GetViewMatrix()
 		{

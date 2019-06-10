@@ -52,7 +52,7 @@ namespace XNARTS
 			XSimpleDraw.Initialize();
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Transient ).Init(	graphics_device, 
 																						persistent: false,
-																						max_lines: 50,
+																						max_lines: 2000,
 																						max_triangles: 50 );
 
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.WorldSpace_Persistent ).Init(	graphics_device, 
@@ -121,7 +121,7 @@ namespace XNARTS
 			UpdateCameras();
 
 			// simple draw only clients
-			XWorld.Instance().RenderWorld( game_time );
+			XWorld.Instance().RenderWorld( game_time, mMainWorldCam.GetViewAABB() );
 			XMouse mouse = XMouse.Instance();
 			mouse.RenderWorld( game_time );
 			mouse.RenderScreen( game_time );

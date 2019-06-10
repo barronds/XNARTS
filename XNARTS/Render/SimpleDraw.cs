@@ -15,7 +15,7 @@ namespace XNARTS
 		ScreenSpace_Persistent,
 		WorldSpace_Transient,
 		WorldSpace_Persistent,
-		WorldSpace_Persistent_Map
+		WorldSpace_Persistent_Map,
 	}
 
 

@@ -12,7 +12,6 @@ Controls
 Map
 
 - octaves and features to map
-- try map lines instead of checkerboard
 
 UI
 

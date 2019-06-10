@@ -137,14 +137,13 @@ namespace XNARTS
 			return mMap.mData[ coord.x, coord.y ];
 		}
 
-		public void RenderWorldLines( GameTime game_time )
+		public void RenderWorldLines_Static()
 		{
-			XUtils.Assert( false, "under construction" );
-
-			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Persistent_Map );
 
 			Vector3 start = new Vector3();
 			Vector3 end = new Vector3();
+			Color k_transparent_black = new Color( 0.0f, 0.0f, 0.0f, 0.05f );
 
 			// each cell is 1 unit on edge in world space
 			start.Y = 0;
@@ -155,7 +154,7 @@ namespace XNARTS
 				start.X = x;
 				end.X = x;
 
-				simple_draw_world.DrawLine( start, end, Color.Yellow );
+				simple_draw_world.DrawLine( start, end, k_transparent_black );
 			}
 
 			start.X = 0;
@@ -166,10 +165,53 @@ namespace XNARTS
 				start.Y = y;
 				end.Y = y;
 
-				simple_draw_world.DrawLine( start, end, Color.White );
+				simple_draw_world.DrawLine( start, end, k_transparent_black );
 			}
 		}
-		public void RenderWorld( GameTime game_time )
+
+		public void RenderWorldLines_Dynamic( xAABB2 view_aabb )
+		{
+			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
+
+			// calculate color to use based on how much world is being drawn
+			const float k_large_view_size = 150;
+			const float k_small_view_size = 5;
+			float view_width = view_aabb.GetMax().X - view_aabb.GetMin().X;
+			float lightness =	view_width > k_large_view_size ? 1.0f :
+								view_width < k_small_view_size ? 0.0f :
+								(view_width - k_small_view_size) / (k_large_view_size - k_small_view_size);
+
+			Color k_lightest_color = new Color( 0.0f, 0.0f, 0.0f, 0.025f );
+			Color k_darkest_color = new Color( 0.0f, 0.0f, 0.0f, 0.33f );
+			Color result_color = Color.Lerp( k_darkest_color, k_lightest_color, lightness );
+
+			// each cell is 1 unit on edge in world space
+			Vector3 start = new Vector3();
+			Vector3 end = new Vector3();
+			start.Y = 0;
+			end.Y = mMap.mBounds.y;
+
+			for ( int x = 0; x <= mMap.mBounds.x; ++x )
+			{
+				start.X = x;
+				end.X = x;
+
+				simple_draw_world.DrawLine( start, end, result_color );
+			}
+
+			start.X = 0;
+			end.X = mMap.mBounds.x;
+
+			for ( int y = 0; y <= mMap.mBounds.y; ++y )
+			{
+				start.Y = y;
+				end.Y = y;
+
+				simple_draw_world.DrawLine( start, end, result_color );
+			}
+		}
+
+		public void RenderWorld( GameTime game_time, xAABB2 view_aabb )
 		{
 			if ( !mRendered )
 			{
@@ -185,8 +227,14 @@ namespace XNARTS
 					simple_draw.DrawQuad( low, high, color );
 				} );
 
+				// render world lines in here if they are static
+				// RenderWorldLines_Static();
+
 				mRendered = true;
 			}
+
+			// render world lines here if they are dynamic
+			RenderWorldLines_Dynamic( view_aabb );
 		}
 
 		public void Update()
@@ -486,7 +534,7 @@ namespace XNARTS
 			Generate_AssignTerrainColors();
 			Generate_BlendColors();
 			Generate_ColorLerp();
-			Generate_Checkerboard();
+			//Generate_Checkerboard();
 		}
 	}
 }
