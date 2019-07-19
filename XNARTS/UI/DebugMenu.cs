@@ -59,7 +59,7 @@ namespace XNARTS
 			{
 				if( mRootSelector == null )
 				{
-					mRootSelector = XUI.Instance().CreateSelector(	new XUI.Position( new Vector2( 500, 400 ) ), "Debug Menu", 
+					mRootSelector = XUI.Instance().CreateSelector(	new XUI.Position(), "Debug Menu", 
 																	XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
 																	XUI.eStyle.FrontendTitle, XUI.eStyle.FrontendControl, 
 																	mOptions, mControls );

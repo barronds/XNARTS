@@ -33,5 +33,10 @@ namespace XNARTS
 			return val * val;
 		}
 
+		public static float Sqrt( float val )
+		{
+			return (float)Math.Sqrt( (double)val );
+		}
+
 	}
 }

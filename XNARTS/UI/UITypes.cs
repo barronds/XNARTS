@@ -14,7 +14,7 @@ namespace XNARTS
 			private bool	mCentered;
 			private Vector2 mPosition;
 
-			// one constructor for centered and one for absolute position.  could add one for screen relative.
+			// one constructor for centered and one for absolute position.  could add one for relative.
 			public Position()
 			{
 				mCentered = true;
@@ -32,7 +32,6 @@ namespace XNARTS
 			}
 			public Vector2 GetPosition()
 			{
-				XUtils.Assert( !mCentered );
 				return mPosition;
 			}
 		}

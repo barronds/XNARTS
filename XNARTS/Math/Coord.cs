@@ -25,6 +25,12 @@ namespace XNARTS
             this.y = (int)y;
         }
 
+		public xCoord( float x, float y )
+		{
+			this.x = (int)x;
+			this.y = (int)y;
+		}
+
         public float getLength()
         {
             return (float)System.Math.Sqrt( this.x * this.x + this.y * this.y );

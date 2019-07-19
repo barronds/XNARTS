@@ -174,12 +174,14 @@ namespace XNARTS
 			XSimpleDraw simple_draw_world = XSimpleDraw.Instance( xeSimpleDrawType.WorldSpace_Transient );
 
 			// calculate color to use based on how much world is being drawn
-			const float k_large_view_size = 150;
+			const float k_large_view_size = 200;
 			const float k_small_view_size = 5;
 			float view_width = view_aabb.GetMax().X - view_aabb.GetMin().X;
 			float lightness =	view_width > k_large_view_size ? 1.0f :
 								view_width < k_small_view_size ? 0.0f :
 								(view_width - k_small_view_size) / (k_large_view_size - k_small_view_size);
+
+			lightness = XMath.Sqrt( lightness );
 
 			Color k_lightest_color = new Color( 0.0f, 0.0f, 0.0f, 0.025f );
 			Color k_darkest_color = new Color( 0.0f, 0.0f, 0.0f, 0.33f );

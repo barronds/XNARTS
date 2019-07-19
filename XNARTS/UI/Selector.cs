@@ -94,6 +94,7 @@ namespace XNARTS
 			private eStyle mTitleStyle;
 			private eStyle mControlStyle;
 			private Vector2 mPos;
+			private Position mPosition;
 			private xAABB2 mAABB;
 			private IButton[] mSelections;
 			private IButton[] mControls;
@@ -105,6 +106,7 @@ namespace XNARTS
 				mRenderEnabled = true;
 				mID = id;
 				mPos = pos.GetPosition();
+				mPosition = pos;
 				mTitle = title;
 				mStyle = style;
 				mButtonStyle = button_style;
@@ -206,6 +208,35 @@ namespace XNARTS
 				}
 
 				CenterButton( mTitleButton, largest_x, 0 );
+
+				// if the selector has a non-trivial Position, fix it
+				if( mPosition.IsCentered() )
+				{
+					// see where it is now, figure out where it should be, translate.
+					// apply to aabb for selector plus translate all the buttons
+					xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
+					//Vector2 aabb_min = mAABB.GetMin();
+					//xCoord aabb_coord = new xCoord( aabb_min.X, aabb_min.Y );
+
+					Vector2 span = mAABB.GetSize();
+					Vector2 screen_dim_vec = new Vector2( screen_dim.x, screen_dim.y );
+					Vector2 edge = 0.5f * (screen_dim_vec - span);
+					mAABB.Translate( edge );
+					mPos = mAABB.GetMin();
+
+					// translate each button the same amount, and account for title
+					for ( int i = 0; i < mSelections.Length; ++i )
+					{
+						mSelections[ i ].Translate( edge );
+					}
+
+					for ( int i = 0; i < mControls.Length; ++i )
+					{
+						mControls[ i ].Translate( edge );
+					}
+
+					mTitleButton.Translate( edge );
+				}
 			}
 
 			private IButton PositionAndCreateButton(	Vector2 pos, float border_padding, float spacing, 

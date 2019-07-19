@@ -168,5 +168,10 @@ namespace XNARTS
 
 			XFontDraw.Instance().Draw();
 		}
+
+		public xCoord GetScreenDim()
+		{
+			return mScreenDim;
+		}
 	}
 }
