@@ -134,27 +134,9 @@ namespace XNARTS
 				float spacing = k_spacing_scalar * button_size_y;
 
 				// pad out the text strings so the buttons can be wide if the text is small
-				int longest = 0;
-
-				for( int i = 0; i < texts.Length; ++i )
-				{
-					longest = Math.Max( longest, texts[ i ].Length );
-				}
-
-				for ( int i = 0; i < controls.Length; ++i )
-				{
-					longest = Math.Max( longest, controls[ i ].Length );
-				}
-
-				for ( int i = 0; i < texts.Length; ++i )
-				{
-					texts[ i ] = PadButtonText( texts[ i ], longest );
-				}
-
-				for ( int i = 0; i < controls.Length; ++i )
-				{
-					controls[ i ] = PadButtonText( controls[ i ], longest );
-				}
+				int longest = Math.Max( GetLongestString( texts ), GetLongestString( controls ) );
+				PadButtonTexts( texts, longest );
+				PadButtonTexts( controls, longest );
 
 				// create buttons and track largest
 				float largest_x = 0;
@@ -247,7 +229,17 @@ namespace XNARTS
 				button_pos.Y += border_padding + (spacing + button_size_y) * button_num;
 				return XUI.Instance().CreateRectangularButton( button_pos, text, button_style );
 			}
+			private int GetLongestString( String[] strings )
+			{
+				int longest = 0;
 
+				for ( int i = 0; i < strings.Length; ++i )
+				{
+					longest = Math.Max( longest, strings[ i ].Length );
+				}
+
+                return longest;
+            }
 			private String PadButtonText( String text, int longest )
 			{
 				int length = text.Length;
@@ -255,6 +247,13 @@ namespace XNARTS
 				int even_floor_half_shortfall = shortfall / 2;
 				String padding = XUtils.GetNSpaces( even_floor_half_shortfall );
 				return padding + text + padding;
+			}
+			private void PadButtonTexts( String[] strings, int longest )
+			{
+				for ( int i = 0; i < strings.Length; ++i )
+				{
+					strings[ i ] = PadButtonText( strings[ i ], longest );
+				}
 			}
 			private void CenterButton( IButton button, float largest, float title_padding )
 			{
