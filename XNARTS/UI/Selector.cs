@@ -178,24 +178,27 @@ namespace XNARTS
 					Vector2 span = mAABB.GetSize();
 					Vector2 screen_dim_vec = new Vector2( screen_dim.x, screen_dim.y );
 					Vector2 edge = 0.5f * (screen_dim_vec - span);
-					mAABB.Translate( edge );
-					mPos = mAABB.GetMin();
-
-					// translate each button the same amount, and account for title
-					for ( int i = 0; i < mSelections.Length; ++i )
-					{
-						mSelections[ i ].Translate( edge );
-					}
-
-					for ( int i = 0; i < mControls.Length; ++i )
-					{
-						mControls[ i ].Translate( edge );
-					}
-
-					mTitleButton.Translate( edge );
+					Translate( edge );
 				}
 			}
+			private void Translate( Vector2 t )
+			{
+				mAABB.Translate( t );
+				mPos = mAABB.GetMin();
 
+				// translate each button the same amount, and account for title
+				for ( int i = 0; i < mSelections.Length; ++i )
+				{
+					mSelections[ i ].Translate( t );
+				}
+
+				for ( int i = 0; i < mControls.Length; ++i )
+				{
+					mControls[ i ].Translate( t );
+				}
+
+				mTitleButton.Translate( t );
+			}
 			private IButton PositionAndCreateButton(	Vector2 pos, float border_padding, float spacing, 
 														float button_size_y, eStyle button_style, int button_num, String text )
 			{
