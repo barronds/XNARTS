@@ -18,12 +18,17 @@ namespace XNARTS
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-		GraphicsDeviceManager mGraphicsDeviceManager;
+		private GraphicsDeviceManager			mGraphicsDeviceManager;
+		private XListener< ExitGameEvent >      mListener_ExitGameEvent;
 
 		public Game1()
         {
 			mGraphicsDeviceManager = new GraphicsDeviceManager( this );
 			Content.RootDirectory = "Content";
+
+			mListener_ExitGameEvent = new XListener<ExitGameEvent>( 1, eEventQueueFullBehaviour.Ignore, "ExitGame" );
+
+			BulletinBoard.CreateInstance();
 			XFontDraw.CreateInstance();
 			XRenderManager.CreateInstance();
 			XTouch.CreateInstance();
@@ -43,6 +48,7 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
+			BulletinBoard.Instance().Init();
 			XTouch.Instance().Init();
 			XKeyInput.Instance().Init();
 			XWorld.Instance().Init();
@@ -53,14 +59,15 @@ namespace XNARTS
 			XDebugMenu.Instance().Init();
 
 			base.Initialize();
-        }
 
-		
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
-        protected override void LoadContent()
+			BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Subscribe( mListener_ExitGameEvent );
+		}
+
+		/// <summary>
+		/// LoadContent will be called once per game and is the place to load
+		/// all of your content.
+		/// </summary>
+		protected override void LoadContent()
         {
 			XRenderManager.Instance().LoadContent();
 		}
@@ -74,7 +81,6 @@ namespace XNARTS
         {
         }
 
-
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -83,10 +89,19 @@ namespace XNARTS
         protected override void Update(GameTime game_time)
         {
 			// user controller app exit
+			// TODO: get this into exit event framework below.  
 			if ( GamePad.GetState( PlayerIndex.One ).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown( Keys.Escape ) )
             {
                 Exit();
             }
+
+			ExitGameEvent e = mListener_ExitGameEvent.GetMaxOne();
+
+			if( e != null )
+			{
+				// elaborate shutdown code goes here.  
+				Exit();
+			}
 
 			// TODO: Add your update logic here
 			XTouch.Instance().Update( game_time );

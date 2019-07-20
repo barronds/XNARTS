@@ -40,7 +40,7 @@ namespace XNARTS
 			mBroadcaster_MenuSelection = new XBroadcaster<MenuSelectionEvent>();
 			mRootSelector = null;
 			mOptions = new String[ 1 ]{ "Map" };
-			mControls = new String[ 1 ]{ "Exit" };
+			mControls = new String[ 2 ]{ "Exit", "Quit" };
 		}
 
 		public void Init()
@@ -106,6 +106,10 @@ namespace XNARTS
 					{
 						case 0:
 							// exit selected, shut it down
+							break;
+						case 1:
+							// quit selected, end program
+							BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new XNARTS.ExitGameEvent() );
 							break;
 						default:
 							// problem

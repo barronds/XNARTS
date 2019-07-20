@@ -65,6 +65,7 @@
     <Compile Include="UI\UITypes.cs" />
     <Compile Include="UnitTests\UnitTests.cs" />
     <Compile Include="Utils\Assert.cs" />
+    <Compile Include="Utils\BulletinBoard.cs" />
     <Compile Include="Utils\Events.cs" />
     <Compile Include="Utils\Pluralton.cs" />
     <Compile Include="Utils\Singleton.cs" />
