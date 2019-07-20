@@ -18,6 +18,11 @@ namespace XNARTS
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+		public class ExitGameEvent
+		{
+			public ExitGameEvent() { }
+		}
+
 		private GraphicsDeviceManager			mGraphicsDeviceManager;
 		private XListener< ExitGameEvent >      mListener_ExitGameEvent;
 

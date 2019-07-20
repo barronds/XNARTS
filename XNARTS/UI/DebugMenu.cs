@@ -109,7 +109,7 @@ namespace XNARTS
 							break;
 						case 1:
 							// quit selected, end program
-							BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new XNARTS.ExitGameEvent() );
+							BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
 							break;
 						default:
 							// problem

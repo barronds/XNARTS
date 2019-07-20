@@ -20,14 +20,13 @@ UI
 - menu system based on selector
 - enable/disable or show/hide selector to facilitate layering (menus), ie go back etc.  selector stack better model?
 - selector bigger buttons when title is bigger than all other buttons (optional)
-- quit program in debug menu
+- invisible gap selector as spacer
 
 Events
 
 - extend event system to allow immediate callback in addition to messages. 
 - add ordering to events, a globally unique order so that start and end events can be interpreted correctly
 - for listener / broadcaster, have utility functions that shorten the usage
-- add central cache of broadcasters for simpler access.  open question: where do event class declarations go?
 
 Tests
 

@@ -6,18 +6,15 @@ using System.Threading.Tasks;
 
 namespace XNARTS
 {
-	public class ExitGameEvent
-	{
-		public ExitGameEvent() { }
-	}
+	// event types used by more that one system can live in here
 
 	public class BulletinBoard : XSingleton< BulletinBoard >
 	{
-		public XBroadcaster< ExitGameEvent > mBroadcaster_ExitGameEvent;
+		public XBroadcaster< Game1.ExitGameEvent > mBroadcaster_ExitGameEvent;
 
 		public void Init()
 		{
-			mBroadcaster_ExitGameEvent = new XBroadcaster<ExitGameEvent>();
+			mBroadcaster_ExitGameEvent = new XBroadcaster<Game1.ExitGameEvent>();
 		}
 
 		private BulletinBoard()
