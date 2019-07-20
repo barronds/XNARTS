@@ -138,26 +138,12 @@ namespace XNARTS
 				PadButtonTexts( texts, longest );
 				PadButtonTexts( controls, longest );
 
-				// create buttons and track largest
-				float largest_x = 0;
+				// create buttons 
+				PositionAndCreateButtons( texts, mSelections, border_padding, spacing, button_size_y, button_style, 0 );
+				PositionAndCreateButtons( controls, mControls, border_padding, spacing, button_size_y, button_style, texts.Length );
 
-				for ( int i = 0; i < texts.Length; ++i )
-				{
-					mSelections[ i ] = PositionAndCreateButton( mPos, border_padding, spacing, button_size_y,
-						button_style, i, texts[ i ] );
-
-					float size_x = mSelections[ i ].GetAABB().GetSize().X;
-					largest_x = Math.Max( size_x, largest_x );
-				}
-
-				for ( int i = 0; i < controls.Length; ++i )
-				{
-					mControls[ i ] = PositionAndCreateButton( mPos, border_padding, spacing, button_size_y,
-						control_style, i + texts.Length, controls[ i ] );
-
-					float size_x = mControls[ i ].GetAABB().GetSize().X;
-					largest_x = Math.Max( size_x, largest_x );
-				}
+				// track largest
+				float largest_x = Math.Max( GetWidest( mSelections ), GetWidest( mControls ) );
 
 				// create title button (non-functional) and see if it's the largest
 				Vector2 title_pos = mPos + new Vector2( border_padding, border_padding );
@@ -229,6 +215,15 @@ namespace XNARTS
 				button_pos.Y += border_padding + (spacing + button_size_y) * button_num;
 				return XUI.Instance().CreateRectangularButton( button_pos, text, button_style );
 			}
+			private void PositionAndCreateButtons( String[] strings, IButton[] dest, float border_padding, float spacing,
+													float button_size_y, eStyle style, int offset )
+			{
+				for ( int i = 0; i < strings.Length; ++i )
+				{
+					dest[ i ] = PositionAndCreateButton( mPos, border_padding, spacing, button_size_y,
+						style, i + offset, strings[ i ] );
+				}
+			}
 			private int GetLongestString( String[] strings )
 			{
 				int longest = 0;
@@ -254,6 +249,18 @@ namespace XNARTS
 				{
 					strings[ i ] = PadButtonText( strings[ i ], longest );
 				}
+			}
+			private float GetWidest( IButton[] buttons )
+			{
+				float largest_x = 0.0f;
+
+				for ( int i = 0; i < buttons.Length; ++i )
+				{
+					float size_x = buttons[ i ].GetAABB().GetSize().X;
+					largest_x = Math.Max( size_x, largest_x );
+				}
+
+				return largest_x;
 			}
 			private void CenterButton( IButton button, float largest, float title_padding )
 			{
