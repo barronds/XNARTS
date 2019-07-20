@@ -165,27 +165,16 @@ namespace XNARTS
 				mAABB.Set( mPos, mPos + new Vector2( full_width, full_height ) );
 
 				// translate each button to be centered, and account for title
-				for ( int i = 0; i < mSelections.Length; ++i )
-				{
-					CenterButton( mSelections[ i ], largest_x, title_padding );
-				}
-
-				for ( int i = 0; i < mControls.Length; ++i )
-				{
-					CenterButton( mControls[ i ], largest_x, title_padding );
-				}
-
+				CenterButtons( mSelections, largest_x, title_padding );
+				CenterButtons( mControls, largest_x, title_padding );
 				CenterButton( mTitleButton, largest_x, 0 );
 
 				// if the selector has a non-trivial Position, fix it
-				if( mPosition.IsCentered() )
+				if ( mPosition.IsCentered() )
 				{
 					// see where it is now, figure out where it should be, translate.
 					// apply to aabb for selector plus translate all the buttons
 					xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
-					//Vector2 aabb_min = mAABB.GetMin();
-					//xCoord aabb_coord = new xCoord( aabb_min.X, aabb_min.Y );
-
 					Vector2 span = mAABB.GetSize();
 					Vector2 screen_dim_vec = new Vector2( screen_dim.x, screen_dim.y );
 					Vector2 edge = 0.5f * (screen_dim_vec - span);
@@ -267,6 +256,13 @@ namespace XNARTS
 				float size_x = button.GetAABB().GetSize().X;
 				float shift = (largest - size_x) * 0.5f;
 				button.Translate( new Vector2( shift, title_padding ) );
+			}
+			private void CenterButtons( IButton[] buttons, float largest_x, float title_padding )
+			{
+				for ( int i = 0; i < buttons.Length; ++i )
+				{
+					CenterButton( buttons[ i ], largest_x, title_padding );
+				}
 			}
 			public void SetRenderEnabled( bool value )
 			{
