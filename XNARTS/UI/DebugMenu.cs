@@ -39,8 +39,10 @@ namespace XNARTS
 			mListener_SelectorControl = new XListener<XUI.SelectorControlEvent>( 1, eEventQueueFullBehaviour.Assert, "dmsc" );
 			mBroadcaster_MenuSelection = new XBroadcaster<MenuSelectionEvent>();
 			mRootSelector = null;
+			String spacer = XUI.Instance().GetSpacerString();
+
 			mOptions = new String[ 1 ]{ "Map" };
-			mControls = new String[ 2 ]{ "Exit", "Quit" };
+			mControls = new String[ 4 ]{ spacer, "Exit", spacer, "Quit" };
 		}
 
 		public void Init()
@@ -86,6 +88,7 @@ namespace XNARTS
 							break;
 						default:
 							// problem
+							XUtils.Assert( false );
 							break;
 					}
 				}
@@ -104,15 +107,16 @@ namespace XNARTS
 
 					switch ( control_data.mIndexSelected )
 					{
-						case 0:
-							// exit selected, shut it down
-							break;
 						case 1:
-							// quit selected, end program
+							// exit selected, do nothing, menu will close
+							break;
+						case 3:
+							// quit selected, send message to end program.  this menu will close
 							BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
 							break;
 						default:
 							// problem
+							XUtils.Assert( false );
 							break;
 					}
 				}

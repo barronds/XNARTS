@@ -66,6 +66,11 @@ namespace XNARTS
 			public int mIndexSelected;
 		}
 
+		public String GetSpacerString()
+		{
+			return "<<SPACER>>";
+		}
+
 		public ISelector CreateSelector(	Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
 											eStyle control_style, String[] texts, String[] controls )
 		{
@@ -210,10 +215,27 @@ namespace XNARTS
 			private void PositionAndCreateButtons( String[] strings, IButton[] dest, float border_padding, float spacing,
 													float button_size_y, eStyle style, int offset )
 			{
+				String spacer = XUI.Instance().GetSpacerString();
+				const String spacer_replacement = " ";
+
 				for ( int i = 0; i < strings.Length; ++i )
 				{
-					dest[ i ] = PositionAndCreateButton( mPos, border_padding, spacing, button_size_y,
-						style, i + offset, strings[ i ] );
+					bool is_spacer = spacer == strings[ i ];
+
+					if( is_spacer )
+					{
+						dest[ i ] = PositionAndCreateButton( mPos, border_padding, spacing, button_size_y,
+							style, i + offset, spacer_replacement );
+
+						dest[ i ].SetActive( false );
+					}
+					else
+					{
+						dest[ i ] = PositionAndCreateButton( mPos, border_padding, spacing, button_size_y,
+							style, i + offset, strings[ i ] );
+					}
+
+
 				}
 			}
 			private int GetLongestString( String[] strings )

@@ -20,7 +20,6 @@ UI
 - menu system based on selector
 - enable/disable or show/hide selector to facilitate layering (menus), ie go back etc.  selector stack better model?
 - selector bigger buttons when title is bigger than all other buttons (optional)
-- invisible gap selector as spacer
 
 Events
 
