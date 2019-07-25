@@ -45,6 +45,7 @@
     <Compile Include="Controls\Touch.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Map\World.cs" />
+    <Compile Include="Map\WorldDebugMenu.cs" />
     <Compile Include="Map\WorldGenTuning.cs" />
     <Compile Include="Math\BBox2.cs" />
     <Compile Include="Math\Coord.cs" />

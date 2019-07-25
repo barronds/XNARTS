@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	class XDebugMenu : XSingleton< XDebugMenu >
+	class XRootDebugMenu : XSingleton< XRootDebugMenu >
 	{
 		public class MenuSelectionEvent
 		{
@@ -30,7 +30,7 @@ namespace XNARTS
 		private XUI.ISelector							mRootSelector;
 		private String[]                                mOptions;
 
-		private XDebugMenu()
+		private XRootDebugMenu()
 		{
 			mListener_FiveContacts = new XListener<XTouch.FiveContacts>( 1, eEventQueueFullBehaviour.Assert, "5contacts" );
 			mListener_SelectorSelection = new XListener<XUI.SelectorSelectionEvent>( 1, eEventQueueFullBehaviour.Assert, "dmss" );

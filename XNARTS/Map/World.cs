@@ -63,7 +63,7 @@ namespace XNARTS
 		}
 	}
 
-	public class XWorld : XSingleton< XWorld >
+	partial class XWorld : XSingleton< XWorld >
 	{
 		public class WorldRegenerated
 		{ }

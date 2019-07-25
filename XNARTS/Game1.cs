@@ -41,7 +41,7 @@ namespace XNARTS
 			XWorld.CreateInstance();
 			XMouse.CreateInstance();
 			XUI.CreateInstance();
-			XDebugMenu.CreateInstance();
+			XRootDebugMenu.CreateInstance();
 		}
 
 
@@ -61,7 +61,7 @@ namespace XNARTS
 			XFontDraw.Instance().Init( GraphicsDevice, Content );
 			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager, Content );
 			XUI.Instance().Init();
-			XDebugMenu.Instance().Init();
+			XRootDebugMenu.Instance().Init();
 
 			base.Initialize();
 
@@ -113,7 +113,7 @@ namespace XNARTS
 			XKeyInput.Instance().Update();
 			XMouse.Instance().Update( game_time );
 			XUI.Instance().Update( game_time );
-			XDebugMenu.Instance().Update();
+			XRootDebugMenu.Instance().Update();
 			XWorld.Instance().Update();
 
             base.Update(game_time);
