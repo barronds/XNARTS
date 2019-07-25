@@ -59,6 +59,9 @@
     <Compile Include="UI\Buttons.cs" />
     <Compile Include="UI\DebugMenu.cs" />
     <Compile Include="UI\Input.cs" />
+    <Compile Include="UI\Menu.cs" />
+    <Compile Include="UI\MenuItem.cs" />
+    <Compile Include="UI\MenuStack.cs" />
     <Compile Include="UI\Render.cs" />
     <Compile Include="UI\Selector.cs" />
     <Compile Include="UI\Style.cs" />
