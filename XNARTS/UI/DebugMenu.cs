@@ -7,6 +7,22 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
+	// alternate design, in progress:
+	//
+	// - each menu is an XMenu object
+	// - you can add, delete, grey out menu options dynamically
+	// - once selected, an entry can create another menu, another widget, go back one menu, quit menu, or have a side effect
+	// - once side effect is chosen, the entry can stay in current menu, go back one menu, or quite menu
+	// - there is one global 'active menu stack'. only the top menu is visible at any moment. (one rendering choice, could be others)
+	// - menus in the middle of the stack can still be accessed for option modification on the fly
+	// - each menu has a UID on creation, which changes if the menu is created again.
+	// - there is only one event for listenting to menu selections, so many listeners per option selected, unfortunate.
+	//   optimization there could be to have systems unsubscribe/subscribe for certain menu creations/destructions on the fly.
+	//   to support this, each menu created could have a name, and event fired globally when a menu is created/destroyed.
+	// - menu selection events should have the UID of the Menu object and the string for the button selected, rather than 
+	//   UID or index of button because of dynamic addition/removal.  strings should be unique otherwise there would be 
+	//   an ambiguity visually in the menu.
+
 	class XRootDebugMenu : XSingleton< XRootDebugMenu >
 	{
 		public class MenuSelectionEvent
@@ -14,16 +30,18 @@ namespace XNARTS
 			// this design is not right. ambiguous for listening systems - could be multiple 
 			// different menu items with same name from different menus.
 			// maybe menu entries should be pushed from listener classes. (like realtime plugin)
-			public MenuSelectionEvent( String selection_text )
+			public MenuSelectionEvent( long selector_uid, String selection )
 			{
-				mSelectionText = selection_text;
+				mSelectorUID = selector_uid;
+				mSelection = selection;
 			}
 
-			public String mSelectionText;
+			public long		mSelectorUID;
+			public String	mSelection;
 		}
 
 		// just holds the root of the debug menu.  
-		// individual systems should own the rest fo the tree.
+		// individual systems should own the rest of the tree.
 		private XListener< XTouch.FiveContacts >		mListener_FiveContacts;
 		private XListener< XUI.SelectorSelectionEvent > mListener_SelectorSelection;
 		private XBroadcaster< MenuSelectionEvent >      mBroadcaster_MenuSelection;
@@ -78,7 +96,7 @@ namespace XNARTS
 						case 0:
 							// map selected, sent message for that system to do what it wants
 							Console.WriteLine( "map selected" );
-							mBroadcaster_MenuSelection.Post( new MenuSelectionEvent( mOptions[ 0 ] ) );
+							mBroadcaster_MenuSelection.Post( new MenuSelectionEvent( selection_data.mSelectorID, mOptions[ 0 ] ) );
 							break;
 						case 2:
 							// exit selected, do nothing, menu will close
