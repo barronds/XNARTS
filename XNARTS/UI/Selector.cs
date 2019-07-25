@@ -14,19 +14,16 @@ namespace XNARTS
 			long GetID();
 			void Draw( XSimpleDraw simple_draw );
 			int CheckSelections( long id );
-			int CheckControls( long id );
 			void Destroy();
 		}
 
 		private XBroadcaster< SelectorSelectionEvent >	mBroadcaster_SelectorSelectionEvent;
-		private XBroadcaster< SelectorControlEvent >	mBroadcaster_SelectorControlEvent;
 		private XListener< ButtonUpEvent >				mListener_ButtonUpEvent;
 		private Dictionary< long, ISelector >			mSelectors;
 
 		private void Constructor_Selector()
 		{
 			mBroadcaster_SelectorSelectionEvent = new XBroadcaster<SelectorSelectionEvent>();
-			mBroadcaster_SelectorControlEvent = new XBroadcaster<SelectorControlEvent>();
 			mListener_ButtonUpEvent = new XListener<ButtonUpEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIselectorbutton" );
 			mSelectors = new Dictionary<long, ISelector>();
 		}
@@ -40,24 +37,10 @@ namespace XNARTS
 		{
 			return mBroadcaster_SelectorSelectionEvent;
 		}
-		public XBroadcaster<SelectorControlEvent> GetBroadcaster_SelectorControlEvent()
-		{
-			return mBroadcaster_SelectorControlEvent;
-		}
 
 		public class SelectorSelectionEvent
 		{
 			public SelectorSelectionEvent( long selector_id, int index_selected )
-			{
-				mSelectorID = selector_id;
-				mIndexSelected = index_selected;
-			}
-			public long mSelectorID;
-			public int mIndexSelected;
-		}
-		public class SelectorControlEvent
-		{
-			public SelectorControlEvent( long selector_id, int index_selected )
 			{
 				mSelectorID = selector_id;
 				mIndexSelected = index_selected;
@@ -72,11 +55,11 @@ namespace XNARTS
 		}
 
 		public ISelector CreateSelector(	Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
-											eStyle control_style, String[] texts, String[] controls )
+											String[] texts )
 		{
 
-			ISelector selector = new Selector(	pos, title, style, button_style, title_style, control_style, NextID(), 
-												texts, controls );
+			ISelector selector = new Selector(	pos, title, style, button_style, title_style, NextID(), 
+												texts );
 
 			mSelectors.Add( selector.GetID(), selector );
 			return selector;
@@ -97,16 +80,14 @@ namespace XNARTS
 			private eStyle mStyle;
 			private eStyle mButtonStyle;
 			private eStyle mTitleStyle;
-			private eStyle mControlStyle;
 			private Vector2 mPos;
 			private Position mPosition;
 			private xAABB2 mAABB;
 			private IButton[] mSelections;
-			private IButton[] mControls;
 			private IButton mTitleButton;
 
 			public Selector(	Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
-								eStyle control_style, long id, String[] texts, String[] controls )
+								long id, String[] texts )
 			{
 				mRenderEnabled = true;
 				mID = id;
@@ -116,9 +97,7 @@ namespace XNARTS
 				mStyle = style;
 				mButtonStyle = button_style;
 				mTitleStyle = title_style;
-				mControlStyle = control_style;
 				this.mSelections = new IButton[ texts.Length ];
-				this.mControls = new IButton[ controls.Length ];
 
 				// create a default button to see how big it is vertically
 				// size and position border accordingly, factoring in width of largest button including title
@@ -139,16 +118,14 @@ namespace XNARTS
 				float spacing = k_spacing_scalar * button_size_y;
 
 				// pad out the text strings so the buttons can be wide if the text is small
-				int longest = Math.Max( GetLongestString( texts ), GetLongestString( controls ) );
+				int longest = GetLongestString( texts );
 				PadButtonTexts( texts, longest );
-				PadButtonTexts( controls, longest );
 
 				// create buttons 
 				PositionAndCreateButtons( texts, mSelections, border_padding, spacing, button_size_y, button_style, 0 );
-				PositionAndCreateButtons( controls, mControls, border_padding, spacing, button_size_y, button_style, texts.Length );
 
 				// track largest
-				float largest_x = Math.Max( GetWidest( mSelections ), GetWidest( mControls ) );
+				float largest_x = GetWidest( mSelections );
 
 				// create title button (non-functional) and see if it's the largest
 				Vector2 title_pos = mPos + new Vector2( border_padding, border_padding );
@@ -162,8 +139,8 @@ namespace XNARTS
 				Vector2 title_padding_v = new Vector2( 0, title_padding );
 				float full_width = largest_x + 2 * border_padding;
 
-				float full_height = button_size_y * (mSelections.Length + mControls.Length) +
-									(mSelections.Length + mControls.Length - 1) * spacing +
+				float full_height = button_size_y * (mSelections.Length) +
+									(mSelections.Length - 1) * spacing +
 									2 * border_padding +
 									title_padding;
 
@@ -171,7 +148,6 @@ namespace XNARTS
 
 				// translate each button to be centered, and account for title
 				CenterButtons( mSelections, largest_x, title_padding );
-				CenterButtons( mControls, largest_x, title_padding );
 				CenterButton( mTitleButton, largest_x, 0 );
 
 				// if the selector has a non-trivial Position, fix it
@@ -195,11 +171,6 @@ namespace XNARTS
 				for ( int i = 0; i < mSelections.Length; ++i )
 				{
 					mSelections[ i ].Translate( t );
-				}
-
-				for ( int i = 0; i < mControls.Length; ++i )
-				{
-					mControls[ i ].Translate( t );
 				}
 
 				mTitleButton.Translate( t );
@@ -302,29 +273,12 @@ namespace XNARTS
 				{
 					ui.DestroyButton( mSelections[ i ] );
 				}
-
-				for ( int i = 0; i < mControls.Length; ++i )
-				{
-					ui.DestroyButton( mControls[ i ] );
-				}
 			}
 			int ISelector.CheckSelections( long id )
 			{
 				for( int i = 0; i < mSelections.Length; ++i )
 				{
 					if( mSelections[ i ].GetID() == id )
-					{
-						return i;
-					}
-				}
-
-				return -1;
-			}
-			int ISelector.CheckControls( long id )
-			{
-				for ( int i = 0; i < mControls.Length; ++i )
-				{
-					if ( mControls[ i ].GetID() == id )
 					{
 						return i;
 					}

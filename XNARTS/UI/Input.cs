@@ -100,7 +100,7 @@ namespace XNARTS
 
 		void Update_Input_Selector()
 		{
-			// go through all selectors and check all button and controls against button_up input
+			// go through all selectors and check all buttons against button_up input
 			ButtonUpEvent button_up = mListener_ButtonUpEvent.GetMaxOne();
 			int selected_index = -1;
 
@@ -114,11 +114,6 @@ namespace XNARTS
 					{
 						SelectorSelectionEvent e = new SelectorSelectionEvent( s.Current.Value.GetID(), selected_index );
 						mBroadcaster_SelectorSelectionEvent.Post( e );
-					}
-					else if( (selected_index = s.Current.Value.CheckControls( button_up.mID )) > -1 )
-					{
-						SelectorControlEvent e = new SelectorControlEvent( s.Current.Value.GetID(), selected_index );
-						mBroadcaster_SelectorControlEvent.Post( e );
 					}
 				}
 			}

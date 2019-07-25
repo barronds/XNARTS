@@ -26,30 +26,25 @@ namespace XNARTS
 		// individual systems should own the rest fo the tree.
 		private XListener< XTouch.FiveContacts >		mListener_FiveContacts;
 		private XListener< XUI.SelectorSelectionEvent > mListener_SelectorSelection;
-		private XListener< XUI.SelectorControlEvent >   mListener_SelectorControl;
 		private XBroadcaster< MenuSelectionEvent >      mBroadcaster_MenuSelection;
 		private XUI.ISelector							mRootSelector;
 		private String[]                                mOptions;
-		private String[]                                mControls;
 
 		private XDebugMenu()
 		{
 			mListener_FiveContacts = new XListener<XTouch.FiveContacts>( 1, eEventQueueFullBehaviour.Assert, "5contacts" );
 			mListener_SelectorSelection = new XListener<XUI.SelectorSelectionEvent>( 1, eEventQueueFullBehaviour.Assert, "dmss" );
-			mListener_SelectorControl = new XListener<XUI.SelectorControlEvent>( 1, eEventQueueFullBehaviour.Assert, "dmsc" );
 			mBroadcaster_MenuSelection = new XBroadcaster<MenuSelectionEvent>();
 			mRootSelector = null;
 			String spacer = XUI.Instance().GetSpacerString();
 
-			mOptions = new String[ 1 ]{ "Map" };
-			mControls = new String[ 4 ]{ spacer, "Exit", spacer, "Quit" };
+			mOptions = new String[ 5 ]{ "Map", spacer, "Exit", spacer, "Quit" };
 		}
 
 		public void Init()
 		{
 			XTouch.Instance().GetBroadcaster_FiveContacts().Subscribe( mListener_FiveContacts );
 			XUI.Instance().GetBroadcaster_SelectorSelectionEvent().Subscribe( mListener_SelectorSelection );
-			XUI.Instance().GetBroadcaster_SelectorControlEvent().Subscribe( mListener_SelectorControl );
 		}
 
 		public void Update()
@@ -63,8 +58,7 @@ namespace XNARTS
 				{
 					mRootSelector = XUI.Instance().CreateSelector(	new XUI.Position(), "Debug Menu", 
 																	XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
-																	XUI.eStyle.FrontendTitle, XUI.eStyle.FrontendControl, 
-																	mOptions, mControls );
+																	XUI.eStyle.FrontendTitle, mOptions );
 				}
 			}
 
@@ -86,31 +80,10 @@ namespace XNARTS
 							Console.WriteLine( "map selected" );
 							mBroadcaster_MenuSelection.Post( new MenuSelectionEvent( mOptions[ 0 ] ) );
 							break;
-						default:
-							// problem
-							XUtils.Assert( false );
-							break;
-					}
-				}
-			}
-
-			// check for control selection
-			var control_data = mListener_SelectorControl.GetMaxOne();
-
-			if( control_data != null )
-			{
-				if ( control_data.mSelectorID == mRootSelector.GetID() )
-				{
-					// destroy this selector
-					XUI.Instance().DestroySelector( mRootSelector.GetID() );
-					mRootSelector = null;
-
-					switch ( control_data.mIndexSelected )
-					{
-						case 1:
+						case 2:
 							// exit selected, do nothing, menu will close
 							break;
-						case 3:
+						case 4:
 							// quit selected, send message to end program.  this menu will close
 							BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
 							break;
