@@ -35,5 +35,48 @@ namespace XNARTS
 				return mPosition;
 			}
 		}
+
+
+		public enum ePlacement
+		{
+			Invalid = -1,
+
+			Absolute, // Vector2
+			Centered,
+			TopLeft,
+			TopRight,
+			BottomLeft,
+			BottomRight,
+			CenteredBottom,
+
+			Num
+		}
+
+		public class Position
+		{
+			private ePlacement	mPlacement;
+			private Vector2     mPos;
+			private Widget      mParent;
+
+			// constructor for absolute position relative to widget.  use screen widget for screen space position.
+			public Position( Widget parent, Vector2 pos )
+			{
+				Init( parent, ePlacement.Absolute, pos );
+			}
+
+			// constructor for placement relative to a widget.  use screen widget for screen placement.
+			public Position( Widget parent, ePlacement placement )
+			{
+				XUtils.Assert( placement != ePlacement.Absolute, "wrong constructor for absolute" );
+				Init( parent, placement, Vector2.Zero );
+			}
+
+			private void Init( Widget parent, ePlacement placement, Vector2 pos )
+			{
+				mPos = pos;
+				mPlacement = placement;
+				mParent = parent;
+			}
+		}
 	}
 }
