@@ -9,7 +9,7 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		public interface ISelector
+		public interface _ISelector
 		{
 			long GetID();
 			void Draw( XSimpleDraw simple_draw );
@@ -19,13 +19,13 @@ namespace XNARTS
 
 		private XBroadcaster< SelectorSelectionEvent >	mBroadcaster_SelectorSelectionEvent;
 		private XListener< ButtonUpEvent >				mListener_ButtonUpEvent;
-		private Dictionary< long, ISelector >			mSelectors;
+		private Dictionary< long, _ISelector >			mSelectors;
 
 		private void Constructor_Selector()
 		{
 			mBroadcaster_SelectorSelectionEvent = new XBroadcaster<SelectorSelectionEvent>();
 			mListener_ButtonUpEvent = new XListener<ButtonUpEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIselectorbutton" );
-			mSelectors = new Dictionary<long, ISelector>();
+			mSelectors = new Dictionary<long, _ISelector>();
 		}
 
 		private void Init_Selector()
@@ -54,11 +54,11 @@ namespace XNARTS
 			return "<<SPACER>>";
 		}
 
-		public ISelector CreateSelector(	Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
+		public _ISelector CreateSelector(	_Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
 											String[] texts )
 		{
 
-			ISelector selector = new Selector(	pos, title, style, button_style, title_style, NextID(), 
+			_ISelector selector = new Selector(	pos, title, style, button_style, title_style, NextID(), 
 												texts );
 
 			mSelectors.Add( selector.GetID(), selector );
@@ -67,12 +67,12 @@ namespace XNARTS
 
 		public void DestroySelector( long id )
 		{
-			ISelector selector = mSelectors[ id ];
+			_ISelector selector = mSelectors[ id ];
 			selector.Destroy();
 			mSelectors.Remove( id );
 		}
 
-		public class Selector : ISelector
+		public class Selector : _ISelector
 		{
 			private bool mRenderEnabled;
 			private long mID;
@@ -81,12 +81,12 @@ namespace XNARTS
 			private eStyle mButtonStyle;
 			private eStyle mTitleStyle;
 			private Vector2 mPos;
-			private Position mPosition;
+			private _Position mPosition;
 			private xAABB2 mAABB;
-			private IButton[] mSelections;
-			private IButton mTitleButton;
+			private _IButton[] mSelections;
+			private _IButton mTitleButton;
 
-			public Selector(	Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
+			public Selector(	_Position pos, String title, eStyle style, eStyle button_style, eStyle title_style, 
 								long id, String[] texts )
 			{
 				mRenderEnabled = true;
@@ -97,7 +97,7 @@ namespace XNARTS
 				mStyle = style;
 				mButtonStyle = button_style;
 				mTitleStyle = title_style;
-				this.mSelections = new IButton[ texts.Length ];
+				this.mSelections = new _IButton[ texts.Length ];
 
 				// create a default button to see how big it is vertically
 				// size and position border accordingly, factoring in width of largest button including title
@@ -106,7 +106,7 @@ namespace XNARTS
 				// create title 'button' as disabled button
 				XUI xui_inst = XUI.Instance();
 
-				IButton test = xui_inst.CreateRectangularButton( Vector2.Zero, "Test", style );
+				_IButton test = xui_inst.CreateRectangularButton( Vector2.Zero, "Test", style );
 				xAABB2 button_size = test.GetAABB();
 				float button_size_y = button_size.GetSize().Y;
 				xui_inst.DestroyButton( test );
@@ -175,7 +175,7 @@ namespace XNARTS
 
 				mTitleButton.Translate( t );
 			}
-			private IButton PositionAndCreateButton(	Vector2 pos, float border_padding, float spacing, 
+			private _IButton PositionAndCreateButton(	Vector2 pos, float border_padding, float spacing, 
 														float button_size_y, eStyle button_style, int button_num, String text )
 			{
 				Vector2 button_pos = pos;
@@ -183,7 +183,7 @@ namespace XNARTS
 				button_pos.Y += border_padding + (spacing + button_size_y) * button_num;
 				return XUI.Instance().CreateRectangularButton( button_pos, text, button_style );
 			}
-			private void PositionAndCreateButtons( String[] strings, IButton[] dest, float border_padding, float spacing,
+			private void PositionAndCreateButtons( String[] strings, _IButton[] dest, float border_padding, float spacing,
 													float button_size_y, eStyle style, int offset )
 			{
 				String spacer = XUI.Instance().GetSpacerString();
@@ -235,7 +235,7 @@ namespace XNARTS
 					strings[ i ] = PadButtonText( strings[ i ], longest );
 				}
 			}
-			private float GetWidest( IButton[] buttons )
+			private float GetWidest( _IButton[] buttons )
 			{
 				float largest_x = 0.0f;
 
@@ -247,13 +247,13 @@ namespace XNARTS
 
 				return largest_x;
 			}
-			private void CenterButton( IButton button, float largest, float title_padding )
+			private void CenterButton( _IButton button, float largest, float title_padding )
 			{
 				float size_x = button.GetAABB().GetSize().X;
 				float shift = (largest - size_x) * 0.5f;
 				button.Translate( new Vector2( shift, title_padding ) );
 			}
-			private void CenterButtons( IButton[] buttons, float largest_x, float title_padding )
+			private void CenterButtons( _IButton[] buttons, float largest_x, float title_padding )
 			{
 				for ( int i = 0; i < buttons.Length; ++i )
 				{
@@ -264,7 +264,7 @@ namespace XNARTS
 			{
 				mRenderEnabled = value;
 			}
-			void ISelector.Destroy()
+			void _ISelector.Destroy()
 			{
 				XUI ui = XUI.Instance();
 				ui.DestroyButton( mTitleButton );
@@ -274,7 +274,7 @@ namespace XNARTS
 					ui.DestroyButton( mSelections[ i ] );
 				}
 			}
-			int ISelector.CheckSelections( long id )
+			int _ISelector.CheckSelections( long id )
 			{
 				for( int i = 0; i < mSelections.Length; ++i )
 				{
@@ -286,12 +286,12 @@ namespace XNARTS
 
 				return -1;
 			}
-			long ISelector.GetID()
+			long _ISelector.GetID()
 			{
 				return mID;
 			}
 
-			void ISelector.Draw( XSimpleDraw simple_draw )
+			void _ISelector.Draw( XSimpleDraw simple_draw )
 			{
 				if( mRenderEnabled )
 				{

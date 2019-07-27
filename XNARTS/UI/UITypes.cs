@@ -9,18 +9,18 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		public class Position
+		public class _Position
 		{
 			private bool	mCentered;
 			private Vector2 mPosition;
 
 			// one constructor for centered and one for absolute position.  could add one for relative.
-			public Position()
+			public _Position()
 			{
 				mCentered = true;
 				mPosition = Vector2.Zero;
 			}
-			public Position( Vector2 pos )
+			public _Position( Vector2 pos )
 			{
 				mCentered = false;
 				mPosition = pos;

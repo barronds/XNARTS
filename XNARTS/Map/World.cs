@@ -77,9 +77,9 @@ namespace XNARTS
 		private XSafeGrid< xMapCell >				mMap;
 		private XListener< XKeyInput.KeyUp >		mListenter_KeyUp;
 		private XListener< XUI.ButtonUpEvent >		mListener_Button;
-		private XUI.IButton							mRegnerateMapButton;
-		private XUI.IButton                         mMapTypeButton;
-		private XUI.IButton                         mMapSizeButton;
+		private XUI._IButton							mRegnerateMapButton;
+		private XUI._IButton                         mMapTypeButton;
+		private XUI._IButton                         mMapSizeButton;
 
 		// private constructor as per XSingleton
 		private XWorld()

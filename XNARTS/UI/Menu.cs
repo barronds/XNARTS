@@ -8,11 +8,18 @@ namespace XNARTS
 {
 	// alternate design, in progress:
 	//
-	// - each menu is an XMenu object
+	// - each menu is an XMenu object, (which is a widget maybe)
 	// - you can add, delete, grey out menu options dynamically
+	//
 	// - once selected, an entry can create another menu, another widget, go back one menu, quit menu, or have a side effect
-	// - once side effect is chosen, the entry can stay in current menu, go back one menu, or quite menu
-	// - there is one global 'active menu stack'. only the top menu is visible at any moment. (one rendering choice, could be others)
+	// - once side effect is chosen, the entry can stay in current menu, go back one menu, or quit menu
+	// - if another widget is used and closed, it can stay in current menu or quit menu
+	// - if a widget spawns another menu, ... (maybe here we change menu stack to widget stack) 
+	//
+	// - there is one global 'active menu stack'. only the top menu is visible at any moment. 
+	//   (one rendering choice, could be others).  should be able to have other buttons on screen
+	//	 that would activate other menu stacks if in a current one.  that would exit any current one.
+	//
 	// - menus in the middle of the stack can still be accessed for option modification on the fly
 	// - each menu has a UID on creation, which changes if the menu is created again.
 	// - there is only one event for listenting to menu selections, so many listeners per option selected, unfortunate.

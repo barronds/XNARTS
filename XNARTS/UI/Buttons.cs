@@ -13,8 +13,8 @@ namespace XNARTS
 		private XBroadcaster< ButtonDownEvent >		mBroadcaster_ButtonDownEvent;
 		private XBroadcaster< ButtonHeldEvent >		mBroadcaster_ButtonHeldEvent;
 		private XBroadcaster< ButtonAbortEvent >	mBroadcaster_ButtonAbortEvent;
-		private SortedList< long, IButton >			mButtons;
-		private IButton								mCurrentlyPressed;
+		private SortedList< long, _IButton >			mButtons;
+		private _IButton								mCurrentlyPressed;
 
 		public XBroadcaster<ButtonUpEvent> GetBroadcaster_ButtonUpEvent()
 		{
@@ -33,7 +33,7 @@ namespace XNARTS
 			return mBroadcaster_ButtonAbortEvent;
 		}
 
-		public interface IButton
+		public interface _IButton
 		{
 			bool Contains( Vector2 point );
 			long GetID();
@@ -82,31 +82,31 @@ namespace XNARTS
 			}
 		}
 
-		public IButton CreateRoundButton(	Vector2 pos,
+		public _IButton CreateRoundButton(	Vector2 pos,
 											String text,
 											eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
 			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
-			IButton button = new RoundButton( pos, text, s, NextID(), font_size );
+			_IButton button = new RoundButton( pos, text, s, NextID(), font_size );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
 
-		public IButton CreateRectangularButton( Vector2 pos,
+		public _IButton CreateRectangularButton( Vector2 pos,
 												String text,
 												eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
 			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
-			IButton button = new RectangularButton( pos, text, s, NextID(), font_size );
+			_IButton button = new RectangularButton( pos, text, s, NextID(), font_size );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
 
-		public void DestroyButton( IButton button )
+		public void DestroyButton( _IButton button )
 		{
 			if ( mCurrentlyPressed != null && mCurrentlyPressed.GetID() == button.GetID() )
 			{
@@ -162,7 +162,7 @@ namespace XNARTS
 		}
 
 
-		private class RoundButton : IButton
+		private class RoundButton : _IButton
 		{
 			private double mRadius;
 			private double mRadiusSqr;
@@ -184,47 +184,47 @@ namespace XNARTS
 				mButtonCore = new ButtonCore( pos, text, style, new Vector2( 0, 0 ), id );
 			}
 
-			long IButton.GetID()
+			long _IButton.GetID()
 			{
 				return mButtonCore.mID;
 			}
-			bool IButton.Contains( Vector2 point )
+			bool _IButton.Contains( Vector2 point )
 			{
 				Vector2 d = point - mButtonCore.mPos;
 				double dist_sqr = d.LengthSquared();
 				return dist_sqr < mRadiusSqr;
 			}
-			void IButton.Draw( XSimpleDraw simple_draw )
+			void _IButton.Draw( XSimpleDraw simple_draw )
 			{
 				// draw border and background, then draw 
 				// TODO: circle part, add circles to simple draw
 				mButtonCore.Draw( simple_draw );
 			}
-			void IButton.SetPressed( bool pressed )
+			void _IButton.SetPressed( bool pressed )
 			{
 				mButtonCore.mPressed = pressed;
 			}
-			void IButton.SetActive( bool active )
+			void _IButton.SetActive( bool active )
 			{
 				mButtonCore.mActive = active;
 			}
-			bool IButton.IsActive()
+			bool _IButton.IsActive()
 			{
 				return mButtonCore.mActive;
 			}
-			xAABB2 IButton.GetAABB()
+			xAABB2 _IButton.GetAABB()
 			{
 				return mAABB;
 			}
 
-			void IButton.Translate( Vector2 d )
+			void _IButton.Translate( Vector2 d )
 			{
 				mAABB.Translate( d );
 				mButtonCore.Translate( d );
 			}
 		}
 
-		private class RectangularButton : IButton
+		private class RectangularButton : _IButton
 		{
 			private xAABB2 mAABB;
 			private Vector3 mCorner2;
@@ -250,16 +250,16 @@ namespace XNARTS
 				mButtonCore = new ButtonCore( pos, text, style, new_text_offset, id );
 			}
 
-			long IButton.GetID()
+			long _IButton.GetID()
 			{
 				return mButtonCore.mID;
 			}
-			bool IButton.Contains( Vector2 point )
+			bool _IButton.Contains( Vector2 point )
 			{
 				return mAABB.Contains( point );
 			}
 
-			void IButton.Draw( XSimpleDraw simple_draw )
+			void _IButton.Draw( XSimpleDraw simple_draw )
 			{
 				// draw border and background, then draw core
 				Vector3 lo = new Vector3( mAABB.GetMin(), 2 ); // zero might not be right z
@@ -278,24 +278,24 @@ namespace XNARTS
 				mButtonCore.Draw( simple_draw );
 			}
 
-			void IButton.SetPressed( bool pressed )
+			void _IButton.SetPressed( bool pressed )
 			{
 				mButtonCore.mPressed = pressed;
 			}
-			void IButton.SetActive( bool active )
+			void _IButton.SetActive( bool active )
 			{
 				mButtonCore.mActive = active;
 			}
-			bool IButton.IsActive()
+			bool _IButton.IsActive()
 			{
 				return mButtonCore.mActive;
 			}
-			xAABB2 IButton.GetAABB()
+			xAABB2 _IButton.GetAABB()
 			{
 				return mAABB;
 			}
 
-			void IButton.Translate( Vector2 d )
+			void _IButton.Translate( Vector2 d )
 			{
 				mAABB.Translate( d );
 				Vector3 d3 = new Vector3( d, 0 );
@@ -339,7 +339,7 @@ namespace XNARTS
 			mBroadcaster_ButtonDownEvent = new XBroadcaster<ButtonDownEvent>();
 			mBroadcaster_ButtonHeldEvent = new XBroadcaster<ButtonHeldEvent>();
 			mBroadcaster_ButtonAbortEvent = new XBroadcaster<ButtonAbortEvent>();
-			mButtons = new SortedList<long, IButton>();
+			mButtons = new SortedList<long, _IButton>();
 			mCurrentlyPressed = null;
 		}
 

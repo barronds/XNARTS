@@ -29,7 +29,7 @@ namespace XNARTS
 		private XListener< XTouch.FiveContacts >		mListener_FiveContacts;
 		private XListener< XUI.SelectorSelectionEvent > mListener_SelectorSelection;
 		private XBroadcaster< MenuSelectionEvent >      mBroadcaster_MenuSelection;
-		private XUI.ISelector							mRootSelector;
+		private XUI._ISelector							mRootSelector;
 		private String[]                                mOptions;
 
 		private XRootDebugMenu()
@@ -58,7 +58,7 @@ namespace XNARTS
 			{
 				if( mRootSelector == null )
 				{
-					mRootSelector = XUI.Instance().CreateSelector(	new XUI.Position(), "Debug Menu", 
+					mRootSelector = XUI.Instance().CreateSelector(	new XUI._Position(), "Debug Menu", 
 																	XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
 																	XUI.eStyle.FrontendTitle, mOptions );
 				}
