@@ -55,25 +55,33 @@ namespace XNARTS
 		public class Position
 		{
 			private ePlacement	mPlacement;
-			private Vector2     mPos;
+			private xAABB2		mAABB;
 			private Widget      mParent;
 
 			// constructor for absolute position relative to widget.  use screen widget for screen space position.
-			public Position( Widget parent, Vector2 pos )
+			public Position( Widget parent, xAABB2 aabb )
 			{
-				Init( parent, ePlacement.Absolute, pos );
+				Init( parent, ePlacement.Absolute, aabb );
 			}
 
 			// constructor for placement relative to a widget.  use screen widget for screen placement.
 			public Position( Widget parent, ePlacement placement )
 			{
+				// should maybe be calculating aabb here or force constructing code to pass it in
 				XUtils.Assert( placement != ePlacement.Absolute, "wrong constructor for absolute" );
-				Init( parent, placement, Vector2.Zero );
+				Init( parent, placement, xAABB2.GetOrigin() );
 			}
 
-			private void Init( Widget parent, ePlacement placement, Vector2 pos )
+			public xAABB2 GetAABB()
 			{
-				mPos = pos;
+				return mAABB;
+			}
+
+			// maybe add methods for updating parent, or updating motion, updating aabb
+
+			private void Init( Widget parent, ePlacement placement, xAABB2 aabb )
+			{
+				mAABB = aabb;
 				mPlacement = placement;
 				mParent = parent;
 			}

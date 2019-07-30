@@ -16,6 +16,7 @@ namespace XNARTS
 		private Vector2 mMax;
 		private bool    mIsValid;
 
+		private static xAABB2 sOrigin = new xAABB2( Vector2.Zero );
 
 		public xAABB2( Vector2 min, Vector2 max )
 		{
@@ -43,6 +44,10 @@ namespace XNARTS
 			mIsValid = true;
 		}
 
+		public static xAABB2 GetOrigin()
+		{
+			return sOrigin;
+		}
 
 		public void Reset()
 		{

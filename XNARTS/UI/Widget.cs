@@ -43,8 +43,32 @@ namespace XNARTS
 
 		public class Widget
 		{
-			public Widget()
-			{ }
+			private Position	mPosition;
+			private bool		mInputEnabled;
+
+
+			public Widget( Widget parent, xAABB2 aabb )
+			{
+				mInputEnabled = true;
+				mPosition = new Position( parent, aabb );
+			}
+
+			public Widget( Widget parent, ePlacement placement )
+			{
+				mInputEnabled = true;
+				// maybe do the work here to figure out just where this is?
+				mPosition = new Position( parent, placement );
+			}
+
+			public Position GetPosition()
+			{
+				return mPosition;
+			}
+
+			public void SetInputEnabled( bool value )
+			{
+				mInputEnabled = value;
+			}
 
 
 		}
