@@ -83,24 +83,6 @@ namespace XNARTS
 		public class FiveContacts
 		{}
 
-		// broadcasters
-		private XBroadcaster<MultiDragData>     mBroadcaster_MultiDrag;
-		private XBroadcaster<SinglePokeData>    mBroadcaster_SinglePoke;
-		private XBroadcaster< FiveContacts >    mBroadcaster_FiveContacts;
-
-		public XBroadcaster< MultiDragData > GetBroadcaster_MultiDrag()
-		{
-			return mBroadcaster_MultiDrag;
-		}
-		public XBroadcaster< SinglePokeData > GetBroadcaster_SinglePoke()
-		{
-			return mBroadcaster_SinglePoke;
-		}
-		public XBroadcaster< FiveContacts > GetBroadcaster_FiveContacts()
-		{
-			return mBroadcaster_FiveContacts;
-		}
-
 		private enum eContactChange
 		{
 			// initial state
@@ -161,9 +143,6 @@ namespace XNARTS
 		// private constructor for XSingleton
 		private XTouch()
 		{
-			mBroadcaster_MultiDrag = new XBroadcaster<MultiDragData>();
-			mBroadcaster_SinglePoke = new XBroadcaster<SinglePokeData>();
-			mBroadcaster_FiveContacts = new XBroadcaster<FiveContacts>();
 		}
 
 		// state/transition helper functions
@@ -290,7 +269,7 @@ namespace XNARTS
 									new SinglePokeData( detail, mSinglePoke_StartPos, GetSingleTouchPos(), mSinglePoke_FrameCount )	:
 									new SinglePokeData( detail, mSinglePoke_StartPos, mSinglePoke_FrameCount )						;
 
-			mBroadcaster_SinglePoke.Post( data );
+			XBulletinBoard.Instance().mBroadcaster_SinglePoke.Post( data );
 		}
 		private void EnterSingleDrag()
 		{
@@ -325,7 +304,7 @@ namespace XNARTS
 
 			ePokeDetail detail = mSinglePoke_FrameCount == 0 ? ePokeDetail.Start : ePokeDetail.Hold;
 			SinglePokeData data = new SinglePokeData( detail, mSinglePoke_StartPos, current_pos, mSinglePoke_FrameCount );
-			mBroadcaster_SinglePoke.Post( data );
+			XBulletinBoard.Instance().mBroadcaster_SinglePoke.Post( data );
 			++mSinglePoke_FrameCount;
 
 			return eContactChange.NoChange;
@@ -374,7 +353,7 @@ namespace XNARTS
 		private eContactChange State_MultiDrag()
 		{
 			var data = new MultiDragData( CalcAvgTouchPos(), CalcMaxSeparation(), mMultiDrag_FrameCount );
-			mBroadcaster_MultiDrag.Post( data );
+			XBulletinBoard.Instance().mBroadcaster_MultiDrag.Post( data );
 			++mMultiDrag_FrameCount;
 			return eContactChange.NoChange;
 		}
@@ -433,7 +412,7 @@ namespace XNARTS
 		}
 		private void Transition_5Contacts_Any()
 		{
-			mBroadcaster_FiveContacts.Post( new FiveContacts() );
+			XBulletinBoard.Instance().mBroadcaster_FiveContacts.Post( new FiveContacts() );
 		}
 		private void Transition_Trivial()
 		{ }

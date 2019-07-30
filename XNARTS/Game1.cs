@@ -33,7 +33,7 @@ namespace XNARTS
 
 			mListener_ExitGameEvent = new XListener<ExitGameEvent>( 1, eEventQueueFullBehaviour.Ignore, "ExitGame" );
 
-			BulletinBoard.CreateInstance();
+			XBulletinBoard.CreateInstance();
 			XFontDraw.CreateInstance();
 			XRenderManager.CreateInstance();
 			XTouch.CreateInstance();
@@ -53,7 +53,7 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
-			BulletinBoard.Instance().Init();
+			XBulletinBoard.Instance().Init();
 			XTouch.Instance().Init();
 			XKeyInput.Instance().Init();
 			XWorld.Instance().Init();
@@ -65,7 +65,7 @@ namespace XNARTS
 
 			base.Initialize();
 
-			BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Subscribe( mListener_ExitGameEvent );
+			XBulletinBoard.Instance().mBroadcaster_ExitGameEvent.Subscribe( mListener_ExitGameEvent );
 		}
 
 		/// <summary>

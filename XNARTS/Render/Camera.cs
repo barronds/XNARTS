@@ -41,7 +41,7 @@ namespace XNARTS
 
 			mListener_MultiDrag = new XListener<XTouch.MultiDragData>(	1, eEventQueueFullBehaviour.IgnoreOldest, 
 																		"worldcammultidrag" );
-			XTouch.Instance().GetBroadcaster_MultiDrag().Subscribe( mListener_MultiDrag );
+			XBulletinBoard.Instance().mBroadcaster_MultiDrag.Subscribe( mListener_MultiDrag );
 
 			mListener_WorldRegenerated = new XListener<XWorld.WorldRegenerated>(	1, eEventQueueFullBehaviour.IgnoreOldest, 
 																					"worldcamworldregenerated" );

@@ -25,6 +25,8 @@ namespace XNARTS
 			Init_Selector();
 			Init_Input();
 			Init_Render();
+
+			TestBed.CreateInstance().Init();
 		}
 
 		public void Update( GameTime t )

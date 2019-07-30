@@ -45,7 +45,7 @@ namespace XNARTS
 
 		public void Init()
 		{
-			XTouch.Instance().GetBroadcaster_FiveContacts().Subscribe( mListener_FiveContacts );
+			XBulletinBoard.Instance().mBroadcaster_FiveContacts.Subscribe( mListener_FiveContacts );
 			XUI.Instance().GetBroadcaster_SelectorSelectionEvent().Subscribe( mListener_SelectorSelection );
 		}
 
@@ -87,7 +87,7 @@ namespace XNARTS
 							break;
 						case 4:
 							// quit selected, send message to end program.  this menu will close
-							BulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
+							XBulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
 							break;
 						default:
 							// problem

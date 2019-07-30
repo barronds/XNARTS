@@ -21,6 +21,11 @@ UI
 - enable/disable or show/hide selector to facilitate layering (menus), ie go back etc.  selector stack better model?
 - selector bigger buttons when title is bigger than all other buttons (optional)
 - simplify menu setup
+- xui testbed
+- new widget class
+- new panel class
+- new position class
+
 
 Events
 
