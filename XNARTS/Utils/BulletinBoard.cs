@@ -15,6 +15,7 @@ namespace XNARTS
 		public XBroadcaster< XTouch.MultiDragData >     mBroadcaster_MultiDrag;
 		public XBroadcaster< XTouch.SinglePokeData>		mBroadcaster_SinglePoke;
 		public XBroadcaster< XTouch.FiveContacts >		mBroadcaster_FiveContacts;
+		public XBroadcaster< XTouch.FourContacts >      mBroadcaster_FourContacts;
 
 		public void Init()
 		{
@@ -22,6 +23,7 @@ namespace XNARTS
 
 			mBroadcaster_MultiDrag = new XBroadcaster<XTouch.MultiDragData>();
 			mBroadcaster_SinglePoke = new XBroadcaster<XTouch.SinglePokeData>();
+			mBroadcaster_FourContacts = new XBroadcaster<XTouch.FourContacts>();
 			mBroadcaster_FiveContacts = new XBroadcaster<XTouch.FiveContacts>();
 		}
 

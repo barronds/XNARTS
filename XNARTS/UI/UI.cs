@@ -32,6 +32,7 @@ namespace XNARTS
 		public void Update( GameTime t )
 		{
 			Update_Input();
+			TestBed.Instance().Update( t );
 		}
 
 		private long NextID()
