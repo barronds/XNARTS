@@ -77,6 +77,11 @@ namespace XNARTS
 				return mAABB;
 			}
 
+			public void Translate( Vector2 v )
+			{
+				mAABB.Translate( v );
+			}
+
 			// maybe add methods for updating parent, or updating motion, updating aabb
 
 			private void Init( Widget parent, ePlacement placement, xAABB2 aabb )

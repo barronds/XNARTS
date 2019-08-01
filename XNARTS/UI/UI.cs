@@ -22,6 +22,8 @@ namespace XNARTS
 
 		public void Init()
 		{
+			Widget.ClassInit();
+
 			Init_Selector();
 			Init_Input();
 			Init_Render();

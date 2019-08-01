@@ -27,7 +27,7 @@ namespace XNARTS
 
 		private void Test_Label()
 		{
-
+			XUI.Label label = new XUI.Label( XUI.Widget.GetScreenWidget(), "Test Widget", eFont.Consolas24 );
 		}
 
 		private TestBed()
