@@ -7,32 +7,50 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	public class TestBed : XSingleton< TestBed >
+	public partial class XUI
 	{
-		private XListener< XTouch.FourContacts > mListener_FourContacts;
-
-		public void Init()
+		public class TestBed
 		{
-			mListener_FourContacts = new XListener<XTouch.FourContacts>( 1, eEventQueueFullBehaviour.Ignore, "XUITB4C" );
-			XBulletinBoard.Instance().mBroadcaster_FourContacts.Subscribe( mListener_FourContacts );
-		}
+			private XListener< XTouch.FourContacts > mListener_FourContacts;
 
-		public void Update( GameTime game_time )
-		{
-			if( mListener_FourContacts.GetMaxOne() != null )
+			public TestBed()
+			{ }
+
+			public void Init()
 			{
-				Test_Label();
+				mListener_FourContacts = new XListener<XTouch.FourContacts>( 1, eEventQueueFullBehaviour.Ignore, "XUITB4C" );
+				XBulletinBoard.Instance().mBroadcaster_FourContacts.Subscribe( mListener_FourContacts );
+			}
+
+			public void Update( GameTime game_time )
+			{
+				if ( mListener_FourContacts.GetMaxOne() != null )
+				{
+					Test_Label();
+				}
+			}
+
+			private void Test_Label()
+			{
+				XUI.Label label = new XUI.Label( XUI.Instance().GetScreenWidget(), "Test Widget", eFont.Consolas24 );
 			}
 		}
 
-		private void Test_Label()
+		private TestBed mTestBed;
+
+		private void Constructor_TestBed()
 		{
-			XUI.Label label = new XUI.Label( XUI.Widget.GetScreenWidget(), "Test Widget", eFont.Consolas24 );
+			mTestBed = new TestBed();
 		}
 
-		private TestBed()
+		private void Init_TestBed()
 		{
-			// private constructor as per XSingleton
+			mTestBed.Init();
+		}
+
+		private void Update_TestBed( GameTime t )
+		{
+			mTestBed.Update( t );
 		}
 	}
 }

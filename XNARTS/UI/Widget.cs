@@ -41,14 +41,11 @@ namespace XNARTS
 		// examples:
 		// panel inherits from widget and has-a list of widgets within it.
 
-
 		public class Widget
 		{
 			private Position	mPosition;
 			private bool		mInputEnabled;
 			private bool        mInitialized;
-
-			private static Widget sScreenWidget = null;
 
 			public Widget()
 			{
@@ -61,17 +58,6 @@ namespace XNARTS
 //				// maybe do the work here to figure out just where this is?
 //				mPosition = new Position( parent, placement );
 //			}
-
-			public static Widget GetScreenWidget()
-			{
-				XUtils.Assert( sScreenWidget != null );
-				return sScreenWidget;
-			}
-
-			public static void ClassInit()
-			{
-				sScreenWidget = new ScreenWidget();
-			}
 
 			public void InitWidget( Widget parent, xAABB2 aabb )
 			{
@@ -102,6 +88,19 @@ namespace XNARTS
 				InitWidget( null, new xAABB2( Vector2.Zero, new Vector2( screen_dim.x, screen_dim.y ) ) );
 				SetInputEnabled( false );
 			}
+		}
+
+		private Widget mScreenWidget;
+
+		private void Constructor_Widget()
+		{
+			mScreenWidget = new ScreenWidget();
+		}
+
+		public Widget GetScreenWidget()
+		{
+			XUtils.Assert( mScreenWidget != null );
+			return mScreenWidget;
 		}
 	}
 }

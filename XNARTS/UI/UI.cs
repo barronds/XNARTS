@@ -15,26 +15,26 @@ namespace XNARTS
 		{
 			// private constructor as per singleton
 			Constructor_Style();
+			Constructor_Widget();
+			Constructor_WidgetManager();
 			Constructor_Buttons();
 			Constructor_Selector();
 			Constructor_Input();
+			Constructor_TestBed();
 		}
 
 		public void Init()
 		{
-			Widget.ClassInit();
-
 			Init_Selector();
 			Init_Input();
 			Init_Render();
-
-			TestBed.CreateInstance().Init();
+			Init_TestBed();
 		}
 
 		public void Update( GameTime t )
 		{
 			Update_Input();
-			TestBed.Instance().Update( t );
+			Update_TestBed( t );
 		}
 
 		private long NextID()
