@@ -58,7 +58,7 @@ namespace XNARTS
 											String[] texts )
 		{
 
-			_ISelector selector = new Selector(	pos, title, style, button_style, title_style, NextID(), 
+			_ISelector selector = new Selector(	pos, title, style, button_style, title_style, NextUID(), 
 												texts );
 
 			mSelectors.Add( selector.GetID(), selector );

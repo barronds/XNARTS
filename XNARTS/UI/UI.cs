@@ -9,7 +9,7 @@ namespace XNARTS
 {
 	public partial class XUI : XSingleton< XUI >
 	{
-		private static long sPrevID = 0;
+		private static long sPrevUID = 0;
 
 		private XUI()
 		{
@@ -25,6 +25,7 @@ namespace XNARTS
 
 		public void Init()
 		{
+			Init_Widget();
 			Init_Selector();
 			Init_Input();
 			Init_Render();
@@ -37,10 +38,10 @@ namespace XNARTS
 			Update_TestBed( t );
 		}
 
-		private long NextID()
+		public long NextUID()
 		{
-			++sPrevID;
-			return sPrevID;
+			++sPrevUID;
+			return sPrevUID;
 		}
 	}
 }

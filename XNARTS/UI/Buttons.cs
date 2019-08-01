@@ -89,7 +89,7 @@ namespace XNARTS
 			Style s = XUI.Instance().GetStyle( style );
 			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
-			_IButton button = new RoundButton( pos, text, s, NextID(), font_size );
+			_IButton button = new RoundButton( pos, text, s, NextUID(), font_size );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}
@@ -101,7 +101,7 @@ namespace XNARTS
 			Style s = XUI.Instance().GetStyle( style );
 			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
-			_IButton button = new RectangularButton( pos, text, s, NextID(), font_size );
+			_IButton button = new RectangularButton( pos, text, s, NextUID(), font_size );
 			mButtons.Add( button.GetID(), button );
 			return button;
 		}

@@ -30,6 +30,17 @@ namespace XNARTS
 			{
 				mRootWidgets = new List<XUI.Widget>();
 			}
+
+			public void AddRootWidget( Widget w )
+			{
+				//mRootWidgets.Find( widget => widget.GetUID() == w.GetUID()
+				//mRootWidgets.Add( w );
+			}
+
+			public void RemoveRootWidget( Widget w )
+			{
+				mRootWidgets.Remove( w );
+			}
 		}
 
 

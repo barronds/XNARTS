@@ -43,21 +43,23 @@ namespace XNARTS
 
 		public class Widget
 		{
-			private Position	mPosition;
-			private bool		mInputEnabled;
+			private Position    mPosition;
+			private long        mUID;
+			private bool        mInputEnabled;
 			private bool        mInitialized;
 
 			public Widget()
 			{
+				mUID = XUI.Instance().NextUID();
 				mInitialized = false;
 			}
 
-//			public Widget( Widget parent, ePlacement placement )
-//			{
-//				mInputEnabled = true;
-//				// maybe do the work here to figure out just where this is?
-//				mPosition = new Position( parent, placement );
-//			}
+			//			public Widget( Widget parent, ePlacement placement )
+			//			{
+			//				mInputEnabled = true;
+			//				// maybe do the work here to figure out just where this is?
+			//				mPosition = new Position( parent, placement );
+			//			}
 
 			public void InitWidget( Widget parent, xAABB2 aabb )
 			{
@@ -72,14 +74,18 @@ namespace XNARTS
 				return mPosition;
 			}
 
+			public long GetUID()
+			{
+				return mUID;
+			}
+
 			public void SetInputEnabled( bool value )
 			{
 				XUtils.Assert( mInitialized );
 				mInputEnabled = value;
 			}
 		}
-
-
+	
 		public class ScreenWidget : Widget
 		{
 			public ScreenWidget()
@@ -93,6 +99,10 @@ namespace XNARTS
 		private Widget mScreenWidget;
 
 		private void Constructor_Widget()
+		{
+		}
+
+		private void Init_Widget()
 		{
 			mScreenWidget = new ScreenWidget();
 		}
