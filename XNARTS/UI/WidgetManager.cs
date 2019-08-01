@@ -33,8 +33,9 @@ namespace XNARTS
 
 			public void AddRootWidget( Widget w )
 			{
-				//mRootWidgets.Find( widget => widget.GetUID() == w.GetUID()
-				//mRootWidgets.Add( w );
+				Widget existing = mRootWidgets.Find( CompareWidgets( w ) );
+				XUtils.Assert( existing == null );
+				mRootWidgets.Add( w );
 			}
 
 			public void RemoveRootWidget( Widget w )
@@ -50,7 +51,15 @@ namespace XNARTS
 		{
 			mWidgetManager = new WidgetManager();
 		}
-	
+
+		// TODO: move this into widget class or nearby
+		static Predicate<XUI.Widget> CompareWidgets( Widget w1 )
+		{
+			return delegate( XUI.Widget w2 )
+			{
+				return w1.GetUID() == w2.GetUID();
+			};
+		}
 	}
 
 }
