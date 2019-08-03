@@ -84,8 +84,16 @@ namespace XNARTS
 				XUtils.Assert( mInitialized );
 				mInputEnabled = value;
 			}
+
+			public static Predicate<Widget> CompareWidgets( Widget w1 )
+			{
+				return delegate ( Widget w2 )
+				{
+					return w1.GetUID() == w2.GetUID();
+				};
+			}
 		}
-	
+
 		public class ScreenWidget : Widget
 		{
 			public ScreenWidget()

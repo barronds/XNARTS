@@ -33,14 +33,15 @@ namespace XNARTS
 
 			public void AddRootWidget( Widget w )
 			{
-				Widget existing = mRootWidgets.Find( CompareWidgets( w ) );
+				Widget existing = mRootWidgets.Find( XUI.Widget.CompareWidgets( w ) );
 				XUtils.Assert( existing == null );
 				mRootWidgets.Add( w );
 			}
 
 			public void RemoveRootWidget( Widget w )
 			{
-				mRootWidgets.Remove( w );
+				bool removed = mRootWidgets.Remove( w );
+				XUtils.Assert( removed );
 			}
 		}
 
@@ -50,15 +51,6 @@ namespace XNARTS
 		private void Constructor_WidgetManager()
 		{
 			mWidgetManager = new WidgetManager();
-		}
-
-		// TODO: move this into widget class or nearby
-		static Predicate<XUI.Widget> CompareWidgets( Widget w1 )
-		{
-			return delegate( XUI.Widget w2 )
-			{
-				return w1.GetUID() == w2.GetUID();
-			};
 		}
 	}
 
