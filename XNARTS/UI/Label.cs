@@ -22,8 +22,13 @@ namespace XNARTS
 				InitWidget( parent, aabb );
 			}
 
-//			public Label( Widget parent, ePlacement placement ) : base( parent, placement )
-//			{ }
+			//			public Label( Widget parent, ePlacement placement ) : base( parent, placement )
+			//			{ }
+
+			public override void Render()
+			{
+				Console.WriteLine( "rendering label id " + GetUID() );
+			}
 		}
 
 	}

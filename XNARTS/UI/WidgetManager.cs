@@ -22,35 +22,24 @@ namespace XNARTS
 		// only widgets that are the root of a widget tree need to be in this class, as each widget
 		// will know how to enable/disable, render/hide, and handle input for those it owns.
 
-		public class WidgetManager
+		private List< XUI.Widget > mRootWidgets;
+
+		public void AddRootWidget( Widget w )
 		{
-			private List< XUI.Widget > mRootWidgets;
-
-			public WidgetManager()
-			{
-				mRootWidgets = new List<XUI.Widget>();
-			}
-
-			public void AddRootWidget( Widget w )
-			{
-				Widget existing = mRootWidgets.Find( XUI.Widget.CompareWidgets( w ) );
-				XUtils.Assert( existing == null );
-				mRootWidgets.Add( w );
-			}
-
-			public void RemoveRootWidget( Widget w )
-			{
-				bool removed = mRootWidgets.Remove( w );
-				XUtils.Assert( removed );
-			}
+			Widget existing = mRootWidgets.Find( XUI.Widget.CompareWidgets( w ) );
+			XUtils.Assert( existing == null );
+			mRootWidgets.Add( w );
 		}
 
-
-		private WidgetManager mWidgetManager;
+		public void RemoveRootWidget( Widget w )
+		{
+			bool removed = mRootWidgets.Remove( w );
+			XUtils.Assert( removed );
+		}
 
 		private void Constructor_WidgetManager()
 		{
-			mWidgetManager = new WidgetManager();
+			mRootWidgets = new List<XUI.Widget>();
 		}
 	}
 

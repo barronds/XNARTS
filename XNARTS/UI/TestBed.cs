@@ -11,10 +11,13 @@ namespace XNARTS
 	{
 		public class TestBed
 		{
-			private XListener< XTouch.FourContacts > mListener_FourContacts;
+			private XListener< XTouch.FourContacts >	mListener_FourContacts;
+			private int                                 mTestTriggerCount;
 
 			public TestBed()
-			{ }
+			{
+				mTestTriggerCount = 0;
+			}
 
 			public void Init()
 			{
@@ -24,8 +27,9 @@ namespace XNARTS
 
 			public void Update( GameTime game_time )
 			{
-				if ( mListener_FourContacts.GetMaxOne() != null )
+				if ( mTestTriggerCount == 0 && mListener_FourContacts.GetMaxOne() != null )
 				{
+					++mTestTriggerCount;
 					Test_Label();
 				}
 			}
@@ -33,6 +37,7 @@ namespace XNARTS
 			private void Test_Label()
 			{
 				XUI.Label label = new XUI.Label( XUI.Instance().GetScreenWidget(), "Test Widget", eFont.Consolas24 );
+				XUI.Instance().AddRootWidget( label );
 			}
 		}
 

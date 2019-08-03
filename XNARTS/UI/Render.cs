@@ -20,6 +20,7 @@ namespace XNARTS
 		{
 			Draw_Selector();	
 			Draw_Buttons();
+			Draw_Widgets();
 		}
 
 		private void Draw_Buttons()
@@ -38,6 +39,13 @@ namespace XNARTS
 			while ( enumerator.MoveNext() )
 			{
 				enumerator.Current.Value.Draw( mSimpleDraw );
+			}
+		}
+		private void Draw_Widgets()
+		{
+			for ( int i = 0; i < mRootWidgets.Count; ++i )
+			{
+				mRootWidgets[ i ].Render();
 			}
 		}
 	}

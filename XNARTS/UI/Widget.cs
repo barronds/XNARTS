@@ -85,6 +85,9 @@ namespace XNARTS
 				mInputEnabled = value;
 			}
 
+			public virtual void Render()
+			{ }
+
 			public static Predicate<Widget> CompareWidgets( Widget w1 )
 			{
 				return delegate ( Widget w2 )
