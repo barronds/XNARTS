@@ -11,8 +11,16 @@ namespace XNARTS
 	{
 		public class Label : Widget
 		{
-			public Label( Widget parent, String text, eFont font )
+			private eFont   mFont;
+			private String  mText;
+			private Color   mColor;
+
+			public Label( Widget parent, String text, eFont font, Color color )
 			{
+				mFont = font;
+				mText = text;
+				mColor = color;
+
 				// calculate size of widget by text and init.
 				XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( font );
 
@@ -25,9 +33,9 @@ namespace XNARTS
 			//			public Label( Widget parent, ePlacement placement ) : base( parent, placement )
 			//			{ }
 
-			public override void Render()
+			public override void Render( XSimpleDraw simple_draw )
 			{
-				Console.WriteLine( "rendering label id " + GetUID() );
+				XFontDraw.Instance().DrawString( mFont, GetPosition().GetAABB().GetMin(), mColor, mText );
 			}
 		}
 

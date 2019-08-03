@@ -85,7 +85,7 @@ namespace XNARTS
 				mInputEnabled = value;
 			}
 
-			public virtual void Render()
+			public virtual void Render( XSimpleDraw simple_draw )
 			{ }
 
 			public static Predicate<Widget> CompareWidgets( Widget w1 )

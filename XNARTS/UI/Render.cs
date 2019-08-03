@@ -45,7 +45,7 @@ namespace XNARTS
 		{
 			for ( int i = 0; i < mRootWidgets.Count; ++i )
 			{
-				mRootWidgets[ i ].Render();
+				mRootWidgets[ i ].Render( mSimpleDraw );
 			}
 		}
 	}
