@@ -15,23 +15,31 @@ namespace XNARTS
 			private String  mText;
 			private Color   mColor;
 
-			public Label( Widget parent, String text, eFont font, Color color )
+			public Label( Widget parent, String text, eFont font, Color color, Vector2 pos )
 			{
-				mFont = font;
-				mText = text;
-				mColor = color;
-
-				// calculate size of widget by text and init.
-				XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( font );
-
-				// position it at the origin of the parent for now, and it can be translated afterwards
-				// when the creator sees how big it is via aabb
-				xAABB2 aabb = new xAABB2( Vector2.Zero, new Vector2( info.mSize.X * text.Length, info.mSize.Y ) );
+				// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
+				Vector2 label_size = Init( text, font, color );
+				xAABB2 aabb = new xAABB2( pos, pos + label_size );
 				InitWidget( parent, aabb );
 			}
 
-			//			public Label( Widget parent, ePlacement placement ) : base( parent, placement )
-			//			{ }
+			public Label( Widget parent, String text, eFont font, Color color, ePlacement placement )
+			{
+				Vector2 label_size = Init( text, font, color );
+				InitWidget( parent, placement, label_size );
+			}
+
+			private Vector2 Init( String text, eFont font, Color color )
+			{
+				mText = text;
+				mFont = font;
+				mColor = color;
+
+				// return size of text
+				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
+				Vector2 label_size = new Vector2( font_size.X * text.Length, font_size.Y );
+				return label_size;
+			}
 
 			public override void Render( XSimpleDraw simple_draw )
 			{

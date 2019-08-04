@@ -54,17 +54,21 @@ namespace XNARTS
 				mInitialized = false;
 			}
 
-			//			public Widget( Widget parent, ePlacement placement )
-			//			{
-			//				mInputEnabled = true;
-			//				// maybe do the work here to figure out just where this is?
-			//				mPosition = new Position( parent, placement );
-			//			}
-
 			public void InitWidget( Widget parent, xAABB2 aabb )
 			{
-				mInputEnabled = true;
 				mPosition = new Position( parent, aabb );
+				InitWidgetCommon();
+			}
+
+			public void InitWidget( Widget parent, ePlacement placement, Vector2 size )
+			{
+				mPosition = new Position( parent, placement, size );
+				InitWidgetCommon();
+			}
+
+			private void InitWidgetCommon()
+			{
+				mInputEnabled = true;
 				mInitialized = true;
 			}
 
@@ -86,7 +90,9 @@ namespace XNARTS
 			}
 
 			public virtual void Render( XSimpleDraw simple_draw )
-			{ }
+			{
+				XUtils.Assert( mInitialized );
+			}
 
 			public static Predicate<Widget> CompareWidgets( Widget w1 )
 			{

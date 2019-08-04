@@ -41,7 +41,7 @@ namespace XNARTS
 		{
 			Invalid = -1,
 
-			Absolute, // Vector2
+			Absolute, // Vector2, a position relative to parent widget
 			Centered,
 			TopLeft,
 			TopRight,
@@ -55,21 +55,34 @@ namespace XNARTS
 		public class Position
 		{
 			private ePlacement	mPlacement;
-			private xAABB2		mAABB;
+			private xAABB2		mAABB;	// relative to parent's aabb min point
 			private Widget      mParent;
 
 			// constructor for absolute position relative to widget.  use screen widget for screen space position.
 			public Position( Widget parent, xAABB2 aabb )
 			{
-				Init( parent, ePlacement.Absolute, aabb );
+				mAABB = aabb;
+				mPlacement = ePlacement.Absolute;
+				mParent = parent;
 			}
 
 			// constructor for placement relative to a widget.  use screen widget for screen placement.
-			public Position( Widget parent, ePlacement placement )
+			public Position( Widget parent, ePlacement placement, Vector2 size )
 			{
-				// should maybe be calculating aabb here or force constructing code to pass it in
 				XUtils.Assert( placement != ePlacement.Absolute, "wrong constructor for absolute" );
-				Init( parent, placement, xAABB2.GetOrigin() );
+				mPlacement = placement;
+				mParent = parent;
+
+				switch ( placement )
+				{
+					case ePlacement.Centered:
+						PlaceCentered( size );
+						break;
+
+					default:
+						XUtils.Assert( false, "placement type not yet supported" );
+						break;
+				}
 			}
 
 			public xAABB2 GetAABB()
@@ -82,13 +95,12 @@ namespace XNARTS
 				mAABB.Translate( v );
 			}
 
-			// maybe add methods for updating parent, or updating motion, updating aabb
-
-			private void Init( Widget parent, ePlacement placement, xAABB2 aabb )
+			private void PlaceCentered( Vector2 size )
 			{
-				mAABB = aabb;
-				mPlacement = placement;
-				mParent = parent;
+				xAABB2 parent_aabb = mParent.GetPosition().GetAABB();
+				Vector2 parent_center = parent_aabb.GetCenter();
+				Vector2 half_size = 0.5f * size;
+				mAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
 			}
 		}
 	}

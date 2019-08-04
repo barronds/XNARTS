@@ -36,8 +36,13 @@ namespace XNARTS
 
 			private void Test_Label()
 			{
-				XUI.Label label = new XUI.Label( XUI.Instance().GetScreenWidget(), "Test Widget", eFont.Consolas24, Color.Black );
-				XUI.Instance().AddRootWidget( label );
+				XUI.Label label_1 = new XUI.Label(	XUI.Instance().GetScreenWidget(), "Test Widget 1", eFont.Consolas24, 
+													Color.Black, new Vector2( 500, 700 ) );
+				XUI.Instance().AddRootWidget( label_1 );
+
+				XUI.Label label_2 = new XUI.Label(  XUI.Instance().GetScreenWidget(), "Test Widget 2", eFont.Consolas24,
+													Color.White, ePlacement.Centered );
+				XUI.Instance().AddRootWidget( label_2 );
 			}
 		}
 
