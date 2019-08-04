@@ -30,19 +30,27 @@ namespace XNARTS
 				if ( mTestTriggerCount == 0 && mListener_FourContacts.GetMaxOne() != null )
 				{
 					++mTestTriggerCount;
-					Test_Label();
+					//Test_Label();
+					Test_Panel();
 				}
 			}
 
 			private void Test_Label()
 			{
-				XUI.Label label_1 = new XUI.Label(	XUI.Instance().GetScreenWidget(), "Test Widget 1", eFont.Consolas24, 
-													Color.Black, new Vector2( 500, 700 ) );
+				XUI.Label label_1 = new XUI.Label(	XUI.Instance().GetScreenWidget(), "Test Widget 1", eStyle.Frontend, 
+													new Vector2( 500, 700 ) );
 				XUI.Instance().AddRootWidget( label_1 );
 
-				XUI.Label label_2 = new XUI.Label(  XUI.Instance().GetScreenWidget(), "Test Widget 2", eFont.Consolas24,
-													Color.White, ePlacement.Centered );
+				XUI.Label label_2 = new XUI.Label(  XUI.Instance().GetScreenWidget(), "Test Widget 2", eStyle.Frontend, 
+													ePlacement.Centered );
 				XUI.Instance().AddRootWidget( label_2 );
+			}
+
+			private void Test_Panel()
+			{
+				XUI.Panel panel_1 = new XUI.Panel(  XUI.Instance().GetScreenWidget(), eStyle.Frontend,
+													new xAABB2( new Vector2( 400, 400 ), new Vector2( 700, 500 ) ) );
+				XUI.Instance().AddRootWidget( panel_1 );
 			}
 		}
 

@@ -85,9 +85,24 @@ namespace XNARTS
 				}
 			}
 
-			public xAABB2 GetAABB()
+			public xAABB2 GetRelatveAABB()
 			{
 				return mAABB;
+			}
+
+			public xAABB2 GetScreenAABB()
+			{
+				if( mParent != null )
+				{
+					xAABB2 parent_screen_aabb = mParent.GetPosition().GetScreenAABB();
+					xAABB2 aabb = mAABB; 
+					aabb.Translate( parent_screen_aabb.GetMin() );
+					return aabb;
+				}
+				else
+				{
+					return mAABB;
+				}
 			}
 
 			public void Translate( Vector2 v )
@@ -97,7 +112,7 @@ namespace XNARTS
 
 			private void PlaceCentered( Vector2 size )
 			{
-				xAABB2 parent_aabb = mParent.GetPosition().GetAABB();
+				xAABB2 parent_aabb = mParent.GetPosition().GetRelatveAABB();
 				Vector2 parent_center = parent_aabb.GetCenter();
 				Vector2 half_size = 0.5f * size;
 				mAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
