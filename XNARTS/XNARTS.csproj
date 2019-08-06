@@ -56,6 +56,7 @@
     <Compile Include="Render\FontDraw.cs" />
     <Compile Include="Render\RenderManager.cs" />
     <Compile Include="Render\SimpleDraw.cs" />
+    <Compile Include="UI\Button2.cs" />
     <Compile Include="UI\Buttons.cs" />
     <Compile Include="UI\DebugMenu.cs" />
     <Compile Include="UI\Input.cs" />
