@@ -13,8 +13,8 @@ namespace XNARTS
 		private XBroadcaster< ButtonDownEvent >		mBroadcaster_ButtonDownEvent;
 		private XBroadcaster< ButtonHeldEvent >		mBroadcaster_ButtonHeldEvent;
 		private XBroadcaster< ButtonAbortEvent >	mBroadcaster_ButtonAbortEvent;
-		private SortedList< long, _IButton >			mButtons;
-		private _IButton								mCurrentlyPressed;
+		private SortedList< long, _IButton >		_mButtons;
+		private _IButton							_mCurrentlyPressed;
 
 		public XBroadcaster<ButtonUpEvent> GetBroadcaster_ButtonUpEvent()
 		{
@@ -82,41 +82,41 @@ namespace XNARTS
 			}
 		}
 
-		public _IButton CreateRoundButton(	Vector2 pos,
+		public _IButton _CreateRoundButton(	Vector2 pos,
 											String text,
 											eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
 			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
-			_IButton button = new RoundButton( pos, text, s, NextUID(), font_size );
-			mButtons.Add( button.GetID(), button );
+			_IButton button = new _RoundButton( pos, text, s, NextUID(), font_size );
+			_mButtons.Add( button.GetID(), button );
 			return button;
 		}
 
-		public _IButton CreateRectangularButton( Vector2 pos,
+		public _IButton _CreateRectangularButton( Vector2 pos,
 												String text,
 												eStyle style )
 		{
 			Style s = XUI.Instance().GetStyle( style );
 			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
 			Vector2 font_size = info.mSize;
-			_IButton button = new RectangularButton( pos, text, s, NextUID(), font_size );
-			mButtons.Add( button.GetID(), button );
+			_IButton button = new _RectangularButton( pos, text, s, NextUID(), font_size );
+			_mButtons.Add( button.GetID(), button );
 			return button;
 		}
 
-		public void DestroyButton( _IButton button )
+		public void _DestroyButton( _IButton button )
 		{
-			if ( mCurrentlyPressed != null && mCurrentlyPressed.GetID() == button.GetID() )
+			if ( _mCurrentlyPressed != null && _mCurrentlyPressed.GetID() == button.GetID() )
 			{
 				SendButtonAbortEvent();
 			}
 
-			mButtons.Remove( button.GetID() );
+			_mButtons.Remove( button.GetID() );
 		}
 
-		private class ButtonCore
+		private class _ButtonCore
 		{
 			public Vector2 mPos;
 			public String mText;
@@ -127,7 +127,7 @@ namespace XNARTS
 			public bool mPressed;
 			public bool mActive;
 
-			public ButtonCore( Vector2 pos,
+			public _ButtonCore( Vector2 pos,
 								String text,
 								Style style,
 								Vector2 text_offset,
@@ -162,14 +162,14 @@ namespace XNARTS
 		}
 
 
-		private class RoundButton : _IButton
+		private class _RoundButton : _IButton
 		{
 			private double mRadius;
 			private double mRadiusSqr;
 			private xAABB2 mAABB;
-			private ButtonCore mButtonCore;
+			private _ButtonCore mButtonCore;
 
-			public RoundButton( Vector2 pos,
+			public _RoundButton( Vector2 pos,
 								String text,
 								Style style,
 								long id,
@@ -181,7 +181,7 @@ namespace XNARTS
 				mRadiusSqr = radius * radius;
 				mAABB = new xAABB2( pos, radius ); // correct?
 				// TODO: not finished, place text calculation
-				mButtonCore = new ButtonCore( pos, text, style, new Vector2( 0, 0 ), id );
+				mButtonCore = new _ButtonCore( pos, text, style, new Vector2( 0, 0 ), id );
 			}
 
 			long _IButton.GetID()
@@ -224,14 +224,14 @@ namespace XNARTS
 			}
 		}
 
-		private class RectangularButton : _IButton
+		private class _RectangularButton : _IButton
 		{
 			private xAABB2 mAABB;
 			private Vector3 mCorner2;
 			private Vector3 mCorner3;
-			private ButtonCore mButtonCore;
+			private _ButtonCore mButtonCore;
 
-			public RectangularButton( Vector2 pos,
+			public _RectangularButton( Vector2 pos,
 										String text,
 										Style style,
 										long id,
@@ -247,7 +247,7 @@ namespace XNARTS
 				mCorner2 = new Vector3( pos.X + new_size.X, pos.Y, 2 );
 				mCorner3 = new Vector3( pos.X, pos.Y + new_size.Y, 2 );
 
-				mButtonCore = new ButtonCore( pos, text, style, new_text_offset, id );
+				mButtonCore = new _ButtonCore( pos, text, style, new_text_offset, id );
 			}
 
 			long _IButton.GetID()
@@ -307,41 +307,45 @@ namespace XNARTS
 
 		private void SendButtonEvent< T >( bool pressed_now, XBroadcaster< T > b, T e ) where T : class
 		{
-			XUtils.Assert( mCurrentlyPressed != null );
-			mCurrentlyPressed.SetPressed( pressed_now );
+			XUtils.Assert( _mCurrentlyPressed != null );
+			_mCurrentlyPressed.SetPressed( pressed_now );
 			b.Post( e );
 
 			if( !pressed_now )
 			{
-				mCurrentlyPressed = null;
+				_mCurrentlyPressed = null;
 			}
 		}
 		private void SendButtonUpEvent()
 		{
-			SendButtonEvent( false, mBroadcaster_ButtonUpEvent, new ButtonUpEvent( mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( false, mBroadcaster_ButtonUpEvent, new ButtonUpEvent( _mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonDownEvent()
 		{
-			SendButtonEvent( true, mBroadcaster_ButtonDownEvent, new ButtonDownEvent( mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( true, mBroadcaster_ButtonDownEvent, new ButtonDownEvent( _mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonHeldEvent()
 		{
-			SendButtonEvent( true, mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( true, mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( _mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonAbortEvent()
 		{
-			SendButtonEvent( false, mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( false, mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( _mCurrentlyPressed.GetID() ) );
 		}
 
-		private void Constructor_Buttons()
+		private void _Constructor_Buttons()
 		{
 			mBroadcaster_ButtonUpEvent = new XBroadcaster<ButtonUpEvent>();
 			mBroadcaster_ButtonDownEvent = new XBroadcaster<ButtonDownEvent>();
 			mBroadcaster_ButtonHeldEvent = new XBroadcaster<ButtonHeldEvent>();
 			mBroadcaster_ButtonAbortEvent = new XBroadcaster<ButtonAbortEvent>();
-			mButtons = new SortedList<long, _IButton>();
-			mCurrentlyPressed = null;
+			_mButtons = new SortedList<long, _IButton>();
+			_mCurrentlyPressed = null;
 		}
 
+		private void Constructor_Buttons()
+		{
+
+		}
 	}
 }

@@ -42,7 +42,7 @@ namespace XNARTS
 
 		private void Draw_Buttons()
 		{
-			var enumerator = mButtons.GetEnumerator();
+			var enumerator = _mButtons.GetEnumerator();
 
 			while ( enumerator.MoveNext() )
 			{

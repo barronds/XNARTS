@@ -106,10 +106,10 @@ namespace XNARTS
 				// create title 'button' as disabled button
 				XUI xui_inst = XUI.Instance();
 
-				_IButton test = xui_inst.CreateRectangularButton( Vector2.Zero, "Test", style );
+				_IButton test = xui_inst._CreateRectangularButton( Vector2.Zero, "Test", style );
 				xAABB2 button_size = test.GetAABB();
 				float button_size_y = button_size.GetSize().Y;
-				xui_inst.DestroyButton( test );
+				xui_inst._DestroyButton( test );
 
 				const float k_border_padding_scalar = 0.5f;
 				float border_padding = k_border_padding_scalar * button_size_y;
@@ -129,7 +129,7 @@ namespace XNARTS
 
 				// create title button (non-functional) and see if it's the largest
 				Vector2 title_pos = mPos + new Vector2( border_padding, border_padding );
-				mTitleButton = xui_inst.CreateRectangularButton( title_pos, title, title_style );
+				mTitleButton = xui_inst._CreateRectangularButton( title_pos, title, title_style );
 				mTitleButton.SetActive( false );
 				largest_x = Math.Max( largest_x, mTitleButton.GetAABB().GetSize().X );
 
@@ -181,7 +181,7 @@ namespace XNARTS
 				Vector2 button_pos = pos;
 				button_pos.X += border_padding;
 				button_pos.Y += border_padding + (spacing + button_size_y) * button_num;
-				return XUI.Instance().CreateRectangularButton( button_pos, text, button_style );
+				return XUI.Instance()._CreateRectangularButton( button_pos, text, button_style );
 			}
 			private void PositionAndCreateButtons( String[] strings, _IButton[] dest, float border_padding, float spacing,
 													float button_size_y, eStyle style, int offset )
@@ -267,11 +267,11 @@ namespace XNARTS
 			void _ISelector.Destroy()
 			{
 				XUI ui = XUI.Instance();
-				ui.DestroyButton( mTitleButton );
+				ui._DestroyButton( mTitleButton );
 
 				for( int i = 0; i < mSelections.Length; ++i )
 				{
-					ui.DestroyButton( mSelections[ i ] );
+					ui._DestroyButton( mSelections[ i ] );
 				}
 			}
 			int _ISelector.CheckSelections( long id )

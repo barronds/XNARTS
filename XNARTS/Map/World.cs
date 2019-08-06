@@ -102,9 +102,9 @@ namespace XNARTS
 			mListener_Button = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
 			ui.GetBroadcaster_ButtonUpEvent().Subscribe( mListener_Button );
 
-			mRegnerateMapButton = ui.CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
-			mMapTypeButton = ui.CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
-			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
+			mRegnerateMapButton = ui._CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
+			mMapTypeButton = ui._CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
+			mMapSizeButton = ui._CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
 
 			/*
 			mMapSizeButton = ui.CreateRectangularButton( new Vector2( 30, 315 ),

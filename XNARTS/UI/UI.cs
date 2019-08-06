@@ -17,7 +17,7 @@ namespace XNARTS
 			Constructor_Style();
 			Constructor_Widget();
 			Constructor_WidgetManager();
-			Constructor_Buttons();
+			_Constructor_Buttons();
 			Constructor_Selector();
 			Constructor_Input();
 			Constructor_TestBed();

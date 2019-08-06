@@ -38,10 +38,10 @@ namespace XNARTS
 			single_poke_enumerator.MoveNext();
 			var data = single_poke_enumerator.GetCurrent();
 
-			if ( mCurrentlyPressed != null )
+			if ( _mCurrentlyPressed != null )
 			{
 				// first check if button disabled before considering input
-				if ( !mCurrentlyPressed.IsActive() )
+				if ( !_mCurrentlyPressed.IsActive() )
 				{
 					SendButtonAbortEvent();
 					return;
@@ -51,7 +51,7 @@ namespace XNARTS
 
 				if ( data.mDetail == XTouch.ePokeDetail.Hold )
 				{
-					if ( mCurrentlyPressed.Contains( data.mCurrentPos ) )
+					if ( _mCurrentlyPressed.Contains( data.mCurrentPos ) )
 					{
 						// pressed is still pressed
 						SendButtonHeldEvent();
@@ -84,13 +84,13 @@ namespace XNARTS
 			if ( data != null && data.mDetail == XTouch.ePokeDetail.Start )
 			{
 				// new press, let's see if it hits a button
-				var enumerator = mButtons.GetEnumerator();
+				var enumerator = _mButtons.GetEnumerator();
 
 				while ( enumerator.MoveNext() )
 				{
 					if ( enumerator.Current.Value.Contains( data.mCurrentPos ) && enumerator.Current.Value.IsActive() )
 					{
-						mCurrentlyPressed = enumerator.Current.Value;
+						_mCurrentlyPressed = enumerator.Current.Value;
 						SendButtonDownEvent();
 						break;
 					}
