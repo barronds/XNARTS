@@ -26,6 +26,12 @@ namespace XNARTS
 
 		public class Style
 		{
+			public eFont mNormalFont;
+			public Color mTextColor;
+			public Color mBackgroundColor;
+			public Color mBorderColor;
+			public float mButtonPaddingScalar;
+
 			public Style( eFont normal, Color text, Color background, Color border, float button_padding_scalar )
 			{
 				mNormalFont = normal;
@@ -35,11 +41,10 @@ namespace XNARTS
 				mButtonPaddingScalar = button_padding_scalar;
 			}
 
-			public eFont mNormalFont;
-			public Color mTextColor;
-			public Color mBackgroundColor;
-			public Color mBorderColor;
-			public float mButtonPaddingScalar;
+			public float CalcButtonPadding( Vector2 font_size )
+			{
+				return mButtonPaddingScalar * (font_size.X + font_size.Y);
+			}
 		}
 
 		private Dictionary< eStyle, Style > mStyles;

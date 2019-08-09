@@ -56,22 +56,20 @@ namespace XNARTS
 		{
 			private ePlacement	mPlacement;
 			private xAABB2		mAABB;	// relative to parent's aabb min point
-			private Widget      mParent;
+			private Widget      mParent; // can be null, for screen widget
 
 			// constructor for absolute position relative to widget.  use screen widget for screen space position.
 			public Position( Widget parent, xAABB2 aabb )
 			{
 				mAABB = aabb;
-				mPlacement = ePlacement.Absolute;
-				mParent = parent;
+				Init( parent, ePlacement.Absolute );
 			}
 
 			// constructor for placement relative to a widget.  use screen widget for screen placement.
 			public Position( Widget parent, ePlacement placement, Vector2 size )
 			{
 				XUtils.Assert( placement != ePlacement.Absolute, "wrong constructor for absolute" );
-				mPlacement = placement;
-				mParent = parent;
+				Init( parent, placement );
 
 				switch ( placement )
 				{
@@ -108,6 +106,24 @@ namespace XNARTS
 			public void Translate( Vector2 v )
 			{
 				mAABB.Translate( v );
+			}
+
+			public void ValidateParent( Widget parent )
+			{
+				if( mParent == null )
+				{
+					XUtils.Assert( parent == null );
+				}
+				else
+				{
+					XUtils.Assert( Widget.CompareWidgets( parent )( this.mParent ) );
+				}
+			}
+
+			private void Init( Widget parent, ePlacement placement )
+			{
+				mParent = parent;
+				mPlacement = placement;
 			}
 
 			private void PlaceCentered( Vector2 size )

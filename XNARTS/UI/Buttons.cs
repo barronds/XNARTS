@@ -238,7 +238,7 @@ namespace XNARTS
 										Vector2 font_size )
 			{
 				// padding calculated, and button size and offset
-				float k_padding = style.mButtonPaddingScalar * (font_size.X + font_size.Y);
+				float k_padding = style.CalcButtonPadding( font_size );
 				Vector2 new_text_offset = new Vector2( k_padding, k_padding );
 				float button_width = text.Length * font_size.X + 2 * k_padding;
 				float button_height = font_size.Y + 2 * k_padding;

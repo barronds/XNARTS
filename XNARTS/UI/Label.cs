@@ -14,6 +14,8 @@ namespace XNARTS
 			private Style	mStyle;
 			private String  mText;
 
+			// use static GetSizeOfText() if size is needed before construction
+
 			public Label( Widget parent, String text, eStyle style, Vector2 pos )
 			{
 				// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
@@ -28,13 +30,22 @@ namespace XNARTS
 				InitWidget( parent, placement, label_size );
 			}
 
+			public static Vector2 GetSizeOfText( String text, eStyle style )
+			{
+				Style s = XUI.Instance().GetStyle( style );
+				return CalcSize( text, s );
+			}
+
 			private Vector2 Init( String text, eStyle style )
 			{
 				mText = text;
 				mStyle = XUI.Instance().GetStyle( style );
+				return CalcSize( text, mStyle );
+			}
 
-				// return size of text
-				Vector2 font_size = XFontDraw.Instance().GetFontInfo( mStyle.mNormalFont ).mSize;
+			private static Vector2 CalcSize( String text, Style style )
+			{
+				Vector2 font_size = XFontDraw.Instance().GetFontInfo( style.mNormalFont ).mSize;
 				Vector2 label_size = new Vector2( font_size.X * text.Length, font_size.Y );
 				return label_size;
 			}

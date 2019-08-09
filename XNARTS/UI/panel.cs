@@ -26,6 +26,17 @@ namespace XNARTS
 				InitWidget( parent, placement, size );
 			}
 
+			public void AddChild( Widget child )
+			{
+				XUtils.Assert( child != null && mChildren.Find( Widget.CompareWidgets( child ) ) == null );
+				mChildren.Add( child );
+			}
+
+			public void RemoveChild( Widget child )
+			{
+				XUtils.Assert( child != null && mChildren.Remove( child ) );
+			}
+
 			private void Init( eStyle style )
 			{
 				mStyle = XUI.Instance().GetStyle( style );
