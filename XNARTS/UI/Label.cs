@@ -52,6 +52,7 @@ namespace XNARTS
 
 			public override void Render( XSimpleDraw simple_draw )
 			{
+				base.Render( simple_draw );
 				XFontDraw.Instance().DrawString(	mStyle.mNormalFont, GetPosition().GetRelatveAABB().GetMin(), mStyle.mTextColor,
 													mText );
 			}

@@ -31,7 +31,8 @@ namespace XNARTS
 				{
 					++mTestTriggerCount;
 					//Test_Label();
-					Test_Panel();
+					//Test_Panel();
+					Test_Button();
 				}
 			}
 
@@ -51,6 +52,13 @@ namespace XNARTS
 				XUI.Panel panel_1 = new XUI.Panel(  XUI.Instance().GetScreenWidget(), eStyle.Frontend,
 													new xAABB2( new Vector2( 400, 400 ), new Vector2( 700, 500 ) ) );
 				XUI.Instance().AddRootWidget( panel_1 );
+			}
+
+			private void Test_Button()
+			{
+				XUI.Button button_1 = new XUI.Button(   XUI.Instance().GetScreenWidget(), eStyle.FrontendTest, "Button 1",
+														ePlacement.Centered );
+				XUI.Instance().AddRootWidget( button_1 );
 			}
 		}
 

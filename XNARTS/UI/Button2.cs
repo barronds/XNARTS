@@ -23,35 +23,46 @@ namespace XNARTS
 
 			public Button( Widget parent, eStyle style, String text, Vector2 pos )
 			{
-				// create a label, give it to the panel.  label's parent is panel, panel's parent is parent passed in here.
-				// keep reference to the panel here, but give label to the panel.
-
-				// label needs parent to construct, so create panel first.
-				// two constructors, size and placement, or aabb directly.
-				// aabb requires that we know the size of the label.
-				// so we have a chicken and egg problem here, must move something out of a constructor.
-				// actually i added a static getSize to be used before construction, that makes sense.
-
+				// optimize later
 				Vector2 label_size = Label.GetSizeOfText( text, style );
-
-				// ludicrous poke around for info to get button padding.  
-				// especially since surrounding code also gets XUI, Style, Font Info, etc.
-				// perhaps optimize later.
 				eFont font = XUI.Instance().GetStyle( style ).mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
 				Style s = XUI.Instance().GetStyle( style );
 				float padding = s.CalcButtonPadding( font_size );
-				xAABB2 aabb = new xAABB2( pos, pos + label_size + new Vector2( padding, padding ) );
+				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
+
+				// make sure this widget is initialized before creating children
+				InitWidget( parent, aabb );
 
 				mPanel = new Panel( parent, style, aabb );
-				Label label = new Label( mPanel, text, style, pos );
+				Label label = new Label( mPanel, text, style, ePlacement.Centered );
 
 				mPanel.AddChild( label );
 			}
 
 			public Button( Widget parent, eStyle style, String text, ePlacement placement )
 			{
-				
+				// optimize later
+				Vector2 label_size = Label.GetSizeOfText( text, style );
+				eFont font = XUI.Instance().GetStyle( style ).mNormalFont;
+				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
+				Style s = XUI.Instance().GetStyle( style );
+				float padding = s.CalcButtonPadding( font_size );
+				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
+
+				// make sure this widget is initialized before creating children
+				InitWidget( parent, placement, size );
+
+				mPanel = new Panel( parent, style, size, placement );
+				Label label = new Label( mPanel, text, style, ePlacement.Centered );
+
+				mPanel.AddChild( label );
+			}
+
+			public override void Render( XSimpleDraw simple_draw )
+			{
+				base.Render( simple_draw );
+				mPanel.Render( simple_draw );
 			}
 		}
 	}

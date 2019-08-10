@@ -20,6 +20,7 @@ namespace XNARTS
 			FrontendButton,
 			FrontendTitle,
 			FrontendControl,
+			FrontendTest,
 
 			Num
 		}
@@ -79,6 +80,8 @@ namespace XNARTS
 			AddStyle( eStyle.Frontend, new Style( eFont.Consolas36, Color.White, ui_background, Color.White, 0.0f ) );
 
 			AddStyle( eStyle.FrontendButton, new Style( eFont.Consolas36, Color.White, ui_background, ui_background, 0.0f ) );
+
+			AddStyle( eStyle.FrontendTest, new Style( eFont.Consolas36, Color.White, ui_background, Color.White, 0.25f ) );
 
 			AddStyle( eStyle.FrontendTitle, new Style( eFont.Consolas48, ui_meta, ui_background, ui_background, 0.0f ) );
 

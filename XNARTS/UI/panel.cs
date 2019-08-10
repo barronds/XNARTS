@@ -45,8 +45,14 @@ namespace XNARTS
 
 			public override void Render( XSimpleDraw simple_draw )
 			{
+				base.Render( simple_draw );
 				xAABB2 aabb = GetPosition().GetScreenAABB();
 				XUI.Instance().Util_DrawBox( simple_draw, mStyle, aabb );
+
+				for( int i = 0; i < mChildren.Count; ++i )
+				{
+					mChildren[ i ].Render( simple_draw );
+				}
 			}
 		}
 	}
