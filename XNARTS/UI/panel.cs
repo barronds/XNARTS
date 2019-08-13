@@ -26,6 +26,23 @@ namespace XNARTS
 				InitWidget( parent, placement, size );
 			}
 
+			public Panel()
+			{
+				// if using this constructor, call a flavor of InitPanel afterwards
+			}
+
+			public void InitPanel( Widget parent, eStyle style, xAABB2 aabb )
+			{
+				Init( style );
+				InitWidget( parent, aabb );
+			}
+
+			public void InitPanel( Widget parent, eStyle style, Vector2 size, ePlacement placement )
+			{
+				Init( style );
+				InitWidget( parent, placement, size );
+			}
+
 			public void AddChild( Widget child )
 			{
 				XUtils.Assert( child != null && mChildren.Find( Widget.CompareWidgets( child ) ) == null );

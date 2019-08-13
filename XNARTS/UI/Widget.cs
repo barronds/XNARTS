@@ -36,7 +36,7 @@ namespace XNARTS
 		// draggable (usable in scope of panel?)
 		// the screen? maybe super useful as parent of screen relative widgets.
 
-		// every concrete widget should inherit from widget (is-a) and have sub widgets (has-a) if necessary.
+		// every concrete widget should inherit from widget (is-a) or have sub widgets (has-a) if necessary.
 
 		// examples:
 		// panel inherits from widget and has-a list of widgets within it.
@@ -56,18 +56,19 @@ namespace XNARTS
 
 			public void InitWidget( Widget parent, xAABB2 aabb )
 			{
-				mPosition = new Position( parent, aabb );
 				InitWidgetCommon();
+				mPosition = new Position( parent, aabb );
 			}
 
 			public void InitWidget( Widget parent, ePlacement placement, Vector2 size )
 			{
-				mPosition = new Position( parent, placement, size );
 				InitWidgetCommon();
+				mPosition = new Position( parent, placement, size );
 			}
 
 			private void InitWidgetCommon()
 			{
+				XUtils.Assert( !mInitialized );
 				mInputEnabled = true;
 				mInitialized = true;
 			}
