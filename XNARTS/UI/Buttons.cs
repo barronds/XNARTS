@@ -82,18 +82,6 @@ namespace XNARTS
 			}
 		}
 
-		public _IButton _CreateRoundButton(	Vector2 pos,
-											String text,
-											eStyle style )
-		{
-			Style s = XUI.Instance().GetStyle( style );
-			XFontDraw.FontInfo info = XFontDraw.Instance().GetFontInfo( s.mNormalFont );
-			Vector2 font_size = info.mSize;
-			_IButton button = new _RoundButton( pos, text, s, NextUID(), font_size );
-			_mButtons.Add( button.GetID(), button );
-			return button;
-		}
-
 		public _IButton _CreateRectangularButton( Vector2 pos,
 												String text,
 												eStyle style )
@@ -158,69 +146,6 @@ namespace XNARTS
 					Console.WriteLine( mTextOffset + ", " + mText );
 				}
 				XFontDraw.Instance().DrawString( mStyle.mNormalFont, mPos + mTextOffset, mStyle.mTextColor, mText );
-			}
-		}
-
-
-		private class _RoundButton : _IButton
-		{
-			private double mRadius;
-			private double mRadiusSqr;
-			private xAABB2 mAABB;
-			private _ButtonCore mButtonCore;
-
-			public _RoundButton( Vector2 pos,
-								String text,
-								Style style,
-								long id,
-								Vector2 font_size )
-			{
-				// TODO: calc radius from font size
-				float radius = 100;
-				mRadius = radius;
-				mRadiusSqr = radius * radius;
-				mAABB = new xAABB2( pos, radius ); // correct?
-				// TODO: not finished, place text calculation
-				mButtonCore = new _ButtonCore( pos, text, style, new Vector2( 0, 0 ), id );
-			}
-
-			long _IButton.GetID()
-			{
-				return mButtonCore.mID;
-			}
-			bool _IButton.Contains( Vector2 point )
-			{
-				Vector2 d = point - mButtonCore.mPos;
-				double dist_sqr = d.LengthSquared();
-				return dist_sqr < mRadiusSqr;
-			}
-			void _IButton.Draw( XSimpleDraw simple_draw )
-			{
-				// draw border and background, then draw 
-				// TODO: circle part, add circles to simple draw
-				mButtonCore.Draw( simple_draw );
-			}
-			void _IButton.SetPressed( bool pressed )
-			{
-				mButtonCore.mPressed = pressed;
-			}
-			void _IButton.SetActive( bool active )
-			{
-				mButtonCore.mActive = active;
-			}
-			bool _IButton.IsActive()
-			{
-				return mButtonCore.mActive;
-			}
-			xAABB2 _IButton.GetAABB()
-			{
-				return mAABB;
-			}
-
-			void _IButton.Translate( Vector2 d )
-			{
-				mAABB.Translate( d );
-				mButtonCore.Translate( d );
 			}
 		}
 
