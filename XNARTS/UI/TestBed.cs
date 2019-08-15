@@ -38,31 +38,34 @@ namespace XNARTS
 
 			private void Test_Label()
 			{
-				XUI.Label label_1 = new XUI.Label(	XUI.Instance().GetScreenWidget(), "Test Widget 1", eStyle.Frontend, 
+				XUI ui = XUI.Instance();
+				XUI.Label label_1 = new XUI.Label(	ui.GetScreenWidget(), "Test Widget 1", ui.GetStyle( eStyle.Frontend ), 
 													new Vector2( 500, 700 ) );
-				XUI.Instance().AddRootWidget( label_1 );
+				ui.AddRootWidget( label_1 );
 
-				XUI.Label label_2 = new XUI.Label(  XUI.Instance().GetScreenWidget(), "Test Widget 2", eStyle.Frontend, 
+				XUI.Label label_2 = new XUI.Label(  ui.GetScreenWidget(), "Test Widget 2", ui.GetStyle( eStyle.Frontend ), 
 													ePlacement.Centered );
-				XUI.Instance().AddRootWidget( label_2 );
+				ui.AddRootWidget( label_2 );
 			}
 
 			private void Test_Panel()
 			{
-				XUI.Panel panel_1 = new XUI.Panel(  XUI.Instance().GetScreenWidget(), eStyle.Frontend,
+				XUI ui = XUI.Instance();
+				XUI.Panel panel_1 = new XUI.Panel(  ui.GetScreenWidget(),  ui.GetStyle( eStyle.Frontend ),
 													new xAABB2( new Vector2( 400, 400 ), new Vector2( 700, 500 ) ) );
-				XUI.Instance().AddRootWidget( panel_1 );
+				ui.AddRootWidget( panel_1 );
 			}
 
 			private void Test_Button()
 			{
-				XUI.Button bap_1 = new XUI.Button(    XUI.Instance().GetScreenWidget(), eStyle.GameplayUI,
-																	"Button As Panel 1", ePlacement.Centered );
+				XUI ui = XUI.Instance();
+				XUI.Button bap_1 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ),
+													"Button As Panel 1", ePlacement.Centered );
 
-				XUI.Button bap_2 = new XUI.Button(    XUI.Instance().GetScreenWidget(), eStyle.FrontendTest,
-																	"Button As Panel 2", new Vector2( 100, 800 ) );
-				XUI.Instance().AddRootWidget( bap_1 );
-				XUI.Instance().AddRootWidget( bap_2 );
+				XUI.Button bap_2 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.FrontendTest ),
+													"Button As Panel 2", new Vector2( 100, 800 ) );
+				ui.AddRootWidget( bap_1 );
+				ui.AddRootWidget( bap_2 );
 			}
 		}
 

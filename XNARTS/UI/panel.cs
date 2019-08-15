@@ -12,18 +12,17 @@ namespace XNARTS
 		public class Panel : Widget
 		{
 			private List< Widget >	mChildren;
-			private Style           mStyle;
 
-			public Panel( Widget parent, eStyle style, xAABB2 aabb )
+			public Panel( Widget parent, Style style, xAABB2 aabb )
 			{
-				Init( style );
-				InitWidget( parent, aabb );
+				Init();
+				InitWidget( parent, style, aabb );
 			}
 
-			public Panel( Widget parent, eStyle style, Vector2 size, ePlacement placement )
+			public Panel( Widget parent, Style style, Vector2 size, ePlacement placement )
 			{
-				Init( style );
-				InitWidget( parent, placement, size );
+				Init();
+				InitWidget( parent, style, placement, size );
 			}
 
 			public Panel()
@@ -31,16 +30,16 @@ namespace XNARTS
 				// if using this constructor, call a flavor of InitPanel afterwards
 			}
 
-			public void InitPanel( Widget parent, eStyle style, xAABB2 aabb )
+			public void InitPanel( Widget parent, Style style, xAABB2 aabb )
 			{
-				Init( style );
-				InitWidget( parent, aabb );
+				Init();
+				InitWidget( parent, style, aabb );
 			}
 
-			public void InitPanel( Widget parent, eStyle style, Vector2 size, ePlacement placement )
+			public void InitPanel( Widget parent, Style style, Vector2 size, ePlacement placement )
 			{
-				Init( style );
-				InitWidget( parent, placement, size );
+				Init();
+				InitWidget( parent, style, placement, size );
 			}
 
 			public void AddChild( Widget child )
@@ -54,9 +53,8 @@ namespace XNARTS
 				XUtils.Assert( child != null && mChildren.Remove( child ) );
 			}
 
-			private void Init( eStyle style )
+			private void Init()
 			{
-				mStyle = XUI.Instance().GetStyle( style );
 				mChildren = new List<Widget>();
 			}
 
@@ -64,7 +62,7 @@ namespace XNARTS
 			{
 				base.Render( simple_draw );
 				xAABB2 aabb = GetPosition().GetScreenAABB();
-				XUI.Instance().Util_DrawBox( simple_draw, mStyle, aabb );
+				XUI.Instance().Util_DrawBox( simple_draw, GetStyle(), aabb );
 
 				for( int i = 0; i < mChildren.Count; ++i )
 				{

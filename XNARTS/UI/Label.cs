@@ -11,36 +11,33 @@ namespace XNARTS
 	{
 		public class Label : Widget
 		{
-			private Style	mStyle;
 			private String  mText;
 
 			// use static GetSizeOfText() if size is needed before construction
 
-			public Label( Widget parent, String text, eStyle style, Vector2 pos )
+			public Label( Widget parent, String text, Style style, Vector2 pos )
 			{
 				// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
 				Vector2 label_size = Init( text, style );
 				xAABB2 aabb = new xAABB2( pos, pos + label_size );
-				InitWidget( parent, aabb );
+				InitWidget( parent, style, aabb );
 			}
 
-			public Label( Widget parent, String text, eStyle style, ePlacement placement )
+			public Label( Widget parent, String text, Style style, ePlacement placement )
 			{
 				Vector2 label_size = Init( text, style );
-				InitWidget( parent, placement, label_size );
+				InitWidget( parent, style, placement, label_size );
 			}
 
-			public static Vector2 GetSizeOfText( String text, eStyle style )
+			public static Vector2 GetSizeOfText( String text, Style style )
 			{
-				Style s = XUI.Instance().GetStyle( style );
-				return CalcSize( text, s );
+				return CalcSize( text, style );
 			}
 
-			private Vector2 Init( String text, eStyle style )
+			private Vector2 Init( String text, Style style )
 			{
 				mText = text;
-				mStyle = XUI.Instance().GetStyle( style );
-				return CalcSize( text, mStyle );
+				return CalcSize( text, style );
 			}
 
 			private static Vector2 CalcSize( String text, Style style )
@@ -53,8 +50,8 @@ namespace XNARTS
 			public override void Render( XSimpleDraw simple_draw )
 			{
 				base.Render( simple_draw );
-				XFontDraw.Instance().DrawString(	mStyle.mNormalFont, GetPosition().GetRelatveAABB().GetMin(), mStyle.mTextColor,
-													mText );
+				XFontDraw.Instance().DrawString(	GetStyle().mNormalFont, GetPosition().GetRelatveAABB().GetMin(), 
+													GetStyle().mTextColor, mText );
 			}
 		}
 

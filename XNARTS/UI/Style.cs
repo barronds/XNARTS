@@ -21,6 +21,7 @@ namespace XNARTS
 			FrontendTitle,
 			FrontendControl,
 			FrontendTest,
+			Screen,
 
 			Num
 		}
@@ -86,6 +87,8 @@ namespace XNARTS
 			AddStyle( eStyle.FrontendTitle, new Style( eFont.Consolas48, ui_meta, ui_background, ui_background, 0.0f ) );
 
 			AddStyle( eStyle.FrontendControl, new Style( eFont.Consolas36, ui_meta, ui_background, ui_background, 0.0f ) );
+
+			AddStyle( eStyle.Screen, new Style( eFont.Consolas36, ui_meta, ui_background, ui_background, 2.0f ) );
 		}
 	}
 }

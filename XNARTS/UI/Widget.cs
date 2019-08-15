@@ -44,6 +44,7 @@ namespace XNARTS
 		public class Widget
 		{
 			private Position    mPosition;
+			private Style       mStyle;
 			private long        mUID;
 			private bool        mInputEnabled;
 			private bool        mInitialized;
@@ -54,21 +55,22 @@ namespace XNARTS
 				mInitialized = false;
 			}
 
-			public void InitWidget( Widget parent, xAABB2 aabb )
+			public void InitWidget( Widget parent, Style style, xAABB2 aabb )
 			{
-				InitWidgetCommon();
+				InitWidgetCommon( style );
 				mPosition = new Position( parent, aabb );
 			}
 
-			public void InitWidget( Widget parent, ePlacement placement, Vector2 size )
+			public void InitWidget( Widget parent, Style style, ePlacement placement, Vector2 size )
 			{
-				InitWidgetCommon();
+				InitWidgetCommon( style );
 				mPosition = new Position( parent, placement, size );
 			}
 
-			private void InitWidgetCommon()
+			private void InitWidgetCommon( Style style )
 			{
 				XUtils.Assert( !mInitialized );
+				mStyle = style;
 				mInputEnabled = true;
 				mInitialized = true;
 			}
@@ -77,6 +79,11 @@ namespace XNARTS
 			{
 				XUtils.Assert( mInitialized );
 				return mPosition;
+			}
+
+			public Style GetStyle()
+			{
+				return mStyle;
 			}
 
 			public long GetUID()
@@ -109,7 +116,8 @@ namespace XNARTS
 			public ScreenWidget()
 			{
 				xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
-				InitWidget( null, new xAABB2( Vector2.Zero, new Vector2( screen_dim.x, screen_dim.y ) ) );
+				InitWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), 
+							new xAABB2( Vector2.Zero, new Vector2( screen_dim.x, screen_dim.y ) ) );
 				SetInputEnabled( false );
 			}
 		}
