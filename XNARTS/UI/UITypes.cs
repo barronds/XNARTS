@@ -55,13 +55,13 @@ namespace XNARTS
 		public class Position
 		{
 			private ePlacement	mPlacement;
-			private xAABB2		mAABB;	// relative to parent's aabb min point
-			private Widget      mParent; // can be null, for screen widget
+			private xAABB2		mRelativeAABB;	// relative to parent's aabb min point
+			private Widget      mParent;		// can be null, for screen widget
 
 			// constructor for absolute position relative to widget.  use screen widget for screen space position.
-			public Position( Widget parent, xAABB2 aabb )
+			public Position( Widget parent, xAABB2 relative_aabb )
 			{
-				mAABB = aabb;
+				mRelativeAABB = relative_aabb;
 				Init( parent, ePlacement.Absolute );
 			}
 
@@ -89,7 +89,7 @@ namespace XNARTS
 
 			public xAABB2 GetRelatveAABB()
 			{
-				return mAABB;
+				return mRelativeAABB;
 			}
 
 			public xAABB2 GetScreenAABB()
@@ -97,19 +97,19 @@ namespace XNARTS
 				if( mParent != null )
 				{
 					xAABB2 parent_screen_aabb = mParent.GetPosition().GetScreenAABB();
-					xAABB2 aabb = mAABB; 
+					xAABB2 aabb = mRelativeAABB; 
 					aabb.Translate( parent_screen_aabb.GetMin() );
 					return aabb;
 				}
 				else
 				{
-					return mAABB;
+					return mRelativeAABB;
 				}
 			}
 
 			public void Translate( Vector2 v )
 			{
-				mAABB.Translate( v );
+				mRelativeAABB.Translate( v );
 			}
 
 			public void ValidateParent( Widget parent )
@@ -137,17 +137,27 @@ namespace XNARTS
 
 			private void PlaceCentered( Vector2 size )
 			{
-				xAABB2 parent_aabb = mParent.GetPosition().GetRelatveAABB();
-				Vector2 parent_center = parent_aabb.GetCenter();
+				Vector2 parent_aabb_size = mParent.GetPosition().GetRelatveAABB().GetSize();
+				Vector2 parent_center = 0.5f * parent_aabb_size;
 				Vector2 half_size = 0.5f * size;
-				mAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
+				mRelativeAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
 			}
 
 			private void PlaceCenteredBottom( Vector2 size )
 			{
 				Style style = GetStyle();
 				xAABB2 parent_aabb = mParent.GetPosition().GetRelatveAABB();
+				Vector2 parent_max = parent_aabb.GetMax();
+				Vector2 parent_center_bottom = new Vector2( parent_max.X * 0.5f, parent_max.Y );
+				Vector2 vertical_size = new Vector2( 0, size.Y );
+				Vector2 horizontal_size = new Vector2( size.X, 0 );
 
+				Vector2 top_left =  parent_center_bottom -
+									vertical_size -
+									style.mPlacementPadding * vertical_size -
+									0.5f * horizontal_size;
+
+				mRelativeAABB = new xAABB2( top_left, top_left + size );		
 			}
 		}
 	}

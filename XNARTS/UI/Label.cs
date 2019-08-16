@@ -19,8 +19,8 @@ namespace XNARTS
 			{
 				// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
 				Vector2 label_size = Init( text, style );
-				xAABB2 aabb = new xAABB2( pos, pos + label_size );
-				InitWidget( parent, style, aabb );
+				xAABB2 relative_aabb = new xAABB2( pos, pos + label_size );
+				InitWidget( parent, style, relative_aabb );
 			}
 
 			public Label( Widget parent, String text, Style style, ePlacement placement )
@@ -50,7 +50,7 @@ namespace XNARTS
 			public override void Render( XSimpleDraw simple_draw )
 			{
 				base.Render( simple_draw );
-				XFontDraw.Instance().DrawString(	GetStyle().mNormalFont, GetPosition().GetRelatveAABB().GetMin(), 
+				XFontDraw.Instance().DrawString(	GetStyle().mNormalFont, GetPosition().GetScreenAABB().GetMin(), 
 													GetStyle().mTextColor, mText );
 			}
 		}

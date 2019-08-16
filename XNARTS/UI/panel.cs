@@ -13,10 +13,10 @@ namespace XNARTS
 		{
 			private List< Widget >	mChildren;
 
-			public Panel( Widget parent, Style style, xAABB2 aabb )
+			public Panel( Widget parent, Style style, xAABB2 relative_aabb )
 			{
 				Init();
-				InitWidget( parent, style, aabb );
+				InitWidget( parent, style, relative_aabb );
 			}
 
 			public Panel( Widget parent, Style style, Vector2 size, ePlacement placement )
@@ -30,10 +30,10 @@ namespace XNARTS
 				// if using this constructor, call a flavor of InitPanel afterwards
 			}
 
-			public void InitPanel( Widget parent, Style style, xAABB2 aabb )
+			public void InitPanel( Widget parent, Style style, xAABB2 relative_aabb )
 			{
 				Init();
-				InitWidget( parent, style, aabb );
+				InitWidget( parent, style, relative_aabb );
 			}
 
 			public void InitPanel( Widget parent, Style style, Vector2 size, ePlacement placement )

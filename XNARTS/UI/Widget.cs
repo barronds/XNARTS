@@ -55,10 +55,10 @@ namespace XNARTS
 				mInitialized = false;
 			}
 
-			public void InitWidget( Widget parent, Style style, xAABB2 aabb )
+			public void InitWidget( Widget parent, Style style, xAABB2 relative_aabb )
 			{
 				InitWidgetCommon( style );
-				mPosition = new Position( parent, aabb );
+				mPosition = new Position( parent, relative_aabb );
 			}
 
 			public void InitWidget( Widget parent, Style style, ePlacement placement, Vector2 size )
