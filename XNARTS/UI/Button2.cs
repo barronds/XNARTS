@@ -17,7 +17,7 @@ namespace XNARTS
 				Vector2 label_size = Label.GetSizeOfText( text, style );
 				eFont font = style.mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
-				float padding = style.CalcButtonPadding( font_size );
+				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
 				InitPanel( parent, style, aabb );
 
@@ -31,7 +31,7 @@ namespace XNARTS
 				Vector2 label_size = Label.GetSizeOfText( text, style );
 				eFont font = style.mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
-				float padding = style.CalcButtonPadding( font_size );
+				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
 				InitPanel( parent, style, size, placement );
 

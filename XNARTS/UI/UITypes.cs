@@ -77,6 +77,10 @@ namespace XNARTS
 						PlaceCentered( size );
 						break;
 
+					case ePlacement.CenteredBottom:
+						PlaceCenteredBottom( size );
+						break;
+
 					default:
 						XUtils.Assert( false, "placement type not yet supported" );
 						break;
@@ -126,12 +130,24 @@ namespace XNARTS
 				mPlacement = placement;
 			}
 
+			private Style GetStyle()
+			{
+				return (mParent != null) ? mParent.GetStyle() : XUI.Instance().GetStyle( eStyle.Screen );
+			}
+
 			private void PlaceCentered( Vector2 size )
 			{
 				xAABB2 parent_aabb = mParent.GetPosition().GetRelatveAABB();
 				Vector2 parent_center = parent_aabb.GetCenter();
 				Vector2 half_size = 0.5f * size;
 				mAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
+			}
+
+			private void PlaceCenteredBottom( Vector2 size )
+			{
+				Style style = GetStyle();
+				xAABB2 parent_aabb = mParent.GetPosition().GetRelatveAABB();
+
 			}
 		}
 	}
