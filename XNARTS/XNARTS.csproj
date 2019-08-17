@@ -60,6 +60,7 @@
     <Compile Include="UI\Buttons.cs" />
     <Compile Include="UI\DebugMenu.cs" />
     <Compile Include="UI\Input.cs" />
+    <Compile Include="UI\Input2.cs" />
     <Compile Include="UI\Label.cs" />
     <Compile Include="UI\Menu.cs" />
     <Compile Include="UI\MenuItem.cs" />

@@ -19,7 +19,7 @@ namespace XNARTS
 			Constructor_WidgetManager();
 			_Constructor_Buttons();
 			Constructor_Selector();
-			Constructor_Input();
+			_Constructor_Input();
 			Constructor_TestBed();
 		}
 
@@ -27,14 +27,14 @@ namespace XNARTS
 		{
 			Init_Widget();
 			Init_Selector();
-			Init_Input();
+			_Init_Input();
 			Init_Render();
 			Init_TestBed();
 		}
 
 		public void Update( GameTime t )
 		{
-			Update_Input();
+			_Update_Input();
 			Update_TestBed( t );
 		}
 

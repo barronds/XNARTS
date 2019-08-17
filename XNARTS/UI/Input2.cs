@@ -7,34 +7,35 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
+	/*
 	public partial class XUI
 	{
-		private XListener< XTouch.SinglePokeData >  _mListener_SinglePoke;
+		private XListener< XTouch.SinglePokeData >  mListener_SinglePoke;
 
-		private void _Constructor_Input()
+		private void Constructor_Input()
 		{
-			_mListener_SinglePoke = new XListener<XTouch.SinglePokeData>( 1, eEventQueueFullBehaviour.Assert, "XUIinputsinglepoke" );
+			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>( 1, eEventQueueFullBehaviour.Assert, "XUIinputsinglepoke" );
 		}
 
-		private void _Init_Input()
+		private void Init_Input()
 		{
-			XBulletinBoard.Instance().mBroadcaster_SinglePoke.Subscribe( _mListener_SinglePoke );
+			XBulletinBoard.Instance().mBroadcaster_SinglePoke.Subscribe( mListener_SinglePoke );
 		}
 
-		private void _Update_Input()
+		private void Update_Input()
 		{
-			_Update_Input_Buttons();
-			_Update_Input_Selector();
+			Update_Input_Buttons();
+			Update_Input_Selector();
 		}
 
-		private void _Update_Input_Buttons()
+		private void Update_Input_Buttons()
 		{
 			// things to check for:
 			// - currently pressed button might trigger a button up
 			// - currently pressed button might get aborted by touch gesture or drift
 			// - curretnly pressed button might still be pressed
 			// - on press start, a new button may be pressed
-			var single_poke_enumerator = _mListener_SinglePoke.CreateEnumerator();
+			var single_poke_enumerator = mListener_SinglePoke.CreateEnumerator();
 			single_poke_enumerator.MoveNext();
 			var data = single_poke_enumerator.GetCurrent();
 
@@ -98,19 +99,19 @@ namespace XNARTS
 			}
 		}
 
-		void _Update_Input_Selector()
+		void Update_Input_Selector()
 		{
 			// go through all selectors and check all buttons against button_up input
 			ButtonUpEvent button_up = mListener_ButtonUpEvent.GetMaxOne();
 			int selected_index = -1;
 
-			if( button_up != null )
+			if ( button_up != null )
 			{
 				var s = mSelectors.GetEnumerator();
 
-				while( s.MoveNext() )
+				while ( s.MoveNext() )
 				{
-					if( (selected_index = s.Current.Value.CheckSelections( button_up.mID )) > -1 )
+					if ( (selected_index = s.Current.Value.CheckSelections( button_up.mID )) > -1 )
 					{
 						SelectorSelectionEvent e = new SelectorSelectionEvent( s.Current.Value.GetID(), selected_index );
 						mBroadcaster_SelectorSelectionEvent.Post( e );
@@ -119,4 +120,5 @@ namespace XNARTS
 			}
 		}
 	}
+	*/
 }
