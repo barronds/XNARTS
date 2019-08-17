@@ -9,15 +9,6 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		//private XBroadcaster< ButtonUpEvent >       mBroadcaster_ButtonUpEvent;
-		//private XBroadcaster< ButtonDownEvent >     mBroadcaster_ButtonDownEvent;
-		//private XBroadcaster< ButtonHeldEvent >     mBroadcaster_ButtonHeldEvent;
-		//private XBroadcaster< ButtonAbortEvent >    mBroadcaster_ButtonAbortEvent;
-		private XListener< XTouch.SinglePokeData >  mListener_SinglePoke;
-		private List< Button >						mButtons;
-		private Button								mCurrentlyPressed;
-
-
 		private void Constructor_Input()
 		{
 			mListener_SinglePoke = new XListener<XTouch.SinglePokeData>( 1, eEventQueueFullBehaviour.Assert, "XUIinputsinglepoke" );

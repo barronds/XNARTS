@@ -267,10 +267,5 @@ namespace XNARTS
 			_mButtons = new SortedList<long, _IButton>();
 			_mCurrentlyPressed = null;
 		}
-
-		private void Constructor_Buttons()
-		{
-
-		}
 	}
 }

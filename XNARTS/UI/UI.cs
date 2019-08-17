@@ -18,8 +18,10 @@ namespace XNARTS
 			Constructor_Widget();
 			Constructor_WidgetManager();
 			_Constructor_Buttons();
+			Constructor_Buttons();
 			Constructor_Selector();
 			_Constructor_Input();
+			Constructor_Input();
 			Constructor_TestBed();
 		}
 

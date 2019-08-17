@@ -39,5 +39,23 @@ namespace XNARTS
 				AddChild( label );
 			}
 		}
+
+		private XBroadcaster< ButtonUpEvent >       mBroadcaster_ButtonUpEvent;
+		private XBroadcaster< ButtonDownEvent >     mBroadcaster_ButtonDownEvent;
+		private XBroadcaster< ButtonHeldEvent >     mBroadcaster_ButtonHeldEvent;
+		private XBroadcaster< ButtonAbortEvent >    mBroadcaster_ButtonAbortEvent;
+		private XListener< XTouch.SinglePokeData >  mListener_SinglePoke;
+		private List< Button >                      mActiveButtons;
+		private Button                              mCurrentlyPressed;
+
+		public void Constructor_Buttons()
+		{
+			mBroadcaster_ButtonUpEvent = new XBroadcaster<ButtonUpEvent>();
+			mBroadcaster_ButtonDownEvent = new XBroadcaster<ButtonDownEvent>();
+			mBroadcaster_ButtonHeldEvent = new XBroadcaster<ButtonHeldEvent>();
+			mBroadcaster_ButtonAbortEvent = new XBroadcaster<ButtonAbortEvent>();
+			mActiveButtons = new List<Button>();
+			mCurrentlyPressed = null;
+		}
 	}
 }
