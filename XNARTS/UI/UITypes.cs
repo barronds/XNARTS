@@ -66,6 +66,7 @@ namespace XNARTS
 			{
 				mRelativeAABB = relative_aabb;
 				Init( parent, ePlacement.Absolute );
+				ValidateAABB();
 			}
 
 			// constructor for placement relative to a widget.  use screen widget for screen placement.
@@ -90,6 +91,8 @@ namespace XNARTS
 						XUtils.Assert( false, "placement type not yet supported" );
 						break;
 				}
+
+				ValidateAABB();
 			}
 
 			public xAABB2 GetRelatveAABB()
@@ -115,6 +118,7 @@ namespace XNARTS
 			public void Translate( Vector2 v )
 			{
 				mRelativeAABB.Translate( v );
+				ValidateAABB();
 			}
 
 			public void ValidateParent( Widget parent )
@@ -154,9 +158,18 @@ namespace XNARTS
 				Vector2 padding = GetStyle().mPlacementPadding * new Vector2( padding_norm_x, padding_norm_y );
 				Vector2 size_correct = new Vector2( size.X * shape_correct_norm_x, size.Y * shape_correct_norm_y );
 				Vector2 top_left = parent_start_point + padding + size_correct;
-				mRelativeAABB = new xAABB2( top_left, top_left + size );
+				Vector2 bottom_right = top_left + size;
+				mRelativeAABB = new xAABB2( top_left, bottom_right );
 			}
 
+			private void ValidateAABB()
+			{
+				if( mParent != null )
+				{
+					xAABB2 parent_aabb = new xAABB2( Vector2.Zero, mParent.GetPosition().GetRelatveAABB().GetSize() );
+					XUtils.Assert( parent_aabb.Contains( mRelativeAABB.GetMin() ) && parent_aabb.Contains( mRelativeAABB.GetMax() ) );
+				}
+			}
 		}
 	}
 }
