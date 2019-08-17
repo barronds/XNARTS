@@ -63,9 +63,13 @@ namespace XNARTS
 				XUI.Panel panel_4 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 200, 50 ),
 													ePlacement.CenteredBottom );
 
+				XUI.Panel panel_5 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 100, 150 ),
+													ePlacement.CenteredLeft );
+
 				panel_1.AddChild( panel_2 );
 				panel_1.AddChild( panel_3 );
 				panel_1.AddChild( panel_4 );
+				panel_1.AddChild( panel_5 );
 				ui.AddRootWidget( panel_1 );
 			}
 

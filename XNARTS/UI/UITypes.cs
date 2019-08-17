@@ -43,11 +43,14 @@ namespace XNARTS
 
 			Absolute, // Vector2, a position relative to parent widget
 			Centered,
+			CenteredLeft,
+			CenteredRight,
 			TopLeft,
 			TopRight,
 			BottomLeft,
 			BottomRight,
 			CenteredBottom,
+			CenteredTop,
 
 			Num
 		}
@@ -73,13 +76,15 @@ namespace XNARTS
 
 				switch ( placement )
 				{
-					case ePlacement.Centered:
-						PlaceCentered( size );
-						break;
-
-					case ePlacement.CenteredBottom:
-						PlaceCenteredBottom( size );
-						break;
+					case ePlacement.Centered:			PlaceCentered( size );			break;
+					case ePlacement.CenteredLeft:		PlaceCenteredLeft( size );		break;
+					case ePlacement.CenteredRight:		PlaceCenteredRight( size );		break;
+					case ePlacement.CenteredTop:		PlaceCenteredTop( size );		break;
+					case ePlacement.CenteredBottom:		PlaceCenteredBottom( size );	break;
+					case ePlacement.TopLeft:			PlaceTopLeft( size );			break;
+					case ePlacement.TopRight:			PlaceTopRight( size );			break;
+					case ePlacement.BottomLeft:			PlaceBottomLeft( size );		break;
+					case ePlacement.BottomRight:		PlaceBottomRight( size );		break;
 
 					default:
 						XUtils.Assert( false, "placement type not yet supported" );
@@ -135,29 +140,91 @@ namespace XNARTS
 				return (mParent != null) ? mParent.GetStyle() : XUI.Instance().GetStyle( eStyle.Screen );
 			}
 
+			private Vector2 CalcPlacementPadding( float x_scalar, float y_scalar )
+			{
+				float padding = GetStyle().mPlacementPadding;
+				return new Vector2( x_scalar * padding, y_scalar * padding );
+			}
+
+			private Vector2 GetParentSize()
+			{
+				return mParent.GetPosition().GetRelatveAABB().GetSize();
+			}
+
 			private void PlaceCentered( Vector2 size )
 			{
-				Vector2 parent_aabb_size = mParent.GetPosition().GetRelatveAABB().GetSize();
-				Vector2 parent_center = 0.5f * parent_aabb_size;
+				Vector2 parent_center = 0.5f * GetParentSize();
 				Vector2 half_size = 0.5f * size;
 				mRelativeAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
 			}
 
 			private void PlaceCenteredBottom( Vector2 size )
 			{
-				Style style = GetStyle();
-				Vector2 parent_aabb_size = mParent.GetPosition().GetRelatveAABB().GetSize();
+				Vector2 parent_aabb_size = GetParentSize();
 				Vector2 parent_center_bottom = new Vector2( parent_aabb_size.X * 0.5f, parent_aabb_size.Y );
 				Vector2 vertical_size = new Vector2( 0, size.Y );
 				Vector2 horizontal_size = new Vector2( size.X, 0 );
+				Vector2 placement_padding = CalcPlacementPadding( 0, -1 );
 
 				Vector2 top_left =  parent_center_bottom -
-									vertical_size -
-									style.mPlacementPadding * Vector2.UnitY -
+									vertical_size +
+									placement_padding -
 									0.5f * horizontal_size;
 
-				mRelativeAABB = new xAABB2( top_left, top_left + size );		
+				mRelativeAABB = new xAABB2( top_left, top_left + size );
 			}
+
+			private void PlaceCenteredLeft( Vector2 size )
+			{
+				Vector2 parent_aabb_size = GetParentSize();
+				Vector2 parent_center_left = new Vector2( 0, parent_aabb_size.Y * 0.5f );
+				Vector2 horizontal_size = new Vector2( size.X, 0 );
+				Vector2 vertical_size = new Vector2( 0, size.Y );
+				Vector2 placement_padding = CalcPlacementPadding( 1, 0 );
+
+				Vector2 top_left =  parent_center_left +
+									placement_padding -
+									0.5f * vertical_size;
+
+				mRelativeAABB = new xAABB2( top_left, top_left + size );
+			}
+
+			private void PlaceCenteredRight( Vector2 size )
+			{
+
+			}
+
+
+			private void PlaceCenteredTop( Vector2 size )
+			{
+
+			}
+
+
+			private void PlaceTopLeft( Vector2 size )
+			{
+
+			}
+
+
+			private void PlaceTopRight( Vector2 size )
+			{
+
+			}
+
+
+			private void PlaceBottomLeft( Vector2 size )
+			{
+
+			}
+
+
+			private void PlaceBottomRight( Vector2 size )
+			{
+
+			}
+
+
 		}
 	}
 }
