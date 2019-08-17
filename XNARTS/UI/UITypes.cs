@@ -140,53 +140,36 @@ namespace XNARTS
 				return (mParent != null) ? mParent.GetStyle() : XUI.Instance().GetStyle( eStyle.Screen );
 			}
 
-			private Vector2 CalcPlacementPadding( float x_scalar, float y_scalar )
+			private void Place(	Vector2 size,
+								float parent_start_norm_x, 
+								float parent_start_norm_y,
+								float shape_correct_norm_x,
+								float shape_correct_norm_y,
+								float padding_norm_x,
+								float padding_norm_y )
 			{
-				float padding = GetStyle().mPlacementPadding;
-				return new Vector2( x_scalar * padding, y_scalar * padding );
-			}
-
-			private Vector2 GetParentSize()
-			{
-				return mParent.GetPosition().GetRelatveAABB().GetSize();
+				Vector2 parent_aabb_size = mParent.GetPosition().GetRelatveAABB().GetSize();
+				Vector2 parent_start_point = new Vector2(	parent_start_norm_x * parent_aabb_size.X, 
+															parent_start_norm_y * parent_aabb_size.Y );
+				Vector2 padding = GetStyle().mPlacementPadding * new Vector2( padding_norm_x, padding_norm_y );
+				Vector2 size_correct = new Vector2( size.X * shape_correct_norm_x, size.Y * shape_correct_norm_y );
+				Vector2 top_left = parent_start_point + padding + size_correct;
+				mRelativeAABB = new xAABB2( top_left, top_left + size );
 			}
 
 			private void PlaceCentered( Vector2 size )
 			{
-				Vector2 parent_center = 0.5f * GetParentSize();
-				Vector2 half_size = 0.5f * size;
-				mRelativeAABB = new xAABB2( parent_center - half_size, parent_center + half_size );
+				Place( size, 0.5f, 0.5f, -0.5f, -0.5f, 0.0f, 0.0f );
 			}
 
 			private void PlaceCenteredBottom( Vector2 size )
 			{
-				Vector2 parent_aabb_size = GetParentSize();
-				Vector2 parent_center_bottom = new Vector2( parent_aabb_size.X * 0.5f, parent_aabb_size.Y );
-				Vector2 vertical_size = new Vector2( 0, size.Y );
-				Vector2 horizontal_size = new Vector2( size.X, 0 );
-				Vector2 placement_padding = CalcPlacementPadding( 0, -1 );
-
-				Vector2 top_left =  parent_center_bottom -
-									vertical_size +
-									placement_padding -
-									0.5f * horizontal_size;
-
-				mRelativeAABB = new xAABB2( top_left, top_left + size );
+				Place( size, 0.5f, 1.0f, -0.5f, -1.0f, 0.0f, -1.0f );
 			}
 
 			private void PlaceCenteredLeft( Vector2 size )
 			{
-				Vector2 parent_aabb_size = GetParentSize();
-				Vector2 parent_center_left = new Vector2( 0, parent_aabb_size.Y * 0.5f );
-				Vector2 horizontal_size = new Vector2( size.X, 0 );
-				Vector2 vertical_size = new Vector2( 0, size.Y );
-				Vector2 placement_padding = CalcPlacementPadding( 1, 0 );
-
-				Vector2 top_left =  parent_center_left +
-									placement_padding -
-									0.5f * vertical_size;
-
-				mRelativeAABB = new xAABB2( top_left, top_left + size );
+				Place( size, 0.0f, 0.5f, 0.0f, -0.5f, 1.0f, 0.0f );
 			}
 
 			private void PlaceCenteredRight( Vector2 size )
