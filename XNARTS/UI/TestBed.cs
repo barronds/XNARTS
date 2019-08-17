@@ -51,17 +51,21 @@ namespace XNARTS
 			private void Test_Panel()
 			{
 				XUI ui = XUI.Instance();
-				XUI.Panel panel_1 = new XUI.Panel(  ui.GetScreenWidget(),  ui.GetStyle( eStyle.Frontend ),
+				XUI.Panel panel_1 = new XUI.Panel(  ui.GetScreenWidget(),  ui.GetStyle( eStyle.FrontendTest ),
 													new xAABB2( new Vector2( 200, 600 ), new Vector2( 1500, 1100 ) ) );
 
-				XUI.Panel panel_2 = new XUI.Panel(	panel_1, ui.GetStyle( eStyle.Frontend ),
+				XUI.Panel panel_2 = new XUI.Panel(	panel_1, ui.GetStyle( eStyle.FrontendTest ),
 													new xAABB2( new Vector2( 10, 20 ), new Vector2( 100, 40 ) ) );
 
-				XUI.Panel panel_3 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.Frontend ), new Vector2( 200, 300 ),
+				XUI.Panel panel_3 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 100, 50 ),
 													ePlacement.Centered );
 
-				//panel_1.AddChild( panel_2 );
+				XUI.Panel panel_4 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 200, 50 ),
+													ePlacement.CenteredBottom );
+
+				panel_1.AddChild( panel_2 );
 				panel_1.AddChild( panel_3 );
+				panel_1.AddChild( panel_4 );
 				ui.AddRootWidget( panel_1 );
 			}
 

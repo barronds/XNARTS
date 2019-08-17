@@ -146,15 +146,14 @@ namespace XNARTS
 			private void PlaceCenteredBottom( Vector2 size )
 			{
 				Style style = GetStyle();
-				xAABB2 parent_aabb = mParent.GetPosition().GetRelatveAABB();
-				Vector2 parent_max = parent_aabb.GetMax();
-				Vector2 parent_center_bottom = new Vector2( parent_max.X * 0.5f, parent_max.Y );
+				Vector2 parent_aabb_size = mParent.GetPosition().GetRelatveAABB().GetSize();
+				Vector2 parent_center_bottom = new Vector2( parent_aabb_size.X * 0.5f, parent_aabb_size.Y );
 				Vector2 vertical_size = new Vector2( 0, size.Y );
 				Vector2 horizontal_size = new Vector2( size.X, 0 );
 
 				Vector2 top_left =  parent_center_bottom -
 									vertical_size -
-									style.mPlacementPadding * vertical_size -
+									style.mPlacementPadding * Vector2.UnitY -
 									0.5f * horizontal_size;
 
 				mRelativeAABB = new xAABB2( top_left, top_left + size );		
