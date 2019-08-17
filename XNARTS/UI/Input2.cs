@@ -7,10 +7,16 @@ using Microsoft.Xna.Framework;
 
 namespace XNARTS
 {
-	/*
 	public partial class XUI
 	{
+		//private XBroadcaster< ButtonUpEvent >       mBroadcaster_ButtonUpEvent;
+		//private XBroadcaster< ButtonDownEvent >     mBroadcaster_ButtonDownEvent;
+		//private XBroadcaster< ButtonHeldEvent >     mBroadcaster_ButtonHeldEvent;
+		//private XBroadcaster< ButtonAbortEvent >    mBroadcaster_ButtonAbortEvent;
 		private XListener< XTouch.SinglePokeData >  mListener_SinglePoke;
+		private List< Button >						mButtons;
+		private Button								mCurrentlyPressed;
+
 
 		private void Constructor_Input()
 		{
@@ -25,7 +31,6 @@ namespace XNARTS
 		private void Update_Input()
 		{
 			Update_Input_Buttons();
-			Update_Input_Selector();
 		}
 
 		private void Update_Input_Buttons()
@@ -120,5 +125,4 @@ namespace XNARTS
 			}
 		}
 	}
-	*/
 }

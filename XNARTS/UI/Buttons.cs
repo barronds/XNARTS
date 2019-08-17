@@ -9,28 +9,28 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		private XBroadcaster< ButtonUpEvent >		mBroadcaster_ButtonUpEvent;
-		private XBroadcaster< ButtonDownEvent >		mBroadcaster_ButtonDownEvent;
-		private XBroadcaster< ButtonHeldEvent >		mBroadcaster_ButtonHeldEvent;
-		private XBroadcaster< ButtonAbortEvent >	mBroadcaster_ButtonAbortEvent;
+		private XBroadcaster< ButtonUpEvent >		_mBroadcaster_ButtonUpEvent;
+		private XBroadcaster< ButtonDownEvent >		_mBroadcaster_ButtonDownEvent;
+		private XBroadcaster< ButtonHeldEvent >		_mBroadcaster_ButtonHeldEvent;
+		private XBroadcaster< ButtonAbortEvent >	_mBroadcaster_ButtonAbortEvent;
 		private SortedList< long, _IButton >		_mButtons;
 		private _IButton							_mCurrentlyPressed;
 
 		public XBroadcaster<ButtonUpEvent> GetBroadcaster_ButtonUpEvent()
 		{
-			return mBroadcaster_ButtonUpEvent;
+			return _mBroadcaster_ButtonUpEvent;
 		}
 		public XBroadcaster<ButtonDownEvent> GetBroadcaster_ButtonDownEvent()
 		{
-			return mBroadcaster_ButtonDownEvent;
+			return _mBroadcaster_ButtonDownEvent;
 		}
 		public XBroadcaster<ButtonHeldEvent> GetBroadcaster_ButtonHeldEvent()
 		{
-			return mBroadcaster_ButtonHeldEvent;
+			return _mBroadcaster_ButtonHeldEvent;
 		}
 		public XBroadcaster<ButtonAbortEvent> GetBroadcaster_ButtonAbortEvent()
 		{
-			return mBroadcaster_ButtonAbortEvent;
+			return _mBroadcaster_ButtonAbortEvent;
 		}
 
 		public interface _IButton
@@ -243,27 +243,27 @@ namespace XNARTS
 		}
 		private void SendButtonUpEvent()
 		{
-			SendButtonEvent( false, mBroadcaster_ButtonUpEvent, new ButtonUpEvent( _mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( false, _mBroadcaster_ButtonUpEvent, new ButtonUpEvent( _mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonDownEvent()
 		{
-			SendButtonEvent( true, mBroadcaster_ButtonDownEvent, new ButtonDownEvent( _mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( true, _mBroadcaster_ButtonDownEvent, new ButtonDownEvent( _mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonHeldEvent()
 		{
-			SendButtonEvent( true, mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( _mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( true, _mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( _mCurrentlyPressed.GetID() ) );
 		}
 		private void SendButtonAbortEvent()
 		{
-			SendButtonEvent( false, mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( _mCurrentlyPressed.GetID() ) );
+			SendButtonEvent( false, _mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( _mCurrentlyPressed.GetID() ) );
 		}
 
 		private void _Constructor_Buttons()
 		{
-			mBroadcaster_ButtonUpEvent = new XBroadcaster<ButtonUpEvent>();
-			mBroadcaster_ButtonDownEvent = new XBroadcaster<ButtonDownEvent>();
-			mBroadcaster_ButtonHeldEvent = new XBroadcaster<ButtonHeldEvent>();
-			mBroadcaster_ButtonAbortEvent = new XBroadcaster<ButtonAbortEvent>();
+			_mBroadcaster_ButtonUpEvent = new XBroadcaster<ButtonUpEvent>();
+			_mBroadcaster_ButtonDownEvent = new XBroadcaster<ButtonDownEvent>();
+			_mBroadcaster_ButtonHeldEvent = new XBroadcaster<ButtonHeldEvent>();
+			_mBroadcaster_ButtonAbortEvent = new XBroadcaster<ButtonAbortEvent>();
 			_mButtons = new SortedList<long, _IButton>();
 			_mCurrentlyPressed = null;
 		}

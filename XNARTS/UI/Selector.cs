@@ -30,7 +30,7 @@ namespace XNARTS
 
 		private void Init_Selector()
 		{
-			mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonUpEvent );
+			_mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonUpEvent );
 		}
 
 		public XBroadcaster<SelectorSelectionEvent> GetBroadcaster_SelectorSelectionEvent()
