@@ -76,15 +76,15 @@ namespace XNARTS
 
 				switch ( placement )
 				{
-					case ePlacement.Centered:			PlaceCentered( size );			break;
-					case ePlacement.CenteredLeft:		PlaceCenteredLeft( size );		break;
-					case ePlacement.CenteredRight:		PlaceCenteredRight( size );		break;
-					case ePlacement.CenteredTop:		PlaceCenteredTop( size );		break;
-					case ePlacement.CenteredBottom:		PlaceCenteredBottom( size );	break;
-					case ePlacement.TopLeft:			PlaceTopLeft( size );			break;
-					case ePlacement.TopRight:			PlaceTopRight( size );			break;
-					case ePlacement.BottomLeft:			PlaceBottomLeft( size );		break;
-					case ePlacement.BottomRight:		PlaceBottomRight( size );		break;
+					case ePlacement.Centered:			Place( size, 0.5f, 0.5f, -0.5f, -0.5f, 0.0f, 0.0f );	break;
+					case ePlacement.CenteredLeft:		Place( size, 0.0f, 0.5f, 0.0f, -0.5f, 1.0f, 0.0f );		break;
+					case ePlacement.CenteredRight:		Place( size, 1.0f, 0.5f, -1.0f, -0.5f, -1.0f, 0.0f );	break;
+					case ePlacement.CenteredTop:		Place( size, 0.5f, 0.0f, -0.5f, 0.0f, 0.0f, 1.0f );		break;
+					case ePlacement.CenteredBottom:		Place( size, 0.5f, 1.0f, -0.5f, -1.0f, 0.0f, -1.0f );	break;
+					case ePlacement.TopLeft:			Place( size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f );		break;
+					case ePlacement.TopRight:			Place( size, 1.0f, 0.0f, -1.0f, 0.0f, -1.0f, 1.0f );	break;
+					case ePlacement.BottomLeft:			Place( size, 0.0f, 1.0f, 0.0f, -1.0f, 1.0f, -1.0f );	break;
+					case ePlacement.BottomRight:		Place( size, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f );	break;
 
 					default:
 						XUtils.Assert( false, "placement type not yet supported" );
@@ -156,57 +156,6 @@ namespace XNARTS
 				Vector2 top_left = parent_start_point + padding + size_correct;
 				mRelativeAABB = new xAABB2( top_left, top_left + size );
 			}
-
-			private void PlaceCentered( Vector2 size )
-			{
-				Place( size, 0.5f, 0.5f, -0.5f, -0.5f, 0.0f, 0.0f );
-			}
-
-			private void PlaceCenteredBottom( Vector2 size )
-			{
-				Place( size, 0.5f, 1.0f, -0.5f, -1.0f, 0.0f, -1.0f );
-			}
-
-			private void PlaceCenteredLeft( Vector2 size )
-			{
-				Place( size, 0.0f, 0.5f, 0.0f, -0.5f, 1.0f, 0.0f );
-			}
-
-			private void PlaceCenteredRight( Vector2 size )
-			{
-
-			}
-
-
-			private void PlaceCenteredTop( Vector2 size )
-			{
-
-			}
-
-
-			private void PlaceTopLeft( Vector2 size )
-			{
-
-			}
-
-
-			private void PlaceTopRight( Vector2 size )
-			{
-
-			}
-
-
-			private void PlaceBottomLeft( Vector2 size )
-			{
-
-			}
-
-
-			private void PlaceBottomRight( Vector2 size )
-			{
-
-			}
-
 
 		}
 	}

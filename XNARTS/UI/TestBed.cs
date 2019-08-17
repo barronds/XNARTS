@@ -55,21 +55,45 @@ namespace XNARTS
 													new xAABB2( new Vector2( 200, 600 ), new Vector2( 1500, 1100 ) ) );
 
 				XUI.Panel panel_2 = new XUI.Panel(	panel_1, ui.GetStyle( eStyle.FrontendTest ),
-													new xAABB2( new Vector2( 10, 20 ), new Vector2( 100, 40 ) ) );
+													new xAABB2( new Vector2( 410, 220 ), new Vector2( 500, 340 ) ) );
 
 				XUI.Panel panel_3 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 100, 50 ),
 													ePlacement.Centered );
 
-				XUI.Panel panel_4 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 200, 50 ),
-													ePlacement.CenteredBottom );
+				XUI.Panel panel_4 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 80, 50 ),
+													ePlacement.TopLeft );
 
 				XUI.Panel panel_5 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 100, 150 ),
+													ePlacement.CenteredTop );
+
+				XUI.Panel panel_6 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 90, 150 ),
+													ePlacement.TopRight );
+
+				XUI.Panel panel_7 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 70, 120 ),
+													ePlacement.CenteredRight );
+
+				XUI.Panel panel_8 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 90, 120 ),
+													ePlacement.BottomRight );
+
+				XUI.Panel panel_9 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 110, 80 ),
+													ePlacement.CenteredBottom );
+
+				XUI.Panel panel_10 = new XUI.Panel( panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 60, 110 ),
+													ePlacement.BottomLeft );
+
+				XUI.Panel panel_11 = new XUI.Panel( panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 120, 150 ),
 													ePlacement.CenteredLeft );
 
 				panel_1.AddChild( panel_2 );
 				panel_1.AddChild( panel_3 );
 				panel_1.AddChild( panel_4 );
 				panel_1.AddChild( panel_5 );
+				panel_1.AddChild( panel_6 );
+				panel_1.AddChild( panel_7 );
+				panel_1.AddChild( panel_8 );
+				panel_1.AddChild( panel_9 );
+				panel_1.AddChild( panel_10 );
+				panel_1.AddChild( panel_11 );
 				ui.AddRootWidget( panel_1 );
 			}
 
