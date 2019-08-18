@@ -83,11 +83,13 @@ namespace XNARTS
 
 			public Style GetStyle()
 			{
+				XUtils.Assert( mInitialized );
 				return mStyle;
 			}
 
 			public long GetUID()
 			{
+				XUtils.Assert( mInitialized );
 				return mUID;
 			}
 
@@ -95,6 +97,17 @@ namespace XNARTS
 			{
 				XUtils.Assert( mInitialized );
 				mInputEnabled = value;
+			}
+
+			public bool IsInputEnabled()
+			{
+				XUtils.Assert( mInitialized );
+				return mInputEnabled;
+			}
+
+			public bool Contains( Vector2 pos )
+			{
+				return mPosition.GetScreenAABB().Contains( pos );
 			}
 
 			public virtual void Render( XSimpleDraw simple_draw )

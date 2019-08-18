@@ -35,10 +35,10 @@ namespace XNARTS
 			single_poke_enumerator.MoveNext();
 			var data = single_poke_enumerator.GetCurrent();
 
-			if ( _mCurrentlyPressed != null )
+			if ( mCurrentlyPressed != null )
 			{
 				// first check if button disabled before considering input
-				if ( !_mCurrentlyPressed.IsActive() )
+				if ( !mCurrentlyPressed.IsInputEnabled() )
 				{
 					SendButtonAbortEvent();
 					return;
@@ -48,7 +48,7 @@ namespace XNARTS
 
 				if ( data.mDetail == XTouch.ePokeDetail.Hold )
 				{
-					if ( _mCurrentlyPressed.Contains( data.mCurrentPos ) )
+					if ( mCurrentlyPressed.Contains( data.mCurrentPos ) )
 					{
 						// pressed is still pressed
 						SendButtonHeldEvent();
@@ -81,13 +81,11 @@ namespace XNARTS
 			if ( data != null && data.mDetail == XTouch.ePokeDetail.Start )
 			{
 				// new press, let's see if it hits a button
-				var enumerator = _mButtons.GetEnumerator();
-
-				while ( enumerator.MoveNext() )
+				for( int i = 0; i < mActiveButtons.Count; ++i )
 				{
-					if ( enumerator.Current.Value.Contains( data.mCurrentPos ) && enumerator.Current.Value.IsActive() )
+					if( mActiveButtons[ i ].Contains( data.mCurrentPos ) && mActiveButtons[ i ].IsInputEnabled() )
 					{
-						_mCurrentlyPressed = enumerator.Current.Value;
+						mCurrentlyPressed = mActiveButtons[ i ];
 						SendButtonDownEvent();
 						break;
 					}
@@ -95,25 +93,5 @@ namespace XNARTS
 			}
 		}
 
-		void Update_Input_Selector()
-		{
-			// go through all selectors and check all buttons against button_up input
-			ButtonUpEvent button_up = mListener_ButtonUpEvent.GetMaxOne();
-			int selected_index = -1;
-
-			if ( button_up != null )
-			{
-				var s = mSelectors.GetEnumerator();
-
-				while ( s.MoveNext() )
-				{
-					if ( (selected_index = s.Current.Value.CheckSelections( button_up.mID )) > -1 )
-					{
-						SelectorSelectionEvent e = new SelectorSelectionEvent( s.Current.Value.GetID(), selected_index );
-						mBroadcaster_SelectorSelectionEvent.Post( e );
-					}
-				}
-			}
-		}
 	}
 }

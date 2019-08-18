@@ -30,6 +30,7 @@ namespace XNARTS
 			Init_Widget();
 			Init_Selector();
 			_Init_Input();
+			Init_Input();
 			Init_Render();
 			Init_TestBed();
 		}
@@ -37,6 +38,7 @@ namespace XNARTS
 		public void Update( GameTime t )
 		{
 			_Update_Input();
+			Update_Input();
 			Update_TestBed( t );
 		}
 

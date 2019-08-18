@@ -13,7 +13,7 @@ namespace XNARTS
 
 		private void _Constructor_Input()
 		{
-			_mListener_SinglePoke = new XListener<XTouch.SinglePokeData>( 1, eEventQueueFullBehaviour.Assert, "XUIinputsinglepoke" );
+			_mListener_SinglePoke = new XListener<XTouch.SinglePokeData>( 1, eEventQueueFullBehaviour.Assert, "_XUIinputsinglepoke" );
 		}
 
 		private void _Init_Input()
@@ -43,7 +43,7 @@ namespace XNARTS
 				// first check if button disabled before considering input
 				if ( !_mCurrentlyPressed.IsActive() )
 				{
-					SendButtonAbortEvent();
+					_SendButtonAbortEvent();
 					return;
 				}
 
@@ -54,26 +54,26 @@ namespace XNARTS
 					if ( _mCurrentlyPressed.Contains( data.mCurrentPos ) )
 					{
 						// pressed is still pressed
-						SendButtonHeldEvent();
+						_SendButtonHeldEvent();
 						return;
 					}
 
 					// have strayed off button with a hold, un-press
-					SendButtonAbortEvent();
+					_SendButtonAbortEvent();
 					return;
 				}
 
 				if ( data.mDetail == XTouch.ePokeDetail.End_Abort )
 				{
 					// touch decided this gesture is no good, un-press
-					SendButtonAbortEvent();
+					_SendButtonAbortEvent();
 					return;
 				}
 
 				if ( data.mDetail == XTouch.ePokeDetail.End_Normal )
 				{
 					// this is a pressed button
-					SendButtonUpEvent();
+					_SendButtonUpEvent();
 					return;
 				}
 
@@ -91,7 +91,7 @@ namespace XNARTS
 					if ( enumerator.Current.Value.Contains( data.mCurrentPos ) && enumerator.Current.Value.IsActive() )
 					{
 						_mCurrentlyPressed = enumerator.Current.Value;
-						SendButtonDownEvent();
+						_SendButtonDownEvent();
 						break;
 					}
 				}

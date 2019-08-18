@@ -98,7 +98,7 @@ namespace XNARTS
 		{
 			if ( _mCurrentlyPressed != null && _mCurrentlyPressed.GetID() == button.GetID() )
 			{
-				SendButtonAbortEvent();
+				_SendButtonAbortEvent();
 			}
 
 			_mButtons.Remove( button.GetID() );
@@ -230,7 +230,7 @@ namespace XNARTS
 			}
 		}
 
-		private void SendButtonEvent< T >( bool pressed_now, XBroadcaster< T > b, T e ) where T : class
+		private void _SendButtonEvent< T >( bool pressed_now, XBroadcaster< T > b, T e ) where T : class
 		{
 			XUtils.Assert( _mCurrentlyPressed != null );
 			_mCurrentlyPressed.SetPressed( pressed_now );
@@ -241,21 +241,21 @@ namespace XNARTS
 				_mCurrentlyPressed = null;
 			}
 		}
-		private void SendButtonUpEvent()
+		private void _SendButtonUpEvent()
 		{
-			SendButtonEvent( false, _mBroadcaster_ButtonUpEvent, new ButtonUpEvent( _mCurrentlyPressed.GetID() ) );
+			_SendButtonEvent( false, _mBroadcaster_ButtonUpEvent, new ButtonUpEvent( _mCurrentlyPressed.GetID() ) );
 		}
-		private void SendButtonDownEvent()
+		private void _SendButtonDownEvent()
 		{
-			SendButtonEvent( true, _mBroadcaster_ButtonDownEvent, new ButtonDownEvent( _mCurrentlyPressed.GetID() ) );
+			_SendButtonEvent( true, _mBroadcaster_ButtonDownEvent, new ButtonDownEvent( _mCurrentlyPressed.GetID() ) );
 		}
-		private void SendButtonHeldEvent()
+		private void _SendButtonHeldEvent()
 		{
-			SendButtonEvent( true, _mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( _mCurrentlyPressed.GetID() ) );
+			_SendButtonEvent( true, _mBroadcaster_ButtonHeldEvent, new ButtonHeldEvent( _mCurrentlyPressed.GetID() ) );
 		}
-		private void SendButtonAbortEvent()
+		private void _SendButtonAbortEvent()
 		{
-			SendButtonEvent( false, _mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( _mCurrentlyPressed.GetID() ) );
+			_SendButtonEvent( false, _mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( _mCurrentlyPressed.GetID() ) );
 		}
 
 		private void _Constructor_Buttons()
