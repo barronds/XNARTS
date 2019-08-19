@@ -37,6 +37,16 @@ namespace XNARTS
 			XUtils.Assert( removed );
 		}
 
+		public void PushWidget( Widget parent )
+		{
+
+		}
+
+		public void PopWidget( Widget parent )
+		{
+
+		}
+
 		private void Constructor_WidgetManager()
 		{
 			mRootWidgets = new List<XUI.Widget>();

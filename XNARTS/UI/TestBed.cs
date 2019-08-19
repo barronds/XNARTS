@@ -33,6 +33,7 @@ namespace XNARTS
 					//Test_Label();
 					//Test_Panel();
 					Test_Button();
+					//Test_State();
 				}
 			}
 
@@ -40,11 +41,11 @@ namespace XNARTS
 			{
 				XUI ui = XUI.Instance();
 				XUI.Label label_1 = new XUI.Label(	ui.GetScreenWidget(), "Test Widget 1", ui.GetStyle( eStyle.Frontend ), 
-													new Vector2( 500, 700 ) );
+													new Vector2( 500, 700 ), Widget.eInitialState.Active );
 				ui.AddRootWidget( label_1 );
 
 				XUI.Label label_2 = new XUI.Label(  ui.GetScreenWidget(), "Test Widget 2", ui.GetStyle( eStyle.Frontend ), 
-													ePlacement.Centered );
+													ePlacement.Centered, Widget.eInitialState.Active );
 				ui.AddRootWidget( label_2 );
 			}
 
@@ -52,40 +53,42 @@ namespace XNARTS
 			{
 				XUI ui = XUI.Instance();
 				XUI.Panel panel_1 = new XUI.Panel(  ui.GetScreenWidget(),  ui.GetStyle( eStyle.FrontendTest ),
-													new xAABB2( new Vector2( 200, 600 ), new Vector2( 1500, 1100 ) ) );
+													new xAABB2( new Vector2( 200, 600 ), new Vector2( 1500, 1100 ) ),
+													Widget.eInitialState.Active );
 
 				XUI.Panel panel_2 = new XUI.Panel(	panel_1, ui.GetStyle( eStyle.FrontendTest ),
-													new xAABB2( new Vector2( 210, 220 ), new Vector2( 450, 440 ) ) );
+													new xAABB2( new Vector2( 210, 220 ), new Vector2( 450, 440 ) ),
+													Widget.eInitialState.Active );
 
 				XUI.Panel panel_3 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 100, 50 ),
-													ePlacement.Centered );
+													ePlacement.Centered, Widget.eInitialState.Active );
 
 				XUI.Panel panel_4 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 80, 50 ),
-													ePlacement.TopLeft );
+													ePlacement.TopLeft, Widget.eInitialState.Active );
 
 				XUI.Panel panel_5 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 100, 150 ),
-													ePlacement.CenteredTop );
+													ePlacement.CenteredTop, Widget.eInitialState.Active );
 
 				XUI.Panel panel_6 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 90, 150 ),
-													ePlacement.TopRight );
+													ePlacement.TopRight, Widget.eInitialState.Active );
 
 				XUI.Panel panel_7 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 70, 120 ),
-													ePlacement.CenteredRight );
+													ePlacement.CenteredRight, Widget.eInitialState.Active );
 
 				XUI.Panel panel_8 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 90, 120 ),
-													ePlacement.BottomRight );
+													ePlacement.BottomRight, Widget.eInitialState.Active );
 
 				XUI.Panel panel_9 = new XUI.Panel(  panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 110, 80 ),
-													ePlacement.CenteredBottom );
+													ePlacement.CenteredBottom, Widget.eInitialState.Active );
 
 				XUI.Panel panel_10 = new XUI.Panel( panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 60, 110 ),
-													ePlacement.BottomLeft );
+													ePlacement.BottomLeft, Widget.eInitialState.Active );
 
 				XUI.Panel panel_11 = new XUI.Panel( panel_1, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 120, 150 ),
-													ePlacement.CenteredLeft );
+													ePlacement.CenteredLeft, Widget.eInitialState.Active );
 
 				XUI.Panel panel_12 = new XUI.Panel( panel_2, ui.GetStyle( eStyle.FrontendTest ), new Vector2( 70, 50 ),
-													ePlacement.CenteredLeft );
+													ePlacement.CenteredLeft, Widget.eInitialState.Active );
 
 				panel_1.AddChild( panel_2 );
 				panel_1.AddChild( panel_3 );
@@ -106,12 +109,17 @@ namespace XNARTS
 			{
 				XUI ui = XUI.Instance();
 				XUI.Button bap_1 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ),
-													"Button As Panel 1", ePlacement.Centered );
+													"Button As Panel 1", ePlacement.Centered, Widget.eInitialState.Active );
 
 				XUI.Button bap_2 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.FrontendTest ),
-													"Button As Panel 2", new Vector2( 100, 800 ) );
+													"Button As Panel 2", new Vector2( 100, 800 ), Widget.eInitialState.Active );
 				ui.AddRootWidget( bap_1 );
 				ui.AddRootWidget( bap_2 );
+			}
+
+			private void Test_State()
+			{
+
 			}
 		}
 

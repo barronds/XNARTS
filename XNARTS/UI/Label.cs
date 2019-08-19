@@ -14,19 +14,18 @@ namespace XNARTS
 			private String  mText;
 
 			// use static GetSizeOfText() if size is needed before construction
-
-			public Label( Widget parent, String text, Style style, Vector2 pos )
+			public Label( Widget parent, String text, Style style, Vector2 pos, eInitialState state )
 			{
 				// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
 				Vector2 label_size = Init( text, style );
 				xAABB2 relative_aabb = new xAABB2( pos, pos + label_size );
-				InitWidget( parent, style, relative_aabb );
+				InitWidget( parent, style, relative_aabb, state );
 			}
 
-			public Label( Widget parent, String text, Style style, ePlacement placement )
+			public Label( Widget parent, String text, Style style, ePlacement placement, eInitialState state )
 			{
 				Vector2 label_size = Init( text, style );
-				InitWidget( parent, style, placement, label_size );
+				InitWidget( parent, style, placement, label_size, state );
 			}
 
 			public static Vector2 GetSizeOfText( String text, Style style )
