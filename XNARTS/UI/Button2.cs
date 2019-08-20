@@ -60,9 +60,15 @@ namespace XNARTS
 				}
 			}
 
-			public override bool IsBackgroundInteractiveColor()
+			public override void Render( XSimpleDraw simple_draw )
 			{
-				return mPressedVisual;
+				XUtils.Assert( IsInitialized() );
+				xAABB2 aabb = GetPosition().GetScreenAABB();
+				Style s = GetStyle();
+				Color border = s.mBorderColor;
+				Color background = mPressedVisual ? s.mInteractionBackgroundColor : s.mBackgroundColor;
+				XUI.Instance().Util_DrawBox( simple_draw, background, s.mBorderColor, aabb );
+				RenderChildren( simple_draw );
 			}
 		}
 

@@ -145,6 +145,11 @@ namespace XNARTS
 				return mInputEnabled && mInFocus && mVisible;
 			}
 
+			public bool IsInitialized()
+			{
+				return mInitialized;
+			}
+
 			public enum eInputChange
 			{
 				None,
@@ -232,11 +237,6 @@ namespace XNARTS
 				mInputEnabled = input_enabled;
 				mInFocus = in_focus;
 				mVisible = visible;
-			}
-
-			public virtual bool IsBackgroundInteractiveColor()
-			{
-				return false;
 			}
 		}
 

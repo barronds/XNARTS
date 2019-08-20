@@ -79,11 +79,13 @@ namespace XNARTS
 				base.Render( simple_draw );
 				xAABB2 aabb = GetPosition().GetScreenAABB();
 				Style s = GetStyle();
-				Color border = s.mBorderColor;
-				Color background = IsBackgroundInteractiveColor() ? s.mInteractionBackgroundColor : s.mBackgroundColor;
-				XUI.Instance().Util_DrawBox( simple_draw, background, border, aabb );
+				XUI.Instance().Util_DrawBox( simple_draw, s.mBackgroundColor, s.mBorderColor, aabb );
+				RenderChildren( simple_draw );
+			}
 
-				for( int i = 0; i < mChildren.Count; ++i )
+			public void RenderChildren( XSimpleDraw simple_draw )
+			{
+				for ( int i = 0; i < mChildren.Count; ++i )
 				{
 					mChildren[ i ].Render( simple_draw );
 				}
