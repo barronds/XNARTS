@@ -38,7 +38,7 @@ namespace XNARTS
 			if ( mCurrentlyPressed != null )
 			{
 				// first check if button disabled before considering input
-				if ( !mCurrentlyPressed.IsInputEnabled() )
+				if ( !mCurrentlyPressed.IsInteractable() )
 				{
 					SendButtonAbortEvent();
 					return;
@@ -83,7 +83,7 @@ namespace XNARTS
 				// new press, let's see if it hits a button
 				for( int i = 0; i < mActiveButtons.Count; ++i )
 				{
-					if( mActiveButtons[ i ].Contains( data.mCurrentPos ) && mActiveButtons[ i ].IsInputEnabled() )
+					if( mActiveButtons[ i ].Contains( data.mCurrentPos ) && mActiveButtons[ i ].IsInteractable() )
 					{
 						mCurrentlyPressed = mActiveButtons[ i ];
 						SendButtonDownEvent();
@@ -91,6 +91,17 @@ namespace XNARTS
 					}
 				}
 			}
+		}
+
+		public void AddActiveButton( Button b )
+		{
+			XUtils.Assert( mActiveButtons.Find( Widget.CompareWidgets( b ) ) == null );
+			mActiveButtons.Add( b );
+		}
+
+		public void RemoveActiveButton( Button b )
+		{
+			XUtils.Assert( mActiveButtons.Remove( b ) );
 		}
 
 	}

@@ -91,9 +91,15 @@ namespace XNARTS
 
 				switch( state )
 				{
-					case eInitialState.Dormant:		SetState( true, false, false );		break;
-					case eInitialState.Active:		SetState( true, true, true );		break;
-					default:						XUtils.Assert( false );				break;
+					case eInitialState.Dormant:
+						SetState( eInputChange.Enable, eFocusChange.Out, eVisibilityChange.Hide );
+						break;
+					case eInitialState.Active:
+						SetState( eInputChange.Enable, eFocusChange.In, eVisibilityChange.Show );
+						break;
+					default:
+						XUtils.Assert( false );
+						break;
 				}
 
 				mInitialized = true;
@@ -113,7 +119,6 @@ namespace XNARTS
 
 			public long GetUID()
 			{
-				XUtils.Assert( mInitialized );
 				return mUID;
 			}
 
@@ -137,7 +142,6 @@ namespace XNARTS
 
 			public bool IsInteractable()
 			{
-				XUtils.Assert( mInitialized );
 				return mInputEnabled && mInFocus && mVisible;
 			}
 

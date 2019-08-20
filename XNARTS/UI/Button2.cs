@@ -11,12 +11,12 @@ namespace XNARTS
 	{
 		public class Button : Panel
 		{
-			private bool mPressed;
+			private bool mPressedVisual;
 
 			public Button( Widget parent, Style style, String text, Vector2 pos, eInitialState state )
 			{
 				// optimize later
-				mPressed = false;
+				mPressedVisual = false;
 				Vector2 label_size = Label.GetSizeOfText( text, style );
 				eFont font = style.mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
@@ -24,14 +24,14 @@ namespace XNARTS
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
 				InitPanel( parent, style, aabb, state );
 
-				Label label = new Label( this, text, style, ePlacement.Centered, state );
+				Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
 			}
 
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
 				// optimize later
-				mPressed = false;
+				mPressedVisual = false;
 				Vector2 label_size = Label.GetSizeOfText( text, style );
 				eFont font = style.mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
@@ -39,21 +39,32 @@ namespace XNARTS
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
 				InitPanel( parent, style, size, placement, state );
 
-				Label label = new Label( this, text, style, ePlacement.Centered, state );
+				Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
 			}
 
-			public void SetPressed( bool pressed )
+			public void SetPressedVisual( bool pressed )
 			{
-				// this is for presentation of the button
-				mPressed = pressed;
+				mPressedVisual = pressed;
+			}
+
+			public override void FacilitateInteractability( bool interactable )
+			{
+				if( interactable )
+				{
+					XUI.Instance().AddActiveButton( this );
+				}
+				else
+				{
+					XUI.Instance().RemoveActiveButton( this );
+				}
 			}
 		}
 
 		private void SendButtonEvent<T>( bool pressed_now, XBroadcaster<T> b, T e ) where T : class
 		{
 			XUtils.Assert( mCurrentlyPressed != null );
-			mCurrentlyPressed.SetPressed( pressed_now );
+			mCurrentlyPressed.SetPressedVisual( pressed_now );
 			b.Post( e );
 
 			if ( !pressed_now )
