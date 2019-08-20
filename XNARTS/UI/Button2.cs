@@ -59,6 +59,11 @@ namespace XNARTS
 					XUI.Instance().RemoveActiveButton( this );
 				}
 			}
+
+			public override bool IsBackgroundInteractiveColor()
+			{
+				return mPressedVisual;
+			}
 		}
 
 		private void SendButtonEvent<T>( bool pressed_now, XBroadcaster<T> b, T e ) where T : class

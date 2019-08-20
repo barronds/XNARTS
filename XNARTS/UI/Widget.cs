@@ -233,6 +233,11 @@ namespace XNARTS
 				mInFocus = in_focus;
 				mVisible = visible;
 			}
+
+			public virtual bool IsBackgroundInteractiveColor()
+			{
+				return false;
+			}
 		}
 
 		public class ScreenWidget : Widget
