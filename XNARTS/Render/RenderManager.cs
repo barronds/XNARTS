@@ -33,9 +33,9 @@ namespace XNARTS
 		{}
 
 
-		public void Initialize( GraphicsDevice graphics_device, 
-								GraphicsDeviceManager graphics_device_manager, 
-								ContentManager content_manager )
+		public void Init_1( GraphicsDevice graphics_device, 
+							GraphicsDeviceManager graphics_device_manager, 
+							ContentManager content_manager )
 		{
 			mGraphicsDeviceManager = graphics_device_manager;
 			mGraphicsDevice = graphics_device;
@@ -74,10 +74,13 @@ namespace XNARTS
 																							persistent: true,
 																							max_lines: 50,
 																							max_triangles: 1600000 );
+		}
+
+		public void Init_2()
+		{
 			mMainWorldCam = new XWorldCam( mScreenDim );
 			mScreenCam = new XScreenCam( mScreenDim );
 		}
-
 
 		public void LoadContent()
 		{

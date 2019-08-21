@@ -75,11 +75,12 @@ namespace XNARTS
 		private int									mMapScale;
 		private XWorldGen.eMapType					mMapType;
 		private XSafeGrid< xMapCell >				mMap;
-		private XListener< XKeyInput.KeyUp >		mListenter_KeyUp;
-		private XListener< XUI.ButtonUpEvent >		mListener_Button;
-		private XUI._IButton							mRegnerateMapButton;
-		private XUI._IButton                         mMapTypeButton;
-		private XUI._IButton                         mMapSizeButton;
+		private XListener< XKeyInput.KeyUp >        mListenter_KeyUp;
+		private XListener< XUI.ButtonUpEvent >      mListener_Button;
+		private XListener< XUI.ButtonUpEvent >		mListener_ButtonNew;
+		private XUI.Button							mRegnerateMapButton;
+		private XUI._IButton                        mMapTypeButton;
+		private XUI._IButton                        mMapSizeButton;
 
 		// private constructor as per XSingleton
 		private XWorld()
@@ -102,7 +103,15 @@ namespace XNARTS
 			mListener_Button = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
 			ui.GetBroadcaster_ButtonUpEvent().Subscribe( mListener_Button );
 
-			mRegnerateMapButton = ui._CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
+			mListener_ButtonNew = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButtonNew" );
+			ui.mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonNew );
+
+			mRegnerateMapButton = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( XUI.eStyle.GameplayUI ),
+													"New Regenerate Map Button", new Vector2( 30, 30 ), 
+													XUI.Widget.eInitialState.Active );
+			ui.AddRootWidget( mRegnerateMapButton );
+
+			//mRegnerateMapButton = ui._CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
 			mMapTypeButton = ui._CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
 			mMapSizeButton = ui._CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
 
@@ -271,7 +280,7 @@ namespace XNARTS
 
 			while( button_enumerator.MoveNext() )
 			{
-				if ( button_enumerator.GetCurrent().mID == mRegnerateMapButton.GetID() )
+				if ( button_enumerator.GetCurrent().mID == mRegnerateMapButton.GetUID() )
 				{
 					generate_map = true;
 				}
@@ -282,6 +291,16 @@ namespace XNARTS
 				else if ( button_enumerator.GetCurrent().mID == mMapSizeButton.GetID() )
 				{
 					resize_map = true;
+				}
+			}
+
+			var button_enumerator_new = mListener_ButtonNew.CreateEnumerator();
+
+			while ( button_enumerator_new.MoveNext() )
+			{
+				if ( button_enumerator_new.GetCurrent().mID == mRegnerateMapButton.GetUID() )
+				{
+					generate_map = true;
 				}
 			}
 

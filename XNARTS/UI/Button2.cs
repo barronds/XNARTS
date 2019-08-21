@@ -100,10 +100,10 @@ namespace XNARTS
 			SendButtonEvent( false, mBroadcaster_ButtonAbortEvent, new ButtonAbortEvent( mCurrentlyPressed.GetUID() ) );
 		}
 
-		private XBroadcaster< ButtonUpEvent >       mBroadcaster_ButtonUpEvent;
-		private XBroadcaster< ButtonDownEvent >     mBroadcaster_ButtonDownEvent;
-		private XBroadcaster< ButtonHeldEvent >     mBroadcaster_ButtonHeldEvent;
-		private XBroadcaster< ButtonAbortEvent >    mBroadcaster_ButtonAbortEvent;
+		public XBroadcaster< ButtonUpEvent >		mBroadcaster_ButtonUpEvent;
+		public XBroadcaster< ButtonDownEvent >		mBroadcaster_ButtonDownEvent;
+		public XBroadcaster< ButtonHeldEvent >		mBroadcaster_ButtonHeldEvent;
+		public XBroadcaster< ButtonAbortEvent >		mBroadcaster_ButtonAbortEvent;
 		private XListener< XTouch.SinglePokeData >  mListener_SinglePoke;
 		private Button                              mCurrentlyPressed;
 

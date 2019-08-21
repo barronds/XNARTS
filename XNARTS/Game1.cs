@@ -53,15 +53,21 @@ namespace XNARTS
 		/// </summary>
 		protected override void Initialize()
         {
+			// phase 1
+			XRenderManager.Instance().Init_1( GraphicsDevice, mGraphicsDeviceManager, Content );
+			XFontDraw.Instance().Init( GraphicsDevice, Content );
 			XBulletinBoard.Instance().Init();
 			XTouch.Instance().Init();
 			XKeyInput.Instance().Init();
-			XWorld.Instance().Init();
 			XMouse.Instance().Init();
-			XFontDraw.Instance().Init( GraphicsDevice, Content );
-			XRenderManager.Instance().Initialize( GraphicsDevice, mGraphicsDeviceManager, Content );
+
+			// phase 2
 			XUI.Instance().Init();
 			XRootDebugMenu.Instance().Init();
+			XWorld.Instance().Init();
+
+			// phase 3
+			XRenderManager.Instance().Init_2();
 
 			base.Initialize();
 
