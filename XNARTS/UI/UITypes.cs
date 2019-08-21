@@ -100,6 +100,12 @@ namespace XNARTS
 				return mRelativeAABB;
 			}
 
+			public void SetRelativeAABB( xAABB2 aabb )
+			{
+				mRelativeAABB = aabb;
+				ValidateAABB();
+			}
+
 			public xAABB2 GetScreenAABB()
 			{
 				if( mParent != null )
@@ -132,6 +138,12 @@ namespace XNARTS
 					XUtils.Assert( Widget.CompareWidgets( parent )( this.mParent ) );
 				}
 			}
+
+			public ePlacement GetPlacement()
+			{
+				return mPlacement;
+			}
+
 
 			private void Init( Widget parent, ePlacement placement )
 			{

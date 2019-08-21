@@ -84,6 +84,18 @@ namespace XNARTS
 				mPosition = new Position( parent, placement, size );
 			}
 
+			public void Reparent( Widget new_parent, ePlacement placement )
+			{
+				XUtils.Assert( mInitialized );
+				mPosition = new Position( new_parent, placement, mPosition.GetRelatveAABB().GetSize() );
+			}
+
+			public void Reparent( Widget new_parent, Vector2 pos )
+			{
+				XUtils.Assert( mInitialized );
+				mPosition = new Position( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
+			}
+
 			private void InitWidgetCommon( Style style, eInitialState state )
 			{
 				XUtils.Assert( !mInitialized );

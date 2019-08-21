@@ -36,9 +36,11 @@ namespace XNARTS
 			public Color	mBorderColor;
 			public float	mButtonPadding;
 			public float	mPlacementPadding;
+			public float    mPackingPadding;
 
 			public Style(	eStyle enum_value, eFont normal, Color text, Color background, Color interation_background, 
-							Color border, float button_padding_scalar, float placement_padding_scalar )
+							Color border, float button_padding_scalar, float placement_padding_scalar, 
+							float packing_padding_scalar )
 			{
 				mEnumValue = enum_value;
 				mNormalFont = normal;
@@ -47,15 +49,16 @@ namespace XNARTS
 				mInteractionBackgroundColor = interation_background;
 				mBorderColor = border;
 
-				CalcPadding( button_padding_scalar, placement_padding_scalar );
+				CalcPadding( button_padding_scalar, placement_padding_scalar, packing_padding_scalar );
 			}
 
-			private void CalcPadding( float button_padding_scalar, float placement_padding_scalar )
+			private void CalcPadding( float button_padding_scalar, float placement_padding_scalar, float packing_padding_scalar )
 			{
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( mNormalFont ).mSize;
 				float heuristic_size = font_size.X + font_size.Y;
 				mButtonPadding = button_padding_scalar * heuristic_size;
 				mPlacementPadding = placement_padding_scalar * heuristic_size;
+				mPackingPadding = packing_padding_scalar * heuristic_size;
 			}
 		}
 
@@ -84,40 +87,40 @@ namespace XNARTS
 			// fonttest: make a button with this to tune (discover) size and offset (change the font)
 			AddStyle( eStyle.FontTest, new Style(	eStyle.FontTest, eFont.Consolas48, Color.White, Color.DarkViolet,
 													Color.Lerp( Color.DarkViolet, Color.White, k_pressed_blend ),
-													Color.Black, 0.0f, 0.0f ) );
+													Color.Black, 0.0f, 0.0f, 0.0f ) );
 
 			AddStyle( eStyle.GameplayUI, new Style( eStyle.GameplayUI, eFont.Consolas16, Color.White,
 													ui_alpha_black, Color.Lerp( ui_alpha_black, Color.White, k_pressed_blend ),
-													Color.White, 0.65f, 1.3f ) );
+													Color.White, 0.65f, 1.3f, 0.325f ) );
 
 			AddStyle( eStyle.Tactical, new Style(	eStyle.Tactical, eFont.LucidaConsole16, 
 													new Color( Color.White, k_Tactical_Alpha ), Color.Transparent,
 													Color.Lerp( Color.Transparent, Color.White, k_pressed_blend ),
-													new Color( Color.White, k_Tactical_Alpha ), 0.65f, 1.3f ) );
+													new Color( Color.White, k_Tactical_Alpha ), 0.65f, 1.3f, 0.325f ) );
 
 			AddStyle( eStyle.Frontend, new Style(	eStyle.Frontend, eFont.Consolas36, Color.White, ui_background,
 													Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-													Color.White, 0.0f, 0.0f ) );
+													Color.White, 0.0f, 0.0f, 0.0f ) );
 
 			AddStyle( eStyle.FrontendButton, new Style(	eStyle.FrontendButton, eFont.Consolas36, Color.White, ui_background,
 														Color.Lerp( Color.DarkViolet, Color.White, k_pressed_blend ),
-														ui_background, 0.0f, 0.0f ) );
+														ui_background, 0.0f, 0.0f, 0.0f ) );
 
 			AddStyle( eStyle.FrontendTest, new Style(	eStyle.FrontendTest, eFont.Consolas36, Color.White, ui_background,
 														Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-														Color.White, 0.25f, 0.5f ) );
+														Color.White, 0.25f, 0.5f, 0.125f ) );
 
 			AddStyle( eStyle.FrontendTitle, new Style(	eStyle.FrontendTitle, eFont.Consolas48, ui_meta, ui_background,
 														Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-														ui_background, 0.0f, 0.0f ) );
+														ui_background, 0.0f, 0.0f, 0.0f ) );
 
 			AddStyle( eStyle.FrontendControl, new Style(	eStyle.FrontendControl, eFont.Consolas36, ui_meta, ui_background,
 															Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-															ui_background, 0.0f, 0.0f ) );
+															ui_background, 0.0f, 0.0f, 0.0f ) );
 
 			AddStyle( eStyle.Screen, new Style( eStyle.Screen, eFont.Consolas36, ui_meta, ui_background,
 												Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-												ui_background, 2.0f, 4.0f ) );
+												ui_background, 2.0f, 4.0f, 1.0f ) );
 		}
 	}
 }

@@ -32,8 +32,9 @@ namespace XNARTS
 					++mTestTriggerCount;
 					//Test_Label();
 					//Test_Panel();
-					Test_Button();
+					//Test_Button();
 					//Test_State();
+					Test_VerticalStack();
 				}
 			}
 
@@ -120,6 +121,31 @@ namespace XNARTS
 			private void Test_State()
 			{
 
+			}
+
+			private void Test_VerticalStack()
+			{
+				XUI ui = XUI.Instance();
+				Style s = ui.GetStyle( eStyle.GameplayUI );
+
+				XUI.Panel panel_1 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 50, 20 ), ePlacement.TopLeft, 
+													Widget.eInitialState.Active );
+
+				XUI.Panel panel_2 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 100, 30 ), ePlacement.TopLeft, 
+													Widget.eInitialState.Active );
+
+				XUI.Panel panel_3 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 70, 70 ), ePlacement.TopLeft, 
+													Widget.eInitialState.Active );
+
+				XUI.Panel panel_4 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 20, 100 ), ePlacement.TopLeft, 
+													Widget.eInitialState.Active );
+
+				XUI.Panel[] panels = { panel_1, panel_2, panel_3, panel_4 };
+
+				XUI.VerticalStack stack = new VerticalStack();
+				stack.InitVerticalStack( ui.GetScreenWidget(), panels, s, ePlacement.Centered, Widget.eInitialState.Active );
+
+				ui.AddRootWidget( stack );
 			}
 		}
 
