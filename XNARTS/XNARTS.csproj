@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+    <None Include=".editorconfig" />
     <None Include="app.manifest" />
     <Compile Include="Controls\Mouse.cs" />
   </ItemGroup>
