@@ -1,0 +1,14 @@
+﻿
+// design v3.0
+
+having trouble creating and placing things in the right order, parenting becoming not intuitive.
+
+new approach: multi (2) step creation for a widget (and its children)
+- Create Standalone (that gives us size of everything)
+- Place everything relative to parent, establishing absolute pos, or relative, or predefined by nature (eg., vertical stack)
+
+don't think we need a step before those 2 (construct) because we are not going to need the object for create.
+
+do i need to support a 3rd version of everything here?  can i kill the 1st version yet?
+i don't think so, can start bottom up, with label then panel, button....  just fix up the usages as we go.
+does widget get a default Place() method and we override it or provide different for vertical stack that has no freedom of placement?
