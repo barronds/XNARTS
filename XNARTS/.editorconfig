@@ -2,3 +2,9 @@
 
 # IDE0051: Remove unused private members
 dotnet_diagnostic.IDE0051.severity = none
+
+# IDE0040: Add accessibility modifiers
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:none
+
+# IDE1006: Naming Styles
+dotnet_diagnostic.IDE1006.severity = none

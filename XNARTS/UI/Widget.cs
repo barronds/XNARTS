@@ -54,6 +54,9 @@ namespace XNARTS
 			private bool        mInFocus;		// can only be interacted with if it's in focus and visible
 			private bool        mVisible;		// can still exist, but will also be not in focus so won't handle input if invisible
 			
+			// TODO: maybe this isn't right - maybe assemble means all elements exist are are assembled.
+			// ie, when assemble is called, you assemble your children, recursively.
+			// then the same for place.  will know more when i've implemented it for all the classes so far and used it.
 			enum eConstructionState
 			{
 				Constructed,	// starts constructed
