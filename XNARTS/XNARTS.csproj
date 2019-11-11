@@ -93,6 +93,7 @@
   <ItemGroup>
     <Content Include="Icon.ico" />
     <Content Include="Documentation\TODO.txt" />
+    <Content Include="UI\design.txt" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

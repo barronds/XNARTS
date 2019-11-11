@@ -30,24 +30,29 @@ namespace XNARTS
 				if ( mTestTriggerCount == 0 && mListener_FourContacts.GetMaxOne() != null )
 				{
 					++mTestTriggerCount;
-					//Test_Label();
+					Test_Label();
 					//Test_Panel();
 					//Test_Button();
 					//Test_State();
-					Test_VerticalStack();
+					//Test_VerticalStack();
 				}
 			}
 
 			private void Test_Label()
 			{
 				XUI ui = XUI.Instance();
-				XUI.Label label_1 = new XUI.Label(	ui.GetScreenWidget(), "Test Widget 1", ui.GetStyle( eStyle.Frontend ), 
-													new Vector2( 500, 700 ), Widget.eInitialState.Active );
+				//XUI.Label label_1 = new XUI.Label(	ui.GetScreenWidget(), "Test Widget 1", ui.GetStyle( eStyle.Frontend ), 
+				//									new Vector2( 500, 700 ), Widget.eInitialState.Active );
+
+				Label label_1 = new XUI.Label( "Test Widget 1" );
+				label_1.Asssemble( ui.GetStyle( eStyle.Frontend ) );
+				label_1.Place( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), ePlacement.CenteredBottom, Widget.eInitialState.Active );
+
 				ui.AddRootWidget( label_1 );
 
-				XUI.Label label_2 = new XUI.Label(  ui.GetScreenWidget(), "Test Widget 2", ui.GetStyle( eStyle.Frontend ), 
-													ePlacement.Centered, Widget.eInitialState.Active );
-				ui.AddRootWidget( label_2 );
+				//XUI.Label label_2 = new XUI.Label(  ui.GetScreenWidget(), "Test Widget 2", ui.GetStyle( eStyle.Frontend ), 
+				//									ePlacement.Centered, Widget.eInitialState.Active );
+				//ui.AddRootWidget( label_2 );
 			}
 
 			private void Test_Panel()

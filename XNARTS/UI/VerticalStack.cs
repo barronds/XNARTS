@@ -35,6 +35,7 @@ namespace XNARTS
 			{
 				// calculate own aabb from already sized widgets
 				int num = widgets.Count();
+				XUtils.Assert( num > 0 );
 				float vertical_sum = 0.0f;
 				float horizontal_max = 0.0f;
 

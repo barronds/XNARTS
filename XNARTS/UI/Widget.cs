@@ -43,21 +43,30 @@ namespace XNARTS
 
 		public class Widget
 		{
-			private Position    mPosition;
-			private Style       mStyle;
-			private long        mUID;
-			private bool        mInitialized;
+			private Position			mPosition;
+			private Style				mStyle;
+			private long				mUID;
+			private bool				mInitialized;
+			private eConstructionState	mConstructionState;
 
 			// general usability/visibility state of the button
 			private bool        mInputEnabled;	// if in focus and visible, can still be interactive or not
 			private bool        mInFocus;		// can only be interacted with if it's in focus and visible
 			private bool        mVisible;		// can still exist, but will also be not in focus so won't handle input if invisible
 			
+			enum eConstructionState
+			{
+				Constructed,	// starts constructed
+				Assembled,		// after Assemble() - all it's elements exist and are placed inside this widget
+				Placed,			// this widget is placed in its parent
+			}
+
 			public Widget()
 			{
 				mUID = XUI.Instance().NextUID();
-				SetState( true, false, false );
+				SetUIState( true, false, false );
 				mInitialized = false;
+				mConstructionState = eConstructionState.Constructed;
 			}
 
 			// convenient initial combinations of input enabled, visibility and focus.  more can be added if needed.
@@ -94,27 +103,6 @@ namespace XNARTS
 			{
 				XUtils.Assert( mInitialized );
 				mPosition = new Position( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
-			}
-
-			private void InitWidgetCommon( Style style, eInitialState state )
-			{
-				XUtils.Assert( !mInitialized );
-				mStyle = style;
-
-				switch( state )
-				{
-					case eInitialState.Dormant:
-						SetState( eInputChange.Enable, eFocusChange.Out, eVisibilityChange.Hide );
-						break;
-					case eInitialState.Active:
-						SetState( eInputChange.Enable, eFocusChange.In, eVisibilityChange.Show );
-						break;
-					default:
-						XUtils.Assert( false );
-						break;
-				}
-
-				mInitialized = true;
 			}
 
 			public Position GetPosition()
@@ -244,11 +232,67 @@ namespace XNARTS
 				};
 			}
 
-			private void SetState( bool input_enabled, bool in_focus, bool visible )
+			public void SetConstructed()
+			{
+				mConstructionState = eConstructionState.Constructed;
+			}
+
+			public void SetAssembled()
+			{
+				mConstructionState = eConstructionState.Assembled;
+			}
+
+			public void SetPlaced()
+			{
+				mConstructionState = eConstructionState.Placed;
+			}
+
+			public bool IsConstructed()
+			{
+				return IsConstructionStateAtLeast( eConstructionState.Constructed );
+			}
+
+			public bool IsAssembled()
+			{
+				return IsConstructionStateAtLeast( eConstructionState.Assembled );
+			}
+
+			public bool IsPlaced()
+			{
+				return IsConstructionStateAtLeast( eConstructionState.Placed );
+			}
+
+			private bool IsConstructionStateAtLeast( eConstructionState s )
+			{
+				return ((int)mConstructionState) >= (int)s;
+			}
+
+			private void SetUIState( bool input_enabled, bool in_focus, bool visible )
 			{
 				mInputEnabled = input_enabled;
 				mInFocus = in_focus;
 				mVisible = visible;
+			}
+
+			private void InitWidgetCommon( Style style, eInitialState state )
+			{
+				XUtils.Assert( !mInitialized );
+				mStyle = style;
+
+				switch ( state )
+				{
+					case eInitialState.Dormant:
+						SetState( eInputChange.Enable, eFocusChange.Out, eVisibilityChange.Hide );
+						break;
+					case eInitialState.Active:
+						SetState( eInputChange.Enable, eFocusChange.In, eVisibilityChange.Show );
+						break;
+					default:
+						XUtils.Assert( false );
+						break;
+				}
+
+				mInitialized = true;
 			}
 		}
 

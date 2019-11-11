@@ -15,31 +15,38 @@ namespace XNARTS
 
 			public Button( Widget parent, Style style, String text, Vector2 pos, eInitialState state )
 			{
-				// optimize later
 				mPressedVisual = false;
-				Vector2 label_size = Label.GetSizeOfText( text, style );
+
+				Label label = new Label( text );
+				label.Asssemble( style );
+				Vector2 label_size = label.GetSize();
+
 				eFont font = style.mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
 				InitPanel( parent, style, aabb, state );
 
-				Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
+				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
+				//Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
 			}
 
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
-				// optimize later
+				Label label = new Label( text );
+				label.Asssemble( style );
+				Vector2 label_size = label.GetSize();
+
 				mPressedVisual = false;
-				Vector2 label_size = Label.GetSizeOfText( text, style );
 				eFont font = style.mNormalFont;
 				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
 				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
 				InitPanel( parent, style, size, placement, state );
 
-				Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
+				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
+				//Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
 			}
 
