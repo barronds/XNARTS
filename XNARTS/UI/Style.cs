@@ -120,7 +120,7 @@ namespace XNARTS
 
 			AddStyle( eStyle.Screen, new Style( eStyle.Screen, eFont.Consolas36, ui_meta, ui_background,
 												Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-												ui_background, 2.0f, 4.0f, 1.0f ) );
+												ui_background, 2.0f, 1.2f, 1.0f ) );
 		}
 	}
 }

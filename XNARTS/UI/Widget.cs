@@ -43,7 +43,7 @@ namespace XNARTS
 
 		public class Widget
 		{
-			private Position			mPosition;
+			private UIPosition			mPosition;
 			private Style				mStyle;
 			private long				mUID;
 			private bool				mInitialized;
@@ -87,28 +87,28 @@ namespace XNARTS
 			public void InitWidget( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
 				InitWidgetCommon( style, state );
-				mPosition = new Position( parent, relative_aabb );
+				mPosition = new UIPosition( parent, relative_aabb );
 			}
 
 			public void InitWidget( Widget parent, Style style, ePlacement placement, Vector2 size, eInitialState state )
 			{
 				InitWidgetCommon( style, state );
-				mPosition = new Position( parent, placement, size );
+				mPosition = new UIPosition( parent, placement, size );
 			}
 
 			public void Reparent( Widget new_parent, ePlacement placement )
 			{
 				XUtils.Assert( mInitialized );
-				mPosition = new Position( new_parent, placement, mPosition.GetRelatveAABB().GetSize() );
+				mPosition = new UIPosition( new_parent, placement, mPosition.GetRelatveAABB().GetSize() );
 			}
 
 			public void Reparent( Widget new_parent, Vector2 pos )
 			{
 				XUtils.Assert( mInitialized );
-				mPosition = new Position( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
+				mPosition = new UIPosition( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
 			}
 
-			public Position GetPosition()
+			public UIPosition GetPosition()
 			{
 				XUtils.Assert( mInitialized );
 				return mPosition;

@@ -39,9 +39,9 @@ namespace XNARTS
 
 		public enum ePlacement
 		{
+			Absolute = -2, // Vector2, a position relative to parent widget
 			Invalid = -1,
 
-			Absolute, // Vector2, a position relative to parent widget
 			Centered,
 			CenteredLeft,
 			CenteredRight,
@@ -55,14 +55,14 @@ namespace XNARTS
 			Num
 		}
 
-		public class Position
+		public class UIPosition
 		{
 			private ePlacement	mPlacement;
 			private xAABB2		mRelativeAABB;	// relative to parent's aabb min point
 			private Widget      mParent;		// can be null, for screen widget
 
 			// constructor for absolute position relative to widget.  use screen widget for screen space position.
-			public Position( Widget parent, xAABB2 relative_aabb )
+			public UIPosition( Widget parent, xAABB2 relative_aabb )
 			{
 				mRelativeAABB = relative_aabb;
 				Init( parent, ePlacement.Absolute );
@@ -70,7 +70,7 @@ namespace XNARTS
 			}
 
 			// constructor for placement relative to a widget.  use screen widget for screen placement.
-			public Position( Widget parent, ePlacement placement, Vector2 size )
+			public UIPosition( Widget parent, ePlacement placement, Vector2 size )
 			{
 				XUtils.Assert( placement != ePlacement.Absolute, "wrong constructor for absolute" );
 				Init( parent, placement );
@@ -167,7 +167,8 @@ namespace XNARTS
 				Vector2 parent_aabb_size = mParent.GetPosition().GetRelatveAABB().GetSize();
 				Vector2 parent_start_point = new Vector2(	parent_start_norm_x * parent_aabb_size.X, 
 															parent_start_norm_y * parent_aabb_size.Y );
-				Vector2 padding = GetStyle().mPlacementPadding * new Vector2( padding_norm_x, padding_norm_y );
+				Style s = GetStyle();
+				Vector2 padding = s.mPlacementPadding * new Vector2( padding_norm_x, padding_norm_y );
 				Vector2 size_correct = new Vector2( size.X * shape_correct_norm_x, size.Y * shape_correct_norm_y );
 				Vector2 top_left = parent_start_point + padding + size_correct;
 				Vector2 bottom_right = top_left + size;

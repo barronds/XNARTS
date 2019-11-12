@@ -30,7 +30,8 @@ namespace XNARTS
 				if ( mTestTriggerCount == 0 && mListener_FourContacts.GetMaxOne() != null )
 				{
 					++mTestTriggerCount;
-					Test_Label();
+					//Test_Label();
+					Test_Positioning();
 					//Test_Panel();
 					//Test_Button();
 					//Test_State();
@@ -51,6 +52,22 @@ namespace XNARTS
 				label_2.Asssemble( ui.GetStyle( eStyle.GameplayUI ) );
 				label_2.Place( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new Vector2( 200, 200 ), Widget.eInitialState.Active );
 				ui.AddRootWidget( label_2 );
+			}
+
+			private void Test_Positioning()
+			{
+				XUI ui = XUI.Instance();
+				Style s = ui.GetStyle( eStyle.Frontend );
+				Widget w = ui.GetScreenWidget();
+
+				for( int i = 0; i < (int)ePlacement.Num; ++i )
+				{
+					ePlacement p = (ePlacement)i;
+					XUI.Label label = new XUI.Label( p.ToString() );
+					label.Asssemble( s );
+					label.Place( w, s, p, Widget.eInitialState.Active );
+					ui.AddRootWidget( label );
+				}
 			}
 
 			private void Test_Panel()
