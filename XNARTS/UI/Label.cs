@@ -11,8 +11,8 @@ namespace XNARTS
 	{
 		public class Label : Widget
 		{
-			private String  mText;
-			private Vector2 mSize;
+			private String	mText;
+			private Vector2	mSize;
 
 			// use static GetSizeOfText() if size is needed before construction
 			//public Label( Widget parent, String text, Style style, Vector2 pos, eInitialState state )
@@ -29,16 +29,16 @@ namespace XNARTS
 			//	InitWidget( parent, style, placement, label_size, state );
 			//}
 
-			public Label( String text )
+			public Label()
 			{
-				mText = text;
 				mSize = Vector2.Zero;
 				SetConstructed();
 			}
 
-			public void Asssemble( Style style )
+			public void Asssemble( Style style, String text )
 			{
-				mSize = CalcSize( mText, style );
+				mSize = CalcSize( text, style );
+				mText = text;
 				SetAssembled();
 			}
 

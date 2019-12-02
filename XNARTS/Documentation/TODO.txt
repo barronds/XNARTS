@@ -19,6 +19,7 @@ UI
 - map types on selector
 - map sizes on selector
 - create placeholder placement type and placeholder parenty
+- add placed assert back into addrootwidget
 
 Events
 

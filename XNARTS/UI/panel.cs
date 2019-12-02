@@ -11,7 +11,7 @@ namespace XNARTS
 	{
 		public class Panel : Widget
 		{
-			private List< Widget >	mChildren;
+			private List< Widget > mChildren;
 
 			public Panel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
@@ -28,6 +28,34 @@ namespace XNARTS
 			public Panel()
 			{
 				// if using this constructor, call a flavor of InitPanel afterwards
+				Init();
+			}
+
+			public void Assemble()
+			{
+				// extending class needs to explicitly assemble the children, then call this
+				for ( int c = 0; c < mChildren.Count; ++c )
+				{
+					XUtils.Assert( mChildren[ c ].IsAssembled() );
+				}
+
+				SetAssembled();
+			}
+
+			public void Place( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
+			{
+				// extending class needs to explicitly place the children, then call this
+				PlaceCommon();
+				InitWidget( parent, style, relative_aabb, state );
+				SetPlaced();
+			}
+
+			public void Place( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
+			{
+				// extending class needs to explicitly place the children, then call this
+				PlaceCommon();
+				InitWidget( parent, style, placement, size, state );
+				SetPlaced();
 			}
 
 			public void InitPanel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
@@ -88,6 +116,14 @@ namespace XNARTS
 				for ( int i = 0; i < mChildren.Count; ++i )
 				{
 					mChildren[ i ].Render( simple_draw );
+				}
+			}
+
+			private void PlaceCommon()
+			{
+				for ( int c = 0; c < mChildren.Count; ++c )
+				{
+					XUtils.Assert( mChildren[ c ].IsPlaced() );
 				}
 			}
 		}

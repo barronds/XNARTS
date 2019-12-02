@@ -69,7 +69,7 @@ namespace XNARTS
 				mUID = XUI.Instance().NextUID();
 				SetUIState( true, false, false );
 				mInitialized = false;
-				mConstructionState = eConstructionState.Constructed;
+				SetConstructed();			
 			}
 
 			// convenient initial combinations of input enabled, visibility and focus.  more can be added if needed.
@@ -242,11 +242,13 @@ namespace XNARTS
 
 			public void SetAssembled()
 			{
+				XUtils.Assert( mConstructionState == eConstructionState.Constructed );
 				mConstructionState = eConstructionState.Assembled;
 			}
 
 			public void SetPlaced()
 			{
+				XUtils.Assert( mConstructionState == eConstructionState.Assembled );
 				mConstructionState = eConstructionState.Placed;
 			}
 

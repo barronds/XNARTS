@@ -17,12 +17,11 @@ namespace XNARTS
 			{
 				mPressedVisual = false;
 
-				Label label = new Label( text );
-				label.Asssemble( style );
+				Label label = new Label();
+				label.Asssemble( style, text );
 				Vector2 label_size = label.GetSize();
 
 				eFont font = style.mNormalFont;
-				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
 				InitPanel( parent, style, aabb, state );
@@ -34,13 +33,12 @@ namespace XNARTS
 
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
-				Label label = new Label( text );
-				label.Asssemble( style );
+				Label label = new Label();
+				label.Asssemble( style, text );
 				Vector2 label_size = label.GetSize();
 
 				mPressedVisual = false;
 				eFont font = style.mNormalFont;
-				Vector2 font_size = XFontDraw.Instance().GetFontInfo( font ).mSize;
 				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
 				InitPanel( parent, style, size, placement, state );

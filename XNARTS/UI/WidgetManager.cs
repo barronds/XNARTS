@@ -28,6 +28,7 @@ namespace XNARTS
 		{
 			Widget existing = mRootWidgets.Find( XUI.Widget.CompareWidgets( w ) );
 			XUtils.Assert( existing == null );
+			// soon XUtils.Assert( w.IsPlaced() );
 			mRootWidgets.Add( w );
 		}
 
