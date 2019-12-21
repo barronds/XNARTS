@@ -13,18 +13,6 @@ namespace XNARTS
 		{
 			private List< Widget > mChildren;
 
-			public Panel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
-			{
-				Init();
-				PlaceWidget( parent, style, relative_aabb, state );
-			}
-
-			public Panel( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
-			{
-				Init();
-				PlaceWidget( parent, style, placement, size, state );
-			}
-
 			public Panel()
 			{
 				// if using this constructor, call a flavor of InitPanel afterwards
