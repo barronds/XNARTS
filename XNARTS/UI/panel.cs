@@ -16,13 +16,13 @@ namespace XNARTS
 			public Panel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
 				Init();
-				InitWidget( parent, style, relative_aabb, state );
+				PlaceWidget( parent, style, relative_aabb, state );
 			}
 
 			public Panel( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
 			{
 				Init();
-				InitWidget( parent, style, placement, size, state );
+				PlaceWidget( parent, style, placement, size, state );
 			}
 
 			public Panel()
@@ -46,7 +46,7 @@ namespace XNARTS
 			{
 				// extending class needs to explicitly place the children, then call this
 				PlaceCommon();
-				InitWidget( parent, style, relative_aabb, state );
+				PlaceWidget( parent, style, relative_aabb, state );
 				SetPlaced();
 			}
 
@@ -54,20 +54,20 @@ namespace XNARTS
 			{
 				// extending class needs to explicitly place the children, then call this
 				PlaceCommon();
-				InitWidget( parent, style, placement, size, state );
+				PlaceWidget( parent, style, placement, size, state );
 				SetPlaced();
 			}
 
 			public void InitPanel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
 				Init();
-				InitWidget( parent, style, relative_aabb, state );
+				PlaceWidget( parent, style, relative_aabb, state );
 			}
 
 			public void InitPanel( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
 			{
 				Init();
-				InitWidget( parent, style, placement, size, state );
+				PlaceWidget( parent, style, placement, size, state );
 			}
 
 			public void AddChild( Widget child )

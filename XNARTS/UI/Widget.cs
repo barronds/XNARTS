@@ -84,13 +84,13 @@ namespace XNARTS
 				Num
 			}
 
-			public void InitWidget( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
+			public void PlaceWidget( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
 				InitWidgetCommon( style, state );
 				mPosition = new UIPosition( parent, relative_aabb );
 			}
 
-			public void InitWidget( Widget parent, Style style, ePlacement placement, Vector2 size, eInitialState state )
+			public void PlaceWidget( Widget parent, Style style, ePlacement placement, Vector2 size, eInitialState state )
 			{
 				InitWidgetCommon( style, state );
 				mPosition = new UIPosition( parent, placement, size );
@@ -306,7 +306,7 @@ namespace XNARTS
 			public ScreenWidget()
 			{
 				xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
-				InitWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), 
+				PlaceWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), 
 							new xAABB2( Vector2.Zero, new Vector2( screen_dim.x, screen_dim.y ) ), Widget.eInitialState.Dormant );
 				SetState( eInputChange.Disable, eFocusChange.None, eVisibilityChange.None );
 			}

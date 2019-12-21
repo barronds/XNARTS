@@ -20,13 +20,13 @@ namespace XNARTS
 			//	// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
 			//	Vector2 label_size = Init( text, style );
 			//	xAABB2 relative_aabb = new xAABB2( pos, pos + label_size );
-			//	InitWidget( parent, style, relative_aabb, state );
+			//	PlaceWidget( parent, style, relative_aabb, state );
 			//}
 
 			//public Label( Widget parent, String text, Style style, ePlacement placement, eInitialState state )
 			//{
 			//	Vector2 label_size = Init( text, style );
-			//	InitWidget( parent, style, placement, label_size, state );
+			//	PlaceWidget( parent, style, placement, label_size, state );
 			//}
 
 			public Label()
@@ -44,14 +44,14 @@ namespace XNARTS
 
 			public void Place( Widget parent, Style style, ePlacement placement, eInitialState state )
 			{
-				InitWidget( parent, style, placement, mSize, state );
+				PlaceWidget( parent, style, placement, mSize, state );
 				SetPlaced();
 			}
 
 			public void Place( Widget parent, Style style, Vector2 pos, eInitialState state )
 			{
 				xAABB2 relative_aabb = new xAABB2( pos, pos + mSize );
-				InitWidget( parent, style, relative_aabb, state );
+				PlaceWidget( parent, style, relative_aabb, state );
 				SetPlaced();
 			}
 
