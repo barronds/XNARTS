@@ -23,31 +23,11 @@ namespace XNARTS
 			public Keys mKey;
 		}
 
-		private XBroadcaster< KeyDown >	mBroadcaster_KeyDown;
-		private XBroadcaster< KeyUp >	mBroadcaster_KeyUp;
-		private XBroadcaster< KeyHeld >	mBroadcaster_KeyHeld;
-
-		public XBroadcaster<KeyDown> GetBroadcaster_KeyDown()
-		{
-			return mBroadcaster_KeyDown;
-		}
-		public XBroadcaster<KeyUp> GetBroadcaster_KeyUp()
-		{
-			return mBroadcaster_KeyUp;
-		}
-		public XBroadcaster<KeyHeld> GetBroadcaster_KeyHeld()
-		{
-			return mBroadcaster_KeyHeld;
-		}
-
-		private List< Keys > mPrevPressedKeys;
+		private readonly List< Keys > mPrevPressedKeys;
 
 		// private constructor for singleton
 		private XKeyInput()
 		{
-			mBroadcaster_KeyDown = new XBroadcaster<KeyDown>();
-			mBroadcaster_KeyUp = new XBroadcaster<KeyUp>();
-			mBroadcaster_KeyHeld = new XBroadcaster<KeyHeld>();
 			mPrevPressedKeys = new List<Keys>();
 		}
 
@@ -82,13 +62,13 @@ namespace XNARTS
 				{
 					KeyHeld msg = new KeyHeld();
 					msg.mKey = mPrevPressedKeys[ p ];
-					mBroadcaster_KeyHeld.Post( msg );
+					XBulletinBoard.Instance().mBroadcaster_KeyHeld.Post( msg );
 				}
 				else
 				{
 					KeyUp msg = new KeyUp();
 					msg.mKey = mPrevPressedKeys[ p ];
-					mBroadcaster_KeyUp.Post( msg );
+					XBulletinBoard.Instance().mBroadcaster_KeyUp.Post( msg );
 				}
 			}
 
@@ -110,7 +90,7 @@ namespace XNARTS
 				{
 					KeyDown msg = new KeyDown();
 					msg.mKey = curr_pressed[ c ];
-					mBroadcaster_KeyDown.Post( msg );
+					XBulletinBoard.Instance().mBroadcaster_KeyDown.Post( msg );
 				}
 			}
 
