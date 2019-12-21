@@ -17,7 +17,6 @@ namespace XNARTS
 			public Label()
 			{
 				mSize = Vector2.Zero;
-				SetConstructed();
 			}
 
 			public void Asssemble( Style style, String text )

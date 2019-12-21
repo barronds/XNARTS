@@ -235,7 +235,7 @@ namespace XNARTS
 				};
 			}
 
-			public void SetConstructed()
+			private void SetConstructed()
 			{
 				mConstructionState = eConstructionState.Constructed;
 			}
