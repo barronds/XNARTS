@@ -11,32 +11,94 @@ namespace XNARTS
 	{
 		public class TestBed
 		{
+			private delegate void TestFunc();
+
 			private XListener< XTouch.FourContacts >	mListener_FourContacts;
-			private int                                 mTestTriggerCount;
+			private XListener< XKeyInput.KeyUp >        mListener_KeyUp;
+			private bool                                mTesting;
+			private int                                 mTestFuncIndex;
+			private List< TestFunc >					mTestFuncs;
+			private List< Widget >                      mRootWidgets;
+
 
 			public TestBed()
 			{
-				mTestTriggerCount = 0;
+				mTesting = false;
+				mTestFuncIndex = 0;
+				mRootWidgets = new List<Widget>();
+
+				// update this manually when a test func is added
+				mTestFuncs = new List<TestFunc>();
+				mTestFuncs.Add( Test_Label );
+				mTestFuncs.Add( Test_Positioning );
+				mTestFuncs.Add( Test_Panel );
+				mTestFuncs.Add( Test_Button );
+				mTestFuncs.Add( Test_State );
+				mTestFuncs.Add( Test_VerticalStack );
 			}
 
 			public void Init()
 			{
 				mListener_FourContacts = new XListener<XTouch.FourContacts>( 1, eEventQueueFullBehaviour.Ignore, "XUITB4C" );
 				XBulletinBoard.Instance().mBroadcaster_FourContacts.Subscribe( mListener_FourContacts );
+
+				mListener_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "XUITBKU" );
+				XBulletinBoard.Instance().mBroadcaster_KeyUp.Subscribe( mListener_KeyUp );
 			}
 
 			public void Update( GameTime game_time )
 			{
-				if ( mTestTriggerCount == 0 && mListener_FourContacts.GetMaxOne() != null )
+				bool trigger_test = false;
+
+				if( mListener_FourContacts.GetMaxOne() != null )
 				{
-					++mTestTriggerCount;
-					//Test_Label();
-					//Test_Positioning();
-					//Test_Panel();
-					//Test_Button();
-					//Test_State();
-					Test_VerticalStack();
+					if( mTesting )
+					{
+						RemoveRootWidgets();
+						mTesting = false;
+					}
+					else
+					{
+						mTesting = true;
+						mTestFuncIndex = 0;
+						trigger_test = true;
+					}
 				}
+
+				if( mTesting )
+				{
+					XKeyInput.KeyUp key = mListener_KeyUp.GetMaxOne();
+
+					if ( key != null && key.mKey == Microsoft.Xna.Framework.Input.Keys.N )
+					{
+						trigger_test = true;
+					}
+				}
+
+				if( trigger_test )
+				{
+					RemoveRootWidgets();
+					mTestFuncs[ mTestFuncIndex ]();
+					mTestFuncIndex = (mTestFuncIndex + 1) % mTestFuncs.Count();
+				}
+			}
+
+			private void AddRootWidget( XUI ui, Widget w )
+			{
+				mRootWidgets.Add( w );
+				ui.AddRootWidget( w );
+			}
+
+			private void RemoveRootWidgets()
+			{
+				XUI ui = XUI.Instance();
+
+				for( int i = 0; i < mRootWidgets.Count(); ++i )
+				{
+					ui.RemoveRootWidget( mRootWidgets[ i ] );
+				}
+
+				mRootWidgets.Clear();
 			}
 
 			private void Test_Label()
@@ -46,12 +108,12 @@ namespace XNARTS
 				Label label_1 = new XUI.Label();
 				label_1.Asssemble( ui.GetStyle( eStyle.Frontend ), "Test Widget 1" );
 				label_1.Place( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), ePlacement.CenteredBottom, Widget.eInitialState.Active );
-				ui.AddRootWidget( label_1 );
+				AddRootWidget( ui, label_1 );
 
 				XUI.Label label_2 = new XUI.Label();
 				label_2.Asssemble( ui.GetStyle( eStyle.GameplayUI ), "Test Widget 2" );
 				label_2.Place( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new Vector2( 200, 200 ), Widget.eInitialState.Active );
-				ui.AddRootWidget( label_2 );
+				AddRootWidget( ui, label_2 );
 			}
 
 			private void Test_Positioning()
@@ -66,7 +128,7 @@ namespace XNARTS
 					XUI.Label label = new XUI.Label();
 					label.Asssemble( s, p.ToString() );
 					label.Place( w, s, p, Widget.eInitialState.Active );
-					ui.AddRootWidget( label );
+					AddRootWidget( ui, label );
 				}
 			}
 
@@ -150,7 +212,7 @@ namespace XNARTS
 				panel_1.AddChild( panel_11 );
 				panel_2.AddChild( panel_12 );
 
-				ui.AddRootWidget( panel_1 );
+				AddRootWidget( ui, panel_1 );
 			}
 
 			private void Test_Button()
@@ -161,8 +223,8 @@ namespace XNARTS
 
 				XUI.Button bap_2 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.FrontendTest ),
 													"Button As Panel 2", new Vector2( 100, 800 ), Widget.eInitialState.Active );
-				ui.AddRootWidget( bap_1 );
-				ui.AddRootWidget( bap_2 );
+				AddRootWidget( ui, bap_1 );
+				AddRootWidget( ui, bap_2 );
 			}
 
 			private void Test_State()
@@ -195,7 +257,7 @@ namespace XNARTS
 				XUI.VerticalStack stack = new VerticalStack();
 				stack.InitVerticalStack( ui.GetScreenWidget(), panels, s, ePlacement.Centered, Widget.eInitialState.Active );
 
-				ui.AddRootWidget( stack );
+				AddRootWidget( ui, stack );
 			}
 		}
 
