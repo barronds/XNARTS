@@ -14,21 +14,6 @@ namespace XNARTS
 			private String	mText;
 			private Vector2	mSize;
 
-			// use static GetSizeOfText() if size is needed before construction
-			//public Label( Widget parent, String text, Style style, Vector2 pos, eInitialState state )
-			//{
-			//	// parent can query aabb afterwards and translate if necessary.  start at prescribed position.
-			//	Vector2 label_size = Init( text, style );
-			//	xAABB2 relative_aabb = new xAABB2( pos, pos + label_size );
-			//	PlaceWidget( parent, style, relative_aabb, state );
-			//}
-
-			//public Label( Widget parent, String text, Style style, ePlacement placement, eInitialState state )
-			//{
-			//	Vector2 label_size = Init( text, style );
-			//	PlaceWidget( parent, style, placement, label_size, state );
-			//}
-
 			public Label()
 			{
 				mSize = Vector2.Zero;
@@ -55,22 +40,11 @@ namespace XNARTS
 				SetPlaced();
 			}
 
-			//public static Vector2 GetSizeOfText( String text, Style style )
-			//{
-			//	return CalcSize( text, style );
-			//}
-
 			public Vector2 GetSize()
 			{
 				XUtils.Assert( IsAssembled() );
 				return mSize;
 			}
-
-			//private Vector2 Init( String text, Style style )
-			//{
-			//	mText = text;
-			//	return CalcSize( text, style );
-			//}
 
 			private static Vector2 CalcSize( String text, Style style )
 			{

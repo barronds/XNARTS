@@ -32,10 +32,10 @@ namespace XNARTS
 					++mTestTriggerCount;
 					//Test_Label();
 					//Test_Positioning();
-					Test_Panel();
+					//Test_Panel();
 					//Test_Button();
 					//Test_State();
-					//Test_VerticalStack();
+					Test_VerticalStack();
 				}
 			}
 
@@ -175,17 +175,20 @@ namespace XNARTS
 				XUI ui = XUI.Instance();
 				Style s = ui.GetStyle( eStyle.GameplayUI );
 
-				XUI.Panel panel_1 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 50, 20 ), ePlacement.TopLeft, 
-													Widget.eInitialState.Active );
+				XUI.Panel panel_1 = new XUI.Panel();
+				XUI.Panel panel_2 = new XUI.Panel();
+				XUI.Panel panel_3 = new XUI.Panel();
+				XUI.Panel panel_4 = new XUI.Panel();
 
-				XUI.Panel panel_2 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 100, 30 ), ePlacement.TopLeft, 
-													Widget.eInitialState.Active );
+				panel_1.Assemble();
+				panel_2.Assemble();
+				panel_3.Assemble();
+				panel_4.Assemble();
 
-				XUI.Panel panel_3 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 70, 70 ), ePlacement.TopLeft, 
-													Widget.eInitialState.Active );
-
-				XUI.Panel panel_4 = new XUI.Panel(	ui.GetScreenWidget(), s, new Vector2( 20, 100 ), ePlacement.TopLeft, 
-													Widget.eInitialState.Active );
+				panel_1.Place(	ui.GetScreenWidget(), s, new Vector2( 50, 20 ), ePlacement.TopLeft, Widget.eInitialState.Active );
+				panel_2.Place(	ui.GetScreenWidget(), s, new Vector2( 100, 30 ), ePlacement.TopLeft, Widget.eInitialState.Active );
+				panel_3.Place(	ui.GetScreenWidget(), s, new Vector2( 70, 70 ), ePlacement.TopLeft, Widget.eInitialState.Active );
+				panel_4.Place(	ui.GetScreenWidget(), s, new Vector2( 20, 100 ), ePlacement.TopLeft, Widget.eInitialState.Active );
 
 				XUI.Panel[] panels = { panel_1, panel_2, panel_3, panel_4 };
 
