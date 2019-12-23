@@ -255,6 +255,7 @@ namespace XNARTS
 				XUI.Panel[] panels = { panel_1, panel_2, panel_3, panel_4 };
 
 				XUI.VerticalStack stack = new VerticalStack();
+				stack.AssembleWidget();
 				stack.InitVerticalStack( ui.GetScreenWidget(), panels, s, ePlacement.Centered, Widget.eInitialState.Active );
 
 				AddRootWidget( ui, stack );

@@ -23,20 +23,18 @@ namespace XNARTS
 			{
 				mSize = CalcSize( text, style );
 				mText = text;
-				SetAssembled();
+				AssembleWidget();
 			}
 
 			public void Place( Widget parent, Style style, ePlacement placement, eInitialState state )
 			{
 				PlaceWidget( parent, style, placement, mSize, state );
-				SetPlaced();
 			}
 
 			public void Place( Widget parent, Style style, Vector2 pos, eInitialState state )
 			{
 				xAABB2 relative_aabb = new xAABB2( pos, pos + mSize );
 				PlaceWidget( parent, style, relative_aabb, state );
-				SetPlaced();
 			}
 
 			public Vector2 GetSize()

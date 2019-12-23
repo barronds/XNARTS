@@ -24,6 +24,7 @@ namespace XNARTS
 				eFont font = style.mNormalFont;
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
+				AssembleWidget();
 				InitPanel( parent, style, aabb, state );
 
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
@@ -41,6 +42,7 @@ namespace XNARTS
 				eFont font = style.mNormalFont;
 				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
+				AssembleWidget();
 				InitPanel( parent, style, size, placement, state );
 
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
@@ -67,7 +69,7 @@ namespace XNARTS
 
 			public override void Render( XSimpleDraw simple_draw )
 			{
-				XUtils.Assert( IsInitialized() );
+				base.Render( simple_draw );
 				xAABB2 aabb = GetPosition().GetScreenAABB();
 				Style s = GetStyle();
 				Color border = s.mBorderColor;

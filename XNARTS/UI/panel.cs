@@ -27,7 +27,7 @@ namespace XNARTS
 					XUtils.Assert( mChildren[ c ].IsAssembled() );
 				}
 
-				SetAssembled();
+				AssembleWidget();
 			}
 
 			public void Place( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
@@ -35,7 +35,6 @@ namespace XNARTS
 				// extending class needs to explicitly place the children, then call this
 				PlaceCommon();
 				PlaceWidget( parent, style, relative_aabb, state );
-				SetPlaced();
 			}
 
 			public void Place( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
@@ -43,7 +42,6 @@ namespace XNARTS
 				// extending class needs to explicitly place the children, then call this
 				PlaceCommon();
 				PlaceWidget( parent, style, placement, size, state );
-				SetPlaced();
 			}
 
 			public void InitPanel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )

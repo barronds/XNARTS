@@ -41,7 +41,7 @@ namespace XNARTS
 
 				for ( int i = 0; i < num; ++i )
 				{
-					XUtils.Assert( widgets[ i ].IsInitialized() );
+					// XUtils.Assert( widgets[ i ].IsInitialized() );
 					Vector2 size = widgets[ i ].GetPosition().GetRelatveAABB().GetSize();
 					vertical_sum += size.Y;
 

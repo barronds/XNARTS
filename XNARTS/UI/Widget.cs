@@ -46,7 +46,6 @@ namespace XNARTS
 			private UIPosition			mPosition;
 			private Style				mStyle;
 			private long				mUID;
-			private bool				mInitialized;
 			private eConstructionState	mConstructionState;
 
 			// general usability/visibility state of the button
@@ -68,7 +67,6 @@ namespace XNARTS
 			{
 				mUID = XUI.Instance().NextUID();
 				SetUIState( true, false, false );
-				mInitialized = false;
 				SetConstructed();			
 			}
 
@@ -86,37 +84,37 @@ namespace XNARTS
 
 			public void PlaceWidget( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
-				InitWidgetCommon( style, state );
+				PlaceWidgetCommon( style, state );
 				mPosition = new UIPosition( parent, relative_aabb );
 			}
 
 			public void PlaceWidget( Widget parent, Style style, ePlacement placement, Vector2 size, eInitialState state )
 			{
-				InitWidgetCommon( style, state );
+				PlaceWidgetCommon( style, state );
 				mPosition = new UIPosition( parent, placement, size );
 			}
 
 			public void Reparent( Widget new_parent, ePlacement placement )
 			{
-				XUtils.Assert( mInitialized );
+				XUtils.Assert( new_parent.IsPlaced() );
 				mPosition = new UIPosition( new_parent, placement, mPosition.GetRelatveAABB().GetSize() );
 			}
 
 			public void Reparent( Widget new_parent, Vector2 pos )
 			{
-				XUtils.Assert( mInitialized );
+				XUtils.Assert( new_parent.IsPlaced() );
 				mPosition = new UIPosition( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
 			}
 
 			public UIPosition GetPosition()
 			{
-				XUtils.Assert( mInitialized );
+				XUtils.Assert( IsPlaced() );
 				return mPosition;
 			}
 
 			public Style GetStyle()
 			{
-				XUtils.Assert( mInitialized );
+				XUtils.Assert( IsPlaced() );
 				return mStyle;
 			}
 
@@ -127,30 +125,22 @@ namespace XNARTS
 
 			public bool IsInputEnabled()
 			{
-				XUtils.Assert( mInitialized );
 				return mInputEnabled;
 			}
 
 			public bool IsInFocus()
 			{
-				XUtils.Assert( mInitialized );
 				return mInFocus;
 			}
 
 			public bool IsVisible()
 			{
-				XUtils.Assert( mInitialized );
 				return mVisible;
 			}
 
 			public bool IsInteractable()
 			{
 				return mInputEnabled && mInFocus && mVisible;
-			}
-
-			public bool IsInitialized()
-			{
-				return mInitialized;
 			}
 
 			public enum eInputChange
@@ -224,7 +214,7 @@ namespace XNARTS
 
 			public virtual void Render( XSimpleDraw simple_draw )
 			{
-				XUtils.Assert( mInitialized );
+				XUtils.Assert( IsPlaced() );
 			}
 
 			public static Predicate<Widget> CompareWidgets( Widget w1 )
@@ -240,7 +230,7 @@ namespace XNARTS
 				mConstructionState = eConstructionState.Constructed;
 			}
 
-			public void SetAssembled()
+			public void AssembleWidget()
 			{
 				XUtils.Assert( mConstructionState == eConstructionState.Constructed );
 				mConstructionState = eConstructionState.Assembled;
@@ -279,9 +269,9 @@ namespace XNARTS
 				mVisible = visible;
 			}
 
-			private void InitWidgetCommon( Style style, eInitialState state )
+			private void PlaceWidgetCommon( Style style, eInitialState state )
 			{
-				XUtils.Assert( !mInitialized );
+				XUtils.Assert( IsAssembled() ); // currently would allow re-placement
 				mStyle = style;
 
 				switch ( state )
@@ -297,7 +287,7 @@ namespace XNARTS
 						break;
 				}
 
-				mInitialized = true;
+				SetPlaced();
 			}
 		}
 
@@ -306,6 +296,7 @@ namespace XNARTS
 			public ScreenWidget()
 			{
 				xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
+				AssembleWidget();
 				PlaceWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), 
 							new xAABB2( Vector2.Zero, new Vector2( screen_dim.x, screen_dim.y ) ), Widget.eInitialState.Dormant );
 				SetState( eInputChange.Disable, eFocusChange.None, eVisibilityChange.None );
