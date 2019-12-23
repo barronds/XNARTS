@@ -236,7 +236,7 @@ namespace XNARTS
 				mConstructionState = eConstructionState.Assembled;
 			}
 
-			public void SetPlaced()
+			private void SetPlaced()
 			{
 				XUtils.Assert( mConstructionState == eConstructionState.Assembled );
 				mConstructionState = eConstructionState.Placed;
