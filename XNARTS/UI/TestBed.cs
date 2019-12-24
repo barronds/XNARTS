@@ -106,12 +106,12 @@ namespace XNARTS
 				XUI ui = XUI.Instance();
 
 				Label label_1 = new XUI.Label();
-				label_1.Asssemble( ui.GetStyle( eStyle.Frontend ), "Test Widget 1" );
+				label_1.Assemble( ui.GetStyle( eStyle.Frontend ), "Test Widget 1" );
 				label_1.Place( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), ePlacement.CenteredBottom, Widget.eInitialState.Active );
 				AddRootWidget( ui, label_1 );
 
 				XUI.Label label_2 = new XUI.Label();
-				label_2.Asssemble( ui.GetStyle( eStyle.GameplayUI ), "Test Widget 2" );
+				label_2.Assemble( ui.GetStyle( eStyle.GameplayUI ), "Test Widget 2" );
 				label_2.Place( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new Vector2( 200, 200 ), Widget.eInitialState.Active );
 				AddRootWidget( ui, label_2 );
 			}
@@ -126,7 +126,7 @@ namespace XNARTS
 				{
 					ePlacement p = (ePlacement)i;
 					XUI.Label label = new XUI.Label();
-					label.Asssemble( s, p.ToString() );
+					label.Assemble( s, p.ToString() );
 					label.Place( w, s, p, Widget.eInitialState.Active );
 					AddRootWidget( ui, label );
 				}

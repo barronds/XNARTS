@@ -82,6 +82,12 @@ namespace XNARTS
 				Num
 			}
 
+			public void AssembleWidget()
+			{
+				XUtils.Assert( mConstructionState == eConstructionState.Constructed );
+				mConstructionState = eConstructionState.Assembled;
+			}
+
 			public void PlaceWidget( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
 				PlaceWidgetCommon( style, state );
@@ -228,12 +234,6 @@ namespace XNARTS
 			private void SetConstructed()
 			{
 				mConstructionState = eConstructionState.Constructed;
-			}
-
-			public void AssembleWidget()
-			{
-				XUtils.Assert( mConstructionState == eConstructionState.Constructed );
-				mConstructionState = eConstructionState.Assembled;
 			}
 
 			private void SetPlaced()

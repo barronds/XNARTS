@@ -72,7 +72,7 @@ namespace XNARTS
 
 				//Label title_label = new Label( parent, title, title_style, Vector2.Zero, state );
 				Label title_label = new Label();
-				title_label.Asssemble( title_style, title );
+				title_label.Assemble( title_style, title );
 				title_label.Place( parent, title_style, Vector2.Zero, state );
 
 				Button[] entry_buttons = new Button[ entries.Count() ];

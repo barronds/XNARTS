@@ -19,7 +19,7 @@ namespace XNARTS
 				mSize = Vector2.Zero;
 			}
 
-			public void Asssemble( Style style, String text )
+			public void Assemble( Style style, String text )
 			{
 				mSize = CalcSize( text, style );
 				mText = text;

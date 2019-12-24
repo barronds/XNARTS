@@ -18,7 +18,7 @@ namespace XNARTS
 				mPressedVisual = false;
 
 				Label label = new Label();
-				label.Asssemble( style, text );
+				label.Assemble( style, text );
 				Vector2 label_size = label.GetSize();
 
 				eFont font = style.mNormalFont;
@@ -35,7 +35,7 @@ namespace XNARTS
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
 				Label label = new Label();
-				label.Asssemble( style, text );
+				label.Assemble( style, text );
 				Vector2 label_size = label.GetSize();
 
 				mPressedVisual = false;
