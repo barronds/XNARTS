@@ -15,37 +15,38 @@ namespace XNARTS
 
 			public Button( Widget parent, Style style, String text, Vector2 pos, eInitialState state )
 			{
-				mPressedVisual = false;
-
-				Label label = new Label();
-				label.Assemble( style, text );
-				Vector2 label_size = label.GetSize();
-
-				eFont font = style.mNormalFont;
+				Init( style, text, out Vector2 label_size, out Label label );
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
-				AssembleWidget();
 				Place( parent, style, aabb, state );
-
-				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
-				AddChild( label );
+				PlaceLabel( label, style );
 			}
 
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
-				Label label = new Label();
-				label.Assemble( style, text );
-				Vector2 label_size = label.GetSize();
+				Init( style, text, out Vector2 label_size, out Label label );
+				Place( parent, style, label_size, placement, state );
+				PlaceLabel( label, style );
+			}
 
+			private void Init( Style style, String text, out Vector2 label_size, out Label label )
+			{
 				mPressedVisual = false;
+
+				label = new Label();
+				AddChild( label );
+				label.Assemble( style, text );
+				label_size = label.GetSize();
+
 				eFont font = style.mNormalFont;
 				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
 				AssembleWidget();
-				Place( parent, style, size, placement, state );
+			}
 
+			private void PlaceLabel( Label label, Style style )
+			{
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
-				AddChild( label );
 			}
 
 			public void SetPressedVisual( bool pressed )
