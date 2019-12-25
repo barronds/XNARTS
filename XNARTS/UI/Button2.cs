@@ -25,7 +25,7 @@ namespace XNARTS
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
 				AssembleWidget();
-				InitPanel( parent, style, aabb, state );
+				Place( parent, style, aabb, state );
 
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
@@ -42,7 +42,7 @@ namespace XNARTS
 				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
 				AssembleWidget();
-				InitPanel( parent, style, size, placement, state );
+				Place( parent, style, size, placement, state );
 
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );

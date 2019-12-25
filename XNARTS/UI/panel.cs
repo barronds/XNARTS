@@ -15,7 +15,7 @@ namespace XNARTS
 
 			public Panel()
 			{
-				Init();
+				mChildren = new List<Widget>();
 			}
 
 			public void Assemble()
@@ -41,18 +41,6 @@ namespace XNARTS
 				PlaceWidget( parent, style, placement, size, state );
 			}
 
-			public void InitPanel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
-			{
-				Init();
-				PlaceWidget( parent, style, relative_aabb, state );
-			}
-
-			public void InitPanel( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
-			{
-				Init();
-				PlaceWidget( parent, style, placement, size, state );
-			}
-
 			public void AddChild( Widget child )
 			{
 				XUtils.Assert( child != null && mChildren.Find( Widget.CompareWidgets( child ) ) == null );
@@ -62,11 +50,6 @@ namespace XNARTS
 			public void RemoveChild( Widget child )
 			{
 				XUtils.Assert( child != null && mChildren.Remove( child ) );
-			}
-
-			private void Init()
-			{
-				mChildren = new List<Widget>();
 			}
 
 			public override void FacilitateInteractability( bool interactable )

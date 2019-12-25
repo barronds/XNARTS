@@ -20,14 +20,14 @@ namespace XNARTS
 											eInitialState state )
 			{
 				Vector2 size = Init_PlaceWidgets( parent, widgets, style );
-				InitPanel( parent, style, size, placement, state );
+				Place( parent, style, size, placement, state );
 				AddAndParentChildren( widgets );
 			}
 
 			public void InitVerticalStack( Widget parent, Widget[] widgets, Style style, Vector2 pos, eInitialState state )
 			{
 				Vector2 size = Init_PlaceWidgets( parent, widgets, style );
-				InitPanel( parent, style, new xAABB2( pos, pos + size ), state );
+				Place( parent, style, new xAABB2( pos, pos + size ), state );
 				AddAndParentChildren( widgets );
 			}
 
