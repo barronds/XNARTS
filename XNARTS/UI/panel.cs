@@ -15,7 +15,6 @@ namespace XNARTS
 
 			public Panel()
 			{
-				// if using this constructor, call a flavor of InitPanel afterwards
 				Init();
 			}
 
@@ -32,15 +31,13 @@ namespace XNARTS
 
 			public void Place( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
 			{
-				// extending class needs to explicitly place the children, then call this
-				PlaceCommon();
+				// extending class needs to explicitly place itself with this method, then place its children
 				PlaceWidget( parent, style, relative_aabb, state );
 			}
 
 			public void Place( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
 			{
-				// extending class needs to explicitly place the children, then call this
-				PlaceCommon();
+				// extending class needs to explicitly place itself with this method, then place its children
 				PlaceWidget( parent, style, placement, size, state );
 			}
 
@@ -102,14 +99,6 @@ namespace XNARTS
 				for ( int i = 0; i < mChildren.Count; ++i )
 				{
 					mChildren[ i ].Render( simple_draw );
-				}
-			}
-
-			private void PlaceCommon()
-			{
-				for ( int c = 0; c < mChildren.Count; ++c )
-				{
-					XUtils.Assert( mChildren[ c ].IsPlaced() );
 				}
 			}
 		}

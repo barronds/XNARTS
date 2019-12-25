@@ -28,7 +28,6 @@ namespace XNARTS
 				InitPanel( parent, style, aabb, state );
 
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
-				//Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
 			}
 
@@ -46,7 +45,6 @@ namespace XNARTS
 				InitPanel( parent, style, size, placement, state );
 
 				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
-				//Label label = new Label( this, text, style, ePlacement.Centered, eInitialState.Dormant );
 				AddChild( label );
 			}
 
