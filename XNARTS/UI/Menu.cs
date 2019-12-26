@@ -32,6 +32,7 @@ namespace XNARTS
 		//   UID or index of button because of dynamic addition/removal.  strings should be unique otherwise there would be 
 		//   an ambiguity visually in the menu.
 
+/*
 		public class Menu_TitleEntriesControls : VerticalStack
 		{
 			// menu is a vertical stack, "layout"
@@ -96,5 +97,6 @@ namespace XNARTS
 				return layout_widgets;
 			}
 		}
+		*/
 	}
 }

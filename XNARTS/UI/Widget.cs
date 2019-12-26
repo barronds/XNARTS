@@ -47,6 +47,7 @@ namespace XNARTS
 			private Style				mStyle;
 			private long				mUID;
 			private eConstructionState	mConstructionState;
+			private Vector2             mAssembledSize;
 
 			// general usability/visibility state of the button
 			private bool        mInputEnabled;	// if in focus and visible, can still be interactive or not
@@ -82,9 +83,10 @@ namespace XNARTS
 				Num
 			}
 
-			public void AssembleWidget()
+			public void AssembleWidget( Vector2 size )
 			{
 				XUtils.Assert( mConstructionState == eConstructionState.Constructed );
+				mAssembledSize = size;
 				mConstructionState = eConstructionState.Assembled;
 			}
 
@@ -94,10 +96,10 @@ namespace XNARTS
 				mPosition = new UIPosition( parent, relative_aabb );
 			}
 
-			public void PlaceWidget( Widget parent, Style style, ePlacement placement, Vector2 size, eInitialState state )
+			public void PlaceWidget( Widget parent, Style style, ePlacement placement, eInitialState state )
 			{
 				PlaceWidgetCommon( style, state );
-				mPosition = new UIPosition( parent, placement, size );
+				mPosition = new UIPosition( parent, placement, mAssembledSize );
 			}
 
 			public void Reparent( Widget new_parent, ePlacement placement )
@@ -110,6 +112,11 @@ namespace XNARTS
 			{
 				XUtils.Assert( new_parent.IsPlaced() );
 				mPosition = new UIPosition( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
+			}
+
+			public Vector2 GetAssembledSize()
+			{
+				return mAssembledSize;
 			}
 
 			public UIPosition GetPosition()
@@ -296,9 +303,10 @@ namespace XNARTS
 			public ScreenWidget()
 			{
 				xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
-				AssembleWidget();
+				Vector2 size = new Vector2( screen_dim.x, screen_dim.y );
+				AssembleWidget( size );
 				PlaceWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), 
-							new xAABB2( Vector2.Zero, new Vector2( screen_dim.x, screen_dim.y ) ), Widget.eInitialState.Dormant );
+							new xAABB2( Vector2.Zero, size ), Widget.eInitialState.Dormant );
 				SetState( eInputChange.Disable, eFocusChange.None, eVisibilityChange.None );
 			}
 		}

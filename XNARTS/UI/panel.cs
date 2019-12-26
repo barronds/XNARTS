@@ -18,7 +18,7 @@ namespace XNARTS
 				mChildren = new List<Widget>();
 			}
 
-			public void Assemble()
+			public void Assemble( Vector2 size )
 			{
 				// extending class needs to explicitly assemble the children, then call this
 				for ( int c = 0; c < mChildren.Count; ++c )
@@ -26,7 +26,7 @@ namespace XNARTS
 					XUtils.Assert( mChildren[ c ].IsAssembled() );
 				}
 
-				AssembleWidget();
+				AssembleWidget( size );
 			}
 
 			public void Place( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
@@ -35,16 +35,26 @@ namespace XNARTS
 				PlaceWidget( parent, style, relative_aabb, state );
 			}
 
-			public void Place( Widget parent, Style style, Vector2 size, ePlacement placement, eInitialState state )
+			public void Place( Widget parent, Style style, ePlacement placement, eInitialState state )
 			{
 				// extending class needs to explicitly place itself with this method, then place its children
-				PlaceWidget( parent, style, placement, size, state );
+				PlaceWidget( parent, style, placement, state );
 			}
 
 			public void AddChild( Widget child )
 			{
 				XUtils.Assert( child != null && mChildren.Find( Widget.CompareWidgets( child ) ) == null );
 				mChildren.Add( child );
+			}
+
+			public int GetNumChildren()
+			{
+				return mChildren.Count();
+			}
+
+			public Widget GetChild( int i )
+			{
+				return mChildren[ i ];
 			}
 
 			public void RemoveChild( Widget child )

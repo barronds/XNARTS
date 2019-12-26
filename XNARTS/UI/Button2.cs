@@ -13,6 +13,7 @@ namespace XNARTS
 		{
 			private bool mPressedVisual;
 
+
 			public Button( Widget parent, Style style, String text, Vector2 pos, eInitialState state )
 			{
 				Init( style, text, out Vector2 label_size, out Label label );
@@ -25,7 +26,7 @@ namespace XNARTS
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
 				Init( style, text, out Vector2 label_size, out Label label );
-				Place( parent, style, label_size, placement, state );
+				Place( parent, style, placement, state );
 				PlaceLabel( label, style );
 			}
 
@@ -36,12 +37,12 @@ namespace XNARTS
 				label = new Label();
 				AddChild( label );
 				label.Assemble( style, text );
-				label_size = label.GetSize();
+				label_size = label.GetAssembledSize();
 
 				eFont font = style.mNormalFont;
 				float padding = style.mButtonPadding;
 				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
-				AssembleWidget();
+				AssembleWidget( size );
 			}
 
 			private void PlaceLabel( Label label, Style style )

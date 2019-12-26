@@ -12,35 +12,27 @@ namespace XNARTS
 		public class Label : Widget
 		{
 			private String	mText;
-			private Vector2	mSize;
 
 			public Label()
 			{
-				mSize = Vector2.Zero;
 			}
 
 			public void Assemble( Style style, String text )
 			{
-				mSize = CalcSize( text, style );
+				Vector2 size = CalcSize( text, style );
 				mText = text;
-				AssembleWidget();
+				AssembleWidget( size );
 			}
 
 			public void Place( Widget parent, Style style, ePlacement placement, eInitialState state )
 			{
-				PlaceWidget( parent, style, placement, mSize, state );
+				PlaceWidget( parent, style, placement, state );
 			}
 
 			public void Place( Widget parent, Style style, Vector2 pos, eInitialState state )
 			{
-				xAABB2 relative_aabb = new xAABB2( pos, pos + mSize );
+				xAABB2 relative_aabb = new xAABB2( pos, pos + GetAssembledSize() );
 				PlaceWidget( parent, style, relative_aabb, state );
-			}
-
-			public Vector2 GetSize()
-			{
-				XUtils.Assert( IsAssembled() );
-				return mSize;
 			}
 
 			private static Vector2 CalcSize( String text, Style style )
