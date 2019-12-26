@@ -46,7 +46,7 @@ namespace XNARTS
 				}
 
 				CalcPlacements( widgets, style );
-				base.Assemble( mSize );
+				base.AssemblePanel( mSize );
 			}
 
 			private void CalcPlacements( Widget[] widgets, Style style )

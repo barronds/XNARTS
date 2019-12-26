@@ -19,15 +19,15 @@ namespace XNARTS
 				Init( style, text, out Vector2 label_size, out Label label );
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
-				Place( parent, style, aabb, state );
-				PlaceLabel( label, style );
+				PlacePanel( parent, style, aabb, state );
+				PlaceButtonLabel( label, style );
 			}
 
 			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
 			{
 				Init( style, text, out Vector2 label_size, out Label label );
-				Place( parent, style, placement, state );
-				PlaceLabel( label, style );
+				PlacePanel( parent, style, placement, state );
+				PlaceButtonLabel( label, style );
 			}
 
 			private void Init( Style style, String text, out Vector2 label_size, out Label label )
@@ -36,7 +36,7 @@ namespace XNARTS
 
 				label = new Label();
 				AddChild( label );
-				label.Assemble( style, text );
+				label.AssembleLabel( style, text );
 				label_size = label.GetAssembledSize();
 
 				eFont font = style.mNormalFont;
@@ -45,9 +45,9 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
-			private void PlaceLabel( Label label, Style style )
+			private void PlaceButtonLabel( Label label, Style style )
 			{
-				label.Place( this, style, ePlacement.Centered, eInitialState.Dormant );
+				label.PlaceLabel( this, style, ePlacement.Centered, eInitialState.Dormant );
 			}
 
 			public void SetPressedVisual( bool pressed )
