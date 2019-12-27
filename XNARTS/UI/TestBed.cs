@@ -207,11 +207,14 @@ namespace XNARTS
 			private void Test_Button()
 			{
 				XUI ui = XUI.Instance();
-				XUI.Button bap_1 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ),
-													"Button As Panel 1", ePlacement.Centered, Widget.eInitialState.Active );
+				Style style_1 = ui.GetStyle( eStyle.GameplayUI );
+				Style style_2 = ui.GetStyle( eStyle.FrontendTest );
 
-				XUI.Button bap_2 = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( eStyle.FrontendTest ),
-													"Button As Panel 2", new Vector2( 100, 800 ), Widget.eInitialState.Active );
+				XUI.Button bap_1 = ui.CreateButton( style_1, "Button As Panel 1", ui.GetScreenWidget(), style_1, 
+													ePlacement.Centered, Widget.eInitialState.Active );
+
+				XUI.Button bap_2 = ui.CreateButton( style_2, "Button As Panel 2", ui.GetScreenWidget(), style_2,
+													new Vector2( 100, 800 ), Widget.eInitialState.Active );
 				AddRootWidget( ui, bap_1 );
 				AddRootWidget( ui, bap_2 );
 			}

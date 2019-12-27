@@ -11,38 +11,37 @@ namespace XNARTS
 	{
 		public class Button : Panel
 		{
-			private bool mPressedVisual;
+			private bool	mPressedVisual;
+			private Label   mLabel;
 
-
-			public Button( Widget parent, Style style, String text, Vector2 pos, eInitialState state )
+			public Button()
 			{
-				Init( style, text, out Vector2 label_size, out Label label );
-				float padding = style.mButtonPadding;
-				xAABB2 aabb = new xAABB2( pos, pos + label_size + 2.0f * new Vector2( padding, padding ) );
-				PlacePanel( parent, style, aabb, state );
-				PlaceButtonLabel( label, style );
+				mLabel = new Label();
+				AddChild( mLabel );
 			}
 
-			public Button( Widget parent, Style style, String text, ePlacement placement, eInitialState state )
-			{
-				Init( style, text, out Vector2 label_size, out Label label );
-				PlacePanel( parent, style, placement, state );
-				PlaceButtonLabel( label, style );
-			}
-
-			private void Init( Style style, String text, out Vector2 label_size, out Label label )
+			public void AssembleButton( Style style, String text )
 			{
 				mPressedVisual = false;
-
-				label = new Label();
-				AddChild( label );
-				label.AssembleLabel( style, text );
-				label_size = label.GetAssembledSize();
-
+				mLabel.AssembleLabel( style, text );
 				eFont font = style.mNormalFont;
 				float padding = style.mButtonPadding;
-				Vector2 size = label_size + 2.0f * new Vector2( padding, padding );
+				Vector2 size = mLabel.GetAssembledSize() + 2.0f * new Vector2( padding, padding );
 				AssembleWidget( size );
+			}
+
+			public void PlaceButton( Widget parent, Style style, Vector2 pos, eInitialState state )
+			{
+				float padding = style.mButtonPadding;
+				xAABB2 aabb = new xAABB2( pos, pos + mLabel.GetAssembledSize() + 2.0f * new Vector2( padding, padding ) );
+				PlacePanel( parent, style, aabb, state );
+				PlaceButtonLabel( mLabel, style );
+			}
+
+			public void PlaceButton( Widget parent, Style style, ePlacement placement, eInitialState state )
+			{
+				PlacePanel( parent, style, placement, state );
+				PlaceButtonLabel( mLabel, style );
 			}
 
 			private void PlaceButtonLabel( Label label, Style style )
@@ -77,6 +76,24 @@ namespace XNARTS
 				XUI.Instance().Util_DrawBox( simple_draw, background, s.mBorderColor, aabb );
 				RenderChildren( simple_draw );
 			}
+		}
+
+		public Button CreateButton(	Style button_style, String text, Widget parent, Style placement_style, 
+									Vector2 pos, Widget.eInitialState initial_state )
+		{
+			Button b = new Button();
+			b.AssembleButton( button_style, text );
+			b.PlaceButton( parent, placement_style, pos, initial_state );
+			return b;
+		}
+
+		public Button CreateButton( Style button_style, String text, Widget parent, Style placement_style,
+									ePlacement placement, Widget.eInitialState initial_state )
+		{
+			Button b = new Button();
+			b.AssembleButton( button_style, text );
+			b.PlaceButton( parent, placement_style, placement, initial_state );
+			return b;
 		}
 
 		private void SendButtonEvent<T>( bool pressed_now, XBroadcaster<T> b, T e ) where T : class

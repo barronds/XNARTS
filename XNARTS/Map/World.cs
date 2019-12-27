@@ -106,9 +106,10 @@ namespace XNARTS
 			mListener_ButtonNew = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButtonNew" );
 			ui.mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonNew );
 
-			mRegnerateMapButton = new XUI.Button(	ui.GetScreenWidget(), ui.GetStyle( XUI.eStyle.GameplayUI ),
-													"New Regenerate Map Button", new Vector2( 30, 30 ), 
-													XUI.Widget.eInitialState.Active );
+			XUI.Style button_style = ui.GetStyle( XUI.eStyle.GameplayUI );
+
+			mRegnerateMapButton = ui.CreateButton(	button_style, "New Regenerate Map Button", ui.GetScreenWidget(), button_style,
+													new Vector2( 30, 30 ), XUI.Widget.eInitialState.Active );
 			ui.AddRootWidget( mRegnerateMapButton );
 
 			//mRegnerateMapButton = ui._CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
