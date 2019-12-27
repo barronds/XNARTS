@@ -226,7 +226,6 @@ namespace XNARTS
 
 			private void Test_VerticalStack()
 			{
-				/*
 				XUI ui = XUI.Instance();
 				Style s = ui.GetStyle( eStyle.GameplayUI );
 
@@ -235,24 +234,22 @@ namespace XNARTS
 				XUI.Panel panel_3 = new XUI.Panel();
 				XUI.Panel panel_4 = new XUI.Panel();
 
-				panel_1.Assemble();
-				panel_2.Assemble();
-				panel_3.Assemble();
-				panel_4.Assemble();
+				panel_1.AssemblePanel( new Vector2( 50, 20 ) );
+				panel_2.AssemblePanel( new Vector2( 100, 30 ) );
+				panel_3.AssemblePanel( new Vector2( 70, 70 ) );
+				panel_4.AssemblePanel( new Vector2( 20, 100 ) );
 
-				//panel_1.Place(	ui.GetScreenWidget(), s, new Vector2( 50, 20 ), ePlacement.TopLeft, Widget.eInitialState.Active );
-				//panel_2.Place(	ui.GetScreenWidget(), s, new Vector2( 100, 30 ), ePlacement.TopLeft, Widget.eInitialState.Active );
-				//panel_3.Place(	ui.GetScreenWidget(), s, new Vector2( 70, 70 ), ePlacement.TopLeft, Widget.eInitialState.Active );
-				//panel_4.Place(	ui.GetScreenWidget(), s, new Vector2( 20, 100 ), ePlacement.TopLeft, Widget.eInitialState.Active );
-
-				XUI.Panel[] panels = { panel_1, panel_2, panel_3, panel_4 };
-
+				XUI.Widget[] widgets = { panel_1, panel_2, panel_3, panel_4 };
 				XUI.VerticalStack stack = new VerticalStack();
-				stack.AssembleWidget(  );
-				stack.InitVerticalStack( ui.GetScreenWidget(), panels, s, ePlacement.Centered, Widget.eInitialState.Active );
+				stack.AssembleVerticalStack( widgets, s );
+				stack.PlacePanel( ui.GetScreenWidget(), s, ePlacement.Centered, Widget.eInitialState.Active );
+
+				panel_1.PlacePanel( stack, s, stack.GetRelativePlacement( 0 ), Widget.eInitialState.Active );
+				panel_2.PlacePanel( stack, s, stack.GetRelativePlacement( 1 ), Widget.eInitialState.Active );
+				panel_3.PlacePanel( stack, s, stack.GetRelativePlacement( 2 ), Widget.eInitialState.Active );
+				panel_4.PlacePanel( stack, s, stack.GetRelativePlacement( 3 ), Widget.eInitialState.Active );
 
 				AddRootWidget( ui, stack );
-				*/
 			}
 		}
 

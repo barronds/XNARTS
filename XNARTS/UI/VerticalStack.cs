@@ -15,21 +15,13 @@ namespace XNARTS
 			// - create and assemble widgets individually outside this class
 			// - assmeble self (here)
 			// - place self (panel)
-			// - place widgets individually outside this class
+			// - place widgets individually outside this class using aabbs from GetRelativePlacement()
 			// - TODO: unify place() if possible so that we can generically call it within here.
 
-			Vector2		mSize;
-			xAABB2[]	mRelativePlacements;
+			xAABB2[] mRelativePlacements;
 
 			public VerticalStack()
 			{
-				// mSize, mRelativePlacements will be filled in by CalcPlacements
-			}
-
-			public Vector2 GetSize()
-			{
-				XUtils.Assert( IsAssembled() );
-				return mSize;
 			}
 
 			public xAABB2 GetRelativePlacement( int i )
@@ -38,18 +30,18 @@ namespace XNARTS
 				return mRelativePlacements[ i ];
 			}
 
-			public void Assemble( Widget[] widgets, Style style )
+			public void AssembleVerticalStack( Widget[] widgets, Style style )
 			{
 				for( int i = 0; i < widgets.Count(); ++i )
 				{
 					AddChild( widgets[ i ] );
 				}
 
-				CalcPlacements( widgets, style );
-				base.AssemblePanel( mSize );
+				Vector2 size = CalcPlacements( widgets, style );
+				base.AssemblePanel( size );
 			}
 
-			private void CalcPlacements( Widget[] widgets, Style style )
+			private Vector2 CalcPlacements( Widget[] widgets, Style style )
 			{
 				// calculate own aabb from already sized widgets
 				int num = widgets.Count();
@@ -59,8 +51,7 @@ namespace XNARTS
 
 				for ( int i = 0; i < num; ++i )
 				{
-					// XUtils.Assert( widgets[ i ].IsInitialized() );
-					Vector2 size = widgets[ i ].GetPosition().GetRelatveAABB().GetSize();
+					Vector2 size = widgets[ i ].GetAssembledSize();
 					vertical_sum += size.Y;
 
 					if ( size.X > horizontal_max )
@@ -79,15 +70,15 @@ namespace XNARTS
 				for ( int i = 0; i < num; ++i )
 				{
 					// center justification, could add more options later (left, right)
-					Vector2 size = widgets[ i ].GetPosition().GetRelatveAABB().GetSize();
+					Vector2 size = widgets[ i ].GetAssembledSize();
 					Vector2 top_left = new Vector2( center_x - 0.5f * size.X, y_cursor );
 					xAABB2 relative = new xAABB2( top_left, top_left + size );
-					//widgets[ i ].GetPosition().SetRelativeAABB( relative );
 					mRelativePlacements[ i ] = relative;
 					y_cursor += style.mPackingPadding + size.Y;
 				}
 
-				mSize = new Vector2( total_x, total_y );
+				// return the size
+				return new Vector2( total_x, total_y );
 			}
 		}
 	}
