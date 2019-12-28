@@ -9,6 +9,58 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
+		public class BasicMenu : VerticalStack
+		{
+			Style mButtonStyle;
+
+			public BasicMenu()
+			{ }
+
+			public void AssembleMenu( Style style, String[] texts )
+			{
+				XUtils.Assert( texts.Count() > 0 );
+				mButtonStyle = style;
+				Button[] buttons = new Button[ texts.Count() ];
+
+				for( int i = 0; i < texts.Count(); ++i )
+				{
+					XUtils.Assert( texts.Length > 0 );
+					buttons[ i ] = new Button();
+					buttons[ i ].AssembleButton( style, texts[ i ] );
+				}
+
+				AssembleVerticalStack( buttons, style );
+			}
+
+			public void PlaceMenu( Widget parent, Style style, ePlacement placement, eInitialState state )
+			{
+				PlacePanel( parent, style, placement, state );
+				PlaceButtons( state );
+			}
+
+			public void PlaceMenu( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
+			{
+				PlacePanel( parent, style, relative_aabb, state );
+				PlaceButtons( state );
+			}
+
+			private void PlaceButtons( eInitialState state )
+			{
+				for( int i = 0; i < GetNumChildren(); ++i )
+				{
+					((Button)GetChild( i )).PlaceButton( this, mButtonStyle, GetRelativePlacement( i ).GetMin(), state );
+				}
+			}
+		}
+
+
+
+
+
+
+
+
+
 		// alternate design, in progress: (outdated, leaving it here until i revise it)
 		//
 		// - each menu is an XMenu object, (which is a widget maybe)

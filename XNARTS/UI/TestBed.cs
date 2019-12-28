@@ -33,8 +33,8 @@ namespace XNARTS
 				mTestFuncs.Add( Test_Positioning );
 				mTestFuncs.Add( Test_Panel );
 				mTestFuncs.Add( Test_Button );
-				mTestFuncs.Add( Test_State );
 				mTestFuncs.Add( Test_VerticalStack );
+				mTestFuncs.Add( Test_BasicMenu );
 			}
 
 			public void Init()
@@ -219,11 +219,6 @@ namespace XNARTS
 				AddRootWidget( ui, bap_2 );
 			}
 
-			private void Test_State()
-			{
-
-			}
-
 			private void Test_VerticalStack()
 			{
 				XUI ui = XUI.Instance();
@@ -250,6 +245,17 @@ namespace XNARTS
 				panel_4.PlacePanel( stack, s, stack.GetRelativePlacement( 3 ), Widget.eInitialState.Active );
 
 				AddRootWidget( ui, stack );
+			}
+
+			private void Test_BasicMenu()
+			{
+				XUI ui = XUI.Instance();
+				Style s = ui.GetStyle( eStyle.Frontend );
+				String[] texts = { "First", "Another Button", "2nd to Last", " ", "5", "Back" };
+				BasicMenu m = new BasicMenu();
+				m.AssembleMenu( s, texts );
+				m.PlaceMenu( ui.GetScreenWidget(), s, ePlacement.TopRight, Widget.eInitialState.Active );
+				ui.AddRootWidget( m );
 			}
 		}
 
