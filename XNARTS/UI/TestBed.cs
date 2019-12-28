@@ -255,7 +255,7 @@ namespace XNARTS
 				BasicMenu m = new BasicMenu();
 				m.AssembleMenu( s, texts );
 				m.PlaceMenu( ui.GetScreenWidget(), s, ePlacement.TopRight, Widget.eInitialState.Active );
-				ui.AddRootWidget( m );
+				AddRootWidget( ui, m );
 			}
 		}
 
