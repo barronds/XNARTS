@@ -100,7 +100,7 @@ namespace XNARTS
 
 			AddStyle( eStyle.Frontend, new Style(	eStyle.Frontend, eFont.Consolas36, Color.White, ui_background,
 													Color.Lerp( ui_background, Color.White, k_pressed_blend ),
-													Color.White, 0.0f, 0.0f, 0.0f ) );
+													ui_background, 0.05f, 1.0f, 0.1f ) );
 
 			AddStyle( eStyle.FrontendButton, new Style(	eStyle.FrontendButton, eFont.Consolas36, Color.White, ui_background,
 														Color.Lerp( Color.DarkViolet, Color.White, k_pressed_blend ),

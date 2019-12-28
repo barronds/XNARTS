@@ -20,13 +20,15 @@ namespace XNARTS
 			{
 				XUtils.Assert( texts.Count() > 0 );
 				mButtonStyle = style;
-				Button[] buttons = new Button[ texts.Count() ];
+				String[] padded_texts = PadButtonTexts( texts );
+
+				Button[] buttons = new Button[ padded_texts.Count() ];
 
 				for( int i = 0; i < texts.Count(); ++i )
 				{
-					XUtils.Assert( texts.Length > 0 );
+					XUtils.Assert( padded_texts.Length > 0 );
 					buttons[ i ] = new Button();
-					buttons[ i ].AssembleButton( style, texts[ i ] );
+					buttons[ i ].AssembleButton( style, padded_texts[ i ] );
 				}
 
 				AssembleVerticalStack( buttons, style );
@@ -51,6 +53,41 @@ namespace XNARTS
 					((Button)GetChild( i )).PlaceButton( this, mButtonStyle, GetRelativePlacement( i ).GetMin(), state );
 				}
 			}
+
+			private int GetLongestString( String[] strings )
+			{
+				int longest = 0;
+
+				for ( int i = 0; i < strings.Length; ++i )
+				{
+					longest = Math.Max( longest, strings[ i ].Length );
+				}
+
+				return longest;
+			}
+
+			private String PadButtonText( String text, int longest )
+			{
+				int length = text.Length;
+				int shortfall = longest - length;
+				int even_floor_half_shortfall = shortfall / 2;
+				String padding = XUtils.GetNSpaces( even_floor_half_shortfall );
+				return padding + text + padding;
+			}
+
+			private String[] PadButtonTexts( String[] input )
+			{
+				int longest_text_length = GetLongestString( input );
+				String[] output = new string[ input.Length ];
+
+				for ( int i = 0; i < input.Length; ++i )
+				{
+					output[ i ] = PadButtonText( input[ i ], longest_text_length );
+				}
+
+				return output;
+			}
+
 		}
 
 
@@ -84,71 +121,71 @@ namespace XNARTS
 		//   UID or index of button because of dynamic addition/removal.  strings should be unique otherwise there would be 
 		//   an ambiguity visually in the menu.
 
-/*
-		public class Menu_TitleEntriesControls : VerticalStack
-		{
-			// menu is a vertical stack, "layout"
-			// the layout holds in it a title, and 2 vertical stacks, "entries" and "controls".
-			// this class doesn't need to hold anything.  layout owns the 3.  entries and controls owns the buttons.
-						
-			public Menu_TitleEntriesControls()
-			{ }
-
-			// maybe return the binding here of uids to entries so the client has a chance to map inputs.
-			// thought 2: instead just have menu selection event with an enum value that says entry or control,
-			// then also return the index of that array, and even maybe the string.
-			public void InitMenu(	Widget parent, Style layout_style, Style title_style, Style entry_style, Style control_style, 
-									String title, String[] entries, String[] controls, ePlacement placement, 
-									eInitialState state )
-			{
-				Widget[] layout_widgets = Init( parent, layout_style, title_style, entry_style, control_style, title, entries, controls, state );		
-				InitVerticalStack( parent, layout_widgets, layout_style, placement, state );
-
-				for( int i = 0; i < layout_widgets.Count(); ++i )
+		/*
+				public class Menu_TitleEntriesControls : VerticalStack
 				{
-					//layout_widgets[ i ].Reparent( this, )
+					// menu is a vertical stack, "layout"
+					// the layout holds in it a title, and 2 vertical stacks, "entries" and "controls".
+					// this class doesn't need to hold anything.  layout owns the 3.  entries and controls owns the buttons.
+
+					public Menu_TitleEntriesControls()
+					{ }
+
+					// maybe return the binding here of uids to entries so the client has a chance to map inputs.
+					// thought 2: instead just have menu selection event with an enum value that says entry or control,
+					// then also return the index of that array, and even maybe the string.
+					public void InitMenu(	Widget parent, Style layout_style, Style title_style, Style entry_style, Style control_style, 
+											String title, String[] entries, String[] controls, ePlacement placement, 
+											eInitialState state )
+					{
+						Widget[] layout_widgets = Init( parent, layout_style, title_style, entry_style, control_style, title, entries, controls, state );		
+						InitVerticalStack( parent, layout_widgets, layout_style, placement, state );
+
+						for( int i = 0; i < layout_widgets.Count(); ++i )
+						{
+							//layout_widgets[ i ].Reparent( this, )
+						}
+					}
+
+					public void InitMenu(	Widget parent, Style layout_style, Style title_style, Style entry_style, Style control_style,
+											String title, String[] entries, String[] controls, Vector2 pos, eInitialState state )
+					{
+
+					}
+
+					private Widget[] Init(	Widget parent, Style layout_style, Style title_style, Style entry_style, Style control_style,
+											String title, String[] entries, String[] controls, eInitialState state )
+					{
+						XUtils.Assert( title != null && entries.Count() > 0 && controls.Count() > 0 );
+						VerticalStack entries_stack = new VerticalStack();
+						VerticalStack controls_stack = new VerticalStack();
+
+						//Label title_label = new Label( parent, title, title_style, Vector2.Zero, state );
+						Label title_label = new Label();
+						title_label.Assemble( title_style, title );
+						title_label.Place( parent, title_style, Vector2.Zero, state );
+
+						Button[] entry_buttons = new Button[ entries.Count() ];
+						Button[] control_buttons = new Button[ controls.Count() ];
+
+						for ( int i = 0; i < entries.Count(); ++i )
+						{
+							Button b = new Button( parent, entry_style, entries[ i ], Vector2.Zero, state );
+							entry_buttons.SetValue( b, i );
+						}
+
+						for ( int i = 0; i < controls.Count(); ++i )
+						{
+							Button b = new Button( parent, control_style, controls[ i ], Vector2.Zero, state );
+							control_buttons.SetValue( b, i );
+						}
+
+						entries_stack.InitVerticalStack( parent, entry_buttons, entry_style, Vector2.Zero, state );
+						controls_stack.InitVerticalStack( parent, control_buttons, control_style, Vector2.Zero, state );
+						Widget[] layout_widgets = { title_label, entries_stack, controls_stack };
+						return layout_widgets;
+					}
 				}
-			}
-
-			public void InitMenu(	Widget parent, Style layout_style, Style title_style, Style entry_style, Style control_style,
-									String title, String[] entries, String[] controls, Vector2 pos, eInitialState state )
-			{
-
-			}
-
-			private Widget[] Init(	Widget parent, Style layout_style, Style title_style, Style entry_style, Style control_style,
-									String title, String[] entries, String[] controls, eInitialState state )
-			{
-				XUtils.Assert( title != null && entries.Count() > 0 && controls.Count() > 0 );
-				VerticalStack entries_stack = new VerticalStack();
-				VerticalStack controls_stack = new VerticalStack();
-
-				//Label title_label = new Label( parent, title, title_style, Vector2.Zero, state );
-				Label title_label = new Label();
-				title_label.Assemble( title_style, title );
-				title_label.Place( parent, title_style, Vector2.Zero, state );
-
-				Button[] entry_buttons = new Button[ entries.Count() ];
-				Button[] control_buttons = new Button[ controls.Count() ];
-
-				for ( int i = 0; i < entries.Count(); ++i )
-				{
-					Button b = new Button( parent, entry_style, entries[ i ], Vector2.Zero, state );
-					entry_buttons.SetValue( b, i );
-				}
-
-				for ( int i = 0; i < controls.Count(); ++i )
-				{
-					Button b = new Button( parent, control_style, controls[ i ], Vector2.Zero, state );
-					control_buttons.SetValue( b, i );
-				}
-
-				entries_stack.InitVerticalStack( parent, entry_buttons, entry_style, Vector2.Zero, state );
-				controls_stack.InitVerticalStack( parent, control_buttons, control_style, Vector2.Zero, state );
-				Widget[] layout_widgets = { title_label, entries_stack, controls_stack };
-				return layout_widgets;
-			}
-		}
-		*/
+				*/
 	}
 }
