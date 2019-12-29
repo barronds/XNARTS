@@ -15,6 +15,7 @@ namespace XNARTS
 
 			private XListener< XTouch.FourContacts >	mListener_FourContacts;
 			private XListener< XKeyInput.KeyUp >        mListener_KeyUp;
+			private XListener< ButtonUpEvent >          mListener_ButtonUp;
 			private bool                                mTesting;
 			private int                                 mTestFuncIndex;
 			private List< TestFunc >					mTestFuncs;
@@ -44,15 +45,24 @@ namespace XNARTS
 
 				mListener_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "XUITBKU" );
 				XBulletinBoard.Instance().mBroadcaster_KeyUp.Subscribe( mListener_KeyUp );
+
+				mListener_ButtonUp = new XListener<ButtonUpEvent>( 1, eEventQueueFullBehaviour.Assert, "XUITBBU" );
+				XUI.Instance().mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonUp );
 			}
 
 			public void Update( GameTime game_time )
 			{
+				Update_TriggerTests();
+				Update_TestInput();
+			}
+
+			private void Update_TriggerTests()
+			{
 				bool trigger_test = false;
 
-				if( mListener_FourContacts.GetMaxOne() != null )
+				if ( mListener_FourContacts.GetMaxOne() != null )
 				{
-					if( mTesting )
+					if ( mTesting )
 					{
 						RemoveRootWidgets();
 						mTesting = false;
@@ -65,7 +75,7 @@ namespace XNARTS
 					}
 				}
 
-				if( mTesting )
+				if ( mTesting )
 				{
 					XKeyInput.KeyUp key = mListener_KeyUp.GetMaxOne();
 
@@ -75,12 +85,17 @@ namespace XNARTS
 					}
 				}
 
-				if( trigger_test )
+				if ( trigger_test )
 				{
 					RemoveRootWidgets();
 					mTestFuncs[ mTestFuncIndex ]();
 					mTestFuncIndex = (mTestFuncIndex + 1) % mTestFuncs.Count();
 				}
+			}
+
+			private void Update_TestInput()
+			{
+				mListener_ButtonUp.IgnoreAll();
 			}
 
 			private void AddRootWidget( XUI ui, Widget w )

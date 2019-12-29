@@ -119,6 +119,12 @@ namespace XNARTS
 		{
 			return mEvents.Count;
 		}
+
+		// ignore all events - useful during development to avoid asserts for not handling them as they pile up
+		public void IgnoreAll()
+		{
+			mEvents.Clear();
+		}
 	}
 
 
