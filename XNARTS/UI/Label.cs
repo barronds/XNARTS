@@ -24,15 +24,15 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
-			public void PlaceLabel( Widget parent, Style style, ePlacement placement, eInitialState state )
+			public void PlaceLabel( Widget parent, Style style, ePlacement placement )
 			{
-				PlaceWidget( parent, style, placement, state );
+				PlaceWidget( parent, style, placement );
 			}
 
-			public void PlaceLabel( Widget parent, Style style, Vector2 pos, eInitialState state )
+			public void PlaceLabel( Widget parent, Style style, Vector2 pos )
 			{
 				xAABB2 relative_aabb = new xAABB2( pos, pos + GetAssembledSize() );
-				PlaceWidget( parent, style, relative_aabb, state );
+				PlaceWidget( parent, style, relative_aabb );
 			}
 
 			private static Vector2 CalcSize( String text, Style style )

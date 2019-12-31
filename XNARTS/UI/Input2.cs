@@ -37,13 +37,6 @@ namespace XNARTS
 
 			if ( mCurrentlyPressed != null )
 			{
-				// first check if button disabled before considering input
-				if ( !mCurrentlyPressed.IsInteractable() )
-				{
-					SendButtonAbortEvent();
-					return;
-				}
-
 				XUtils.Assert( data != null, "should have hold, end, or abort" );
 
 				if ( data.mDetail == XTouch.ePokeDetail.Hold )
@@ -83,7 +76,7 @@ namespace XNARTS
 				// new press, let's see if it hits a button
 				for( int i = 0; i < mActiveButtons.Count; ++i )
 				{
-					if( mActiveButtons[ i ].Contains( data.mCurrentPos ) && mActiveButtons[ i ].IsInteractable() )
+					if( mActiveButtons[ i ].Contains( data.mCurrentPos ) )
 					{
 						mCurrentlyPressed = mActiveButtons[ i ];
 						SendButtonDownEvent();

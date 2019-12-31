@@ -30,40 +30,28 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
-			public void PlaceButton( Widget parent, Style style, Vector2 pos, eInitialState state )
+			public void PlaceButton( Widget parent, Style style, Vector2 pos )
 			{
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + mLabel.GetAssembledSize() + 2.0f * new Vector2( padding, padding ) );
-				PlacePanel( parent, style, aabb, state );
+				PlacePanel( parent, style, aabb );
 				PlaceButtonLabel( mLabel, style );
 			}
 
-			public void PlaceButton( Widget parent, Style style, ePlacement placement, eInitialState state )
+			public void PlaceButton( Widget parent, Style style, ePlacement placement )
 			{
-				PlacePanel( parent, style, placement, state );
+				PlacePanel( parent, style, placement );
 				PlaceButtonLabel( mLabel, style );
 			}
 
 			private void PlaceButtonLabel( Label label, Style style )
 			{
-				label.PlaceLabel( this, style, ePlacement.Centered, eInitialState.Dormant );
+				label.PlaceLabel( this, style, ePlacement.Centered );
 			}
 
 			public void SetPressedVisual( bool pressed )
 			{
 				mPressedVisual = pressed;
-			}
-
-			public override void FacilitateInteractability( bool interactable )
-			{
-				if( interactable )
-				{
-					XUI.Instance().AddActiveButton( this );
-				}
-				else
-				{
-					XUI.Instance().RemoveActiveButton( this );
-				}
 			}
 
 			public override void Render( XSimpleDraw simple_draw )
@@ -76,24 +64,6 @@ namespace XNARTS
 				XUI.Instance().Util_DrawBox( simple_draw, background, s.mBorderColor, aabb );
 				RenderChildren( simple_draw );
 			}
-		}
-
-		public Button CreateButton(	Style button_style, String text, Widget parent, Style placement_style, 
-									Vector2 pos, Widget.eInitialState initial_state )
-		{
-			Button b = new Button();
-			b.AssembleButton( button_style, text );
-			b.PlaceButton( parent, placement_style, pos, initial_state );
-			return b;
-		}
-
-		public Button CreateButton( Style button_style, String text, Widget parent, Style placement_style,
-									ePlacement placement, Widget.eInitialState initial_state )
-		{
-			Button b = new Button();
-			b.AssembleButton( button_style, text );
-			b.PlaceButton( parent, placement_style, placement, initial_state );
-			return b;
 		}
 
 		private void SendButtonEvent<T>( bool pressed_now, XBroadcaster<T> b, T e ) where T : class

@@ -122,12 +122,12 @@ namespace XNARTS
 
 				Label label_1 = new XUI.Label();
 				label_1.AssembleLabel( ui.GetStyle( eStyle.Frontend ), "Test Widget 1" );
-				label_1.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), ePlacement.CenteredBottom, Widget.eInitialState.Active );
+				label_1.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), ePlacement.CenteredBottom );
 				AddRootWidget( ui, label_1 );
 
 				XUI.Label label_2 = new XUI.Label();
 				label_2.AssembleLabel( ui.GetStyle( eStyle.GameplayUI ), "Test Widget 2" );
-				label_2.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new Vector2( 200, 200 ), Widget.eInitialState.Active );
+				label_2.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new Vector2( 200, 200 ) );
 				AddRootWidget( ui, label_2 );
 			}
 
@@ -142,7 +142,7 @@ namespace XNARTS
 					ePlacement p = (ePlacement)i;
 					XUI.Label label = new XUI.Label();
 					label.AssembleLabel( s, p.ToString() );
-					label.PlaceLabel( w, s, p, Widget.eInitialState.Active );
+					label.PlaceLabel( w, s, p );
 					AddRootWidget( ui, label );
 				}
 			}
@@ -203,18 +203,18 @@ namespace XNARTS
 				panel_2.AssemblePanel( panel_2_aabb.GetSize() );
 				panel_1.AssemblePanel( panel_1_aabb.GetSize() );
 
-				panel_1.PlacePanel( ui.GetScreenWidget(),  ui.GetStyle( eStyle.FrontendTest ), panel_1_aabb, Widget.eInitialState.Active );
-				panel_2.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), panel_2_aabb, Widget.eInitialState.Active );
-				panel_3.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.Centered, Widget.eInitialState.Active );
-				panel_4.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.TopLeft, Widget.eInitialState.Active );
-				panel_5.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredTop, Widget.eInitialState.Active );
-				panel_6.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.TopRight, Widget.eInitialState.Active );
-				panel_7.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredRight, Widget.eInitialState.Active );
-				panel_8.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.BottomRight, Widget.eInitialState.Active );
-				panel_9.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredBottom, Widget.eInitialState.Active );
-				panel_10.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.BottomLeft, Widget.eInitialState.Active );
-				panel_11.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredLeft, Widget.eInitialState.Active );
-				panel_12.PlacePanel( panel_2, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredLeft, Widget.eInitialState.Active );
+				panel_1.PlacePanel( ui.GetScreenWidget(),  ui.GetStyle( eStyle.FrontendTest ), panel_1_aabb );
+				panel_2.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), panel_2_aabb );
+				panel_3.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.Centered );
+				panel_4.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.TopLeft );
+				panel_5.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredTop );
+				panel_6.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.TopRight );
+				panel_7.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredRight );
+				panel_8.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.BottomRight );
+				panel_9.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredBottom );
+				panel_10.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.BottomLeft );
+				panel_11.PlacePanel( panel_1, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredLeft );
+				panel_12.PlacePanel( panel_2, ui.GetStyle( eStyle.FrontendTest ), ePlacement.CenteredLeft );
 
 				AddRootWidget( ui, panel_1 );
 			}
@@ -226,10 +226,10 @@ namespace XNARTS
 				Style style_2 = ui.GetStyle( eStyle.FrontendTest );
 
 				XUI.Button bap_1 = ui.CreateButton( style_1, "Button As Panel 1", ui.GetScreenWidget(), style_1, 
-													ePlacement.Centered, Widget.eInitialState.Active );
+													ePlacement.Centered );
 
 				XUI.Button bap_2 = ui.CreateButton( style_2, "Button As Panel 2", ui.GetScreenWidget(), style_2,
-													new Vector2( 100, 800 ), Widget.eInitialState.Active );
+													new Vector2( 100, 800 ) );
 				AddRootWidget( ui, bap_1 );
 				AddRootWidget( ui, bap_2 );
 			}
@@ -252,12 +252,12 @@ namespace XNARTS
 				XUI.Widget[] widgets = { panel_1, panel_2, panel_3, panel_4 };
 				XUI.VerticalStack stack = new VerticalStack();
 				stack.AssembleVerticalStack( widgets, s );
-				stack.PlacePanel( ui.GetScreenWidget(), s, ePlacement.Centered, Widget.eInitialState.Active );
+				stack.PlacePanel( ui.GetScreenWidget(), s, ePlacement.Centered );
 
-				panel_1.PlacePanel( stack, s, stack.GetRelativePlacement( 0 ), Widget.eInitialState.Active );
-				panel_2.PlacePanel( stack, s, stack.GetRelativePlacement( 1 ), Widget.eInitialState.Active );
-				panel_3.PlacePanel( stack, s, stack.GetRelativePlacement( 2 ), Widget.eInitialState.Active );
-				panel_4.PlacePanel( stack, s, stack.GetRelativePlacement( 3 ), Widget.eInitialState.Active );
+				panel_1.PlacePanel( stack, s, stack.GetRelativePlacement( 0 ) );
+				panel_2.PlacePanel( stack, s, stack.GetRelativePlacement( 1 ) );
+				panel_3.PlacePanel( stack, s, stack.GetRelativePlacement( 2 ) );
+				panel_4.PlacePanel( stack, s, stack.GetRelativePlacement( 3 ) );
 
 				AddRootWidget( ui, stack );
 			}
@@ -269,7 +269,7 @@ namespace XNARTS
 				String[] texts = { "First", "Another Button", "2nd to Last", " ", "5", "Back" };
 				BasicMenu m = new BasicMenu();
 				m.AssembleMenu( s, texts );
-				m.PlaceMenu( ui.GetScreenWidget(), s, ePlacement.TopRight, Widget.eInitialState.Active );
+				m.PlaceMenu( ui.GetScreenWidget(), s, ePlacement.TopRight );
 				AddRootWidget( ui, m );
 			}
 		}

@@ -62,10 +62,7 @@ namespace XNARTS
 		{
 			for ( int i = 0; i < mRootWidgets.Count; ++i )
 			{
-				if( mRootWidgets[ i ].IsVisible() )
-				{
-					mRootWidgets[ i ].Render( mSimpleDraw );
-				}
+				mRootWidgets[ i ].Render( mSimpleDraw );
 			}
 		}
 	}

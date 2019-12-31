@@ -38,6 +38,16 @@ namespace XNARTS
 			XUtils.Assert( removed );
 		}
 
+		private void Constructor_WidgetManager()
+		{
+			mRootWidgets = new List<XUI.Widget>();
+		}
+
+
+
+
+		// not sure about this yet
+		/*
 		public void PushWidget( Widget parent )
 		{
 
@@ -47,11 +57,7 @@ namespace XNARTS
 		{
 
 		}
-
-		private void Constructor_WidgetManager()
-		{
-			mRootWidgets = new List<XUI.Widget>();
-		}
+		*/
 	}
 
 }

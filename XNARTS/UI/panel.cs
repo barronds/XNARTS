@@ -29,16 +29,16 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
-			public void PlacePanel( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
+			public void PlacePanel( Widget parent, Style style, xAABB2 relative_aabb )
 			{
 				// extending class needs to explicitly place itself with this method, then place its children
-				PlaceWidget( parent, style, relative_aabb, state );
+				PlaceWidget( parent, style, relative_aabb );
 			}
 
-			public void PlacePanel( Widget parent, Style style, ePlacement placement, eInitialState state )
+			public void PlacePanel( Widget parent, Style style, ePlacement placement )
 			{
 				// extending class needs to explicitly place itself with this method, then place its children
-				PlaceWidget( parent, style, placement, state );
+				PlaceWidget( parent, style, placement );
 			}
 
 			public void AddChild( Widget child )
@@ -60,22 +60,6 @@ namespace XNARTS
 			public void RemoveChild( Widget child )
 			{
 				XUtils.Assert( child != null && mChildren.Remove( child ) );
-			}
-
-			public override void FacilitateInteractability( bool interactable )
-			{
-				// TODO: haven't thought about this yet
-				base.FacilitateInteractability( interactable );
-			}
-
-			public override void SetState( eInputChange i, eFocusChange f, eVisibilityChange v )
-			{
-				base.SetState( i, f, v );
-
-				for( int c = 0; c < mChildren.Count; ++c )
-				{
-					mChildren[ c ].SetState( i, f, v );
-				}
 			}
 
 			public override void Render( XSimpleDraw simple_draw )

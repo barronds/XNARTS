@@ -34,23 +34,27 @@ namespace XNARTS
 				AssembleVerticalStack( buttons, style );
 			}
 
-			public void PlaceMenu( Widget parent, Style style, ePlacement placement, eInitialState state )
+			public void PlaceMenu( Widget parent, Style style, ePlacement placement )
 			{
-				PlacePanel( parent, style, placement, state );
-				PlaceButtons( state );
+				PlacePanel( parent, style, placement );
+				PlaceButtons();
 			}
 
-			public void PlaceMenu( Widget parent, Style style, xAABB2 relative_aabb, eInitialState state )
+			public void PlaceMenu( Widget parent, Style style, xAABB2 relative_aabb )
 			{
-				PlacePanel( parent, style, relative_aabb, state );
-				PlaceButtons( state );
+				PlacePanel( parent, style, relative_aabb );
+				PlaceButtons();
 			}
 
-			private void PlaceButtons( eInitialState state )
+			private void PlaceButtons()
 			{
+				XUI ui = XUI.Instance();
+
 				for( int i = 0; i < GetNumChildren(); ++i )
 				{
-					((Button)GetChild( i )).PlaceButton( this, mButtonStyle, GetRelativePlacement( i ).GetMin(), state );
+					Button b = (Button)GetChild( i );
+					b.PlaceButton( this, mButtonStyle, GetRelativePlacement( i ).GetMin() );
+					ui.AddActiveButton( b );
 				}
 			}
 
