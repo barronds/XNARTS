@@ -20,6 +20,7 @@ namespace XNARTS
 			private int                                 mTestFuncIndex;
 			private List< TestFunc >					mTestFuncs;
 			private List< Widget >                      mRootWidgets;
+			private List< Button >                      mRootButtons;
 
 
 			public TestBed()
@@ -27,6 +28,7 @@ namespace XNARTS
 				mTesting = false;
 				mTestFuncIndex = 0;
 				mRootWidgets = new List<Widget>();
+				mRootButtons = new List<Button>();
 
 				// update this manually when a test func is added
 				mTestFuncs = new List<TestFunc>();
@@ -64,7 +66,7 @@ namespace XNARTS
 				{
 					if ( mTesting )
 					{
-						RemoveRootWidgets();
+						CleanupRootWidgets();
 						mTesting = false;
 					}
 					else
@@ -87,7 +89,7 @@ namespace XNARTS
 
 				if ( trigger_test )
 				{
-					RemoveRootWidgets();
+					CleanupRootWidgets();
 					mTestFuncs[ mTestFuncIndex ]();
 					mTestFuncIndex = (mTestFuncIndex + 1) % mTestFuncs.Count();
 				}
@@ -104,7 +106,12 @@ namespace XNARTS
 				ui.AddRootWidget( w );
 			}
 
-			private void RemoveRootWidgets()
+			private void AddRootButton( Button b )
+			{
+				mRootButtons.Add( b );
+			}
+
+			private void CleanupRootWidgets()
 			{
 				XUI ui = XUI.Instance();
 
@@ -113,7 +120,14 @@ namespace XNARTS
 					ui.RemoveRootWidget( mRootWidgets[ i ] );
 				}
 
+				for( int i = 0; i < mRootButtons.Count(); ++i )
+				{
+					ui.RemoveRootWidget( mRootButtons[ i ] );
+					ui.RemoveActiveButton( mRootButtons[ i ] );
+				}
+
 				mRootWidgets.Clear();
+				mRootButtons.Clear();
 			}
 
 			private void Test_Label()
@@ -230,8 +244,8 @@ namespace XNARTS
 
 				XUI.Button bap_2 = ui.CreateButton( style_2, "Button As Panel 2", ui.GetScreenWidget(), style_2,
 													new Vector2( 100, 800 ) );
-				AddRootWidget( ui, bap_1 );
-				AddRootWidget( ui, bap_2 );
+				AddRootButton( bap_1 );
+				AddRootButton( bap_2 );
 			}
 
 			private void Test_VerticalStack()

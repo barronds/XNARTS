@@ -15,6 +15,7 @@ namespace XNARTS
 			b.AssembleButton( button_style, text );
 			b.PlaceButton( parent, placement_style, pos );
 			AddActiveButton( b );
+			AddRootWidget( b );
 			return b;
 		}
 
@@ -24,7 +25,14 @@ namespace XNARTS
 			b.AssembleButton( button_style, text );
 			b.PlaceButton( parent, placement_style, placement );
 			AddActiveButton( b );
+			AddRootWidget( b );
 			return b;
+		}
+
+		public void DestroyButton( Button b )
+		{
+			RemoveActiveButton( b );
+			RemoveRootWidget( b );
 		}
 
 	}

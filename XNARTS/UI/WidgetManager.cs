@@ -24,7 +24,7 @@ namespace XNARTS
 
 		private List< XUI.Widget > mRootWidgets;
 
-		public void AddRootWidget( Widget w )
+		private void AddRootWidget( Widget w )
 		{
 			Widget existing = mRootWidgets.Find( XUI.Widget.CompareWidgets( w ) );
 			XUtils.Assert( existing == null );
@@ -32,7 +32,7 @@ namespace XNARTS
 			mRootWidgets.Add( w );
 		}
 
-		public void RemoveRootWidget( Widget w )
+		private void RemoveRootWidget( Widget w )
 		{
 			bool removed = mRootWidgets.Remove( w );
 			XUtils.Assert( removed );
