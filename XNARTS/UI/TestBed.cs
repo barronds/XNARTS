@@ -21,6 +21,7 @@ namespace XNARTS
 			private List< TestFunc >					mTestFuncs;
 			private List< Widget >                      mRootWidgets;
 			private List< Button >                      mRootButtons;
+			private List< BasicMenu >                   mRootBasicMenus;
 
 
 			public TestBed()
@@ -29,6 +30,7 @@ namespace XNARTS
 				mTestFuncIndex = 0;
 				mRootWidgets = new List<Widget>();
 				mRootButtons = new List<Button>();
+				mRootBasicMenus = new List<BasicMenu>();
 
 				// update this manually when a test func is added
 				mTestFuncs = new List<TestFunc>();
@@ -111,6 +113,12 @@ namespace XNARTS
 				mRootButtons.Add( b );
 			}
 
+			private void AddRootBasicMenu( XUI ui, BasicMenu m )
+			{
+				mRootBasicMenus.Add( m );
+				ui.AddRootWidget( m );
+			}
+
 			private void CleanupRootWidgets()
 			{
 				XUI ui = XUI.Instance();
@@ -122,12 +130,18 @@ namespace XNARTS
 
 				for( int i = 0; i < mRootButtons.Count(); ++i )
 				{
-					ui.RemoveRootWidget( mRootButtons[ i ] );
-					ui.RemoveActiveButton( mRootButtons[ i ] );
+					ui.DestroyButton( mRootButtons[ i ] );
+				}
+
+				for( int i = 0; i < mRootBasicMenus.Count(); ++i )
+				{
+					ui.DestroyBasicMenu( mRootBasicMenus[ i ] );
+
 				}
 
 				mRootWidgets.Clear();
 				mRootButtons.Clear();
+				mRootBasicMenus.Clear();
 			}
 
 			private void Test_Label()
@@ -284,7 +298,7 @@ namespace XNARTS
 				BasicMenu m = new BasicMenu();
 				m.AssembleMenu( s, texts );
 				m.PlaceMenu( ui.GetScreenWidget(), s, ePlacement.TopRight );
-				AddRootWidget( ui, m );
+				AddRootBasicMenu( ui, m );
 			}
 		}
 

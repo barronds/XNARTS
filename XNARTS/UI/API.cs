@@ -35,5 +35,10 @@ namespace XNARTS
 			RemoveRootWidget( b );
 		}
 
+		public void DestroyBasicMenu( BasicMenu m )
+		{
+			m.Destroy();
+			RemoveRootWidget( m );
+		}
 	}
 }

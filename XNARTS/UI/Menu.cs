@@ -46,6 +46,17 @@ namespace XNARTS
 				PlaceButtons();
 			}
 
+			public void Destroy()
+			{
+				XUI ui = XUI.Instance();
+
+				for ( int i = 0; i < GetNumChildren(); ++i )
+				{
+					Button b = (Button)GetChild( i );
+					ui.RemoveActiveButton( b );
+				}
+			}
+
 			private void PlaceButtons()
 			{
 				XUI ui = XUI.Instance();
