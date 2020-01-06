@@ -26,13 +26,13 @@ namespace XNARTS
 
 			public void PlaceLabel( Widget parent, Style style, ePlacement placement )
 			{
-				PlaceWidget( parent, style, placement );
+				PlaceWidget( parent, style, new UIPosSpec( placement, GetAssembledSize() ) );
 			}
 
 			public void PlaceLabel( Widget parent, Style style, Vector2 pos )
 			{
 				xAABB2 relative_aabb = new xAABB2( pos, pos + GetAssembledSize() );
-				PlaceWidget( parent, style, relative_aabb );
+				PlaceWidget( parent, style, new UIPosSpec( relative_aabb ) );
 			}
 
 			private static Vector2 CalcSize( String text, Style style )

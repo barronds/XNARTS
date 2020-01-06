@@ -112,26 +112,7 @@ namespace XNARTS
 			private xAABB2		mRelativeAABB;	// relative to parent's aabb min point
 			private Widget      mParent;		// can be null, for screen widget
 
-			// constructor for absolute position relative to widget.  use screen widget for screen space position.
-			public UIPosition( Widget parent, xAABB2 relative_aabb )
-			{
-				UIPosSpec spec = new UIPosSpec( relative_aabb );
-				Construct( parent, spec );
-			}
-
-			// constructor for placement relative to a widget.  use screen widget for screen placement.
-			public UIPosition( Widget parent, ePlacement placement, Vector2 size )
-			{
-				UIPosSpec spec = new UIPosSpec( placement, size );
-				Construct( parent, spec );
-			}
-
 			public UIPosition( Widget parent, UIPosSpec spec )
-			{
-				Construct( parent, spec );
-			}
-
-			private void Construct( Widget parent, UIPosSpec spec )
 			{
 				if( spec.IsAbsolute() )
 				{

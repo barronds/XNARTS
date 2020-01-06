@@ -72,28 +72,24 @@ namespace XNARTS
 				mConstructionState = eConstructionState.Assembled;
 			}
 
-			public void PlaceWidget( Widget parent, Style style, xAABB2 relative_aabb )
+			public void PlaceWidget( Widget parent, Style style, UIPosSpec spec )
 			{
 				PlaceWidgetCommon( style );
-				mPosition = new UIPosition( parent, relative_aabb );
-			}
-
-			public void PlaceWidget( Widget parent, Style style, ePlacement placement )
-			{
-				PlaceWidgetCommon( style );
-				mPosition = new UIPosition( parent, placement, mAssembledSize );
+				mPosition = new UIPosition( parent, spec );
 			}
 
 			public void Reparent( Widget new_parent, ePlacement placement )
 			{
 				XUtils.Assert( new_parent.IsPlaced() );
-				mPosition = new UIPosition( new_parent, placement, mPosition.GetRelatveAABB().GetSize() );
+				UIPosSpec spec = new UIPosSpec( placement, mPosition.GetRelatveAABB().GetSize() );
+				mPosition = new UIPosition( new_parent, spec );
 			}
 
 			public void Reparent( Widget new_parent, Vector2 pos )
 			{
 				XUtils.Assert( new_parent.IsPlaced() );
-				mPosition = new UIPosition( new_parent, new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
+				UIPosSpec spec = new UIPosSpec( new xAABB2( pos, pos + mPosition.GetRelatveAABB().GetSize() ) );
+				mPosition = new UIPosition( new_parent, spec );
 			}
 
 			public Vector2 GetAssembledSize()
@@ -182,7 +178,8 @@ namespace XNARTS
 				xCoord screen_dim = XRenderManager.Instance().GetScreenDim();
 				Vector2 size = new Vector2( screen_dim.x, screen_dim.y );
 				AssembleWidget( size );
-				PlaceWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), new xAABB2( Vector2.Zero, size ) );
+				UIPosSpec spec = new UIPosSpec( new xAABB2( Vector2.Zero, size ) );
+				PlaceWidget( null, XUI.Instance().GetStyle( eStyle.Screen ), spec );
 			}
 		}
 
