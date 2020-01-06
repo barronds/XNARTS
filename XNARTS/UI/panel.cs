@@ -29,16 +29,10 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
-			public void PlacePanel( Widget parent, Style style, xAABB2 relative_aabb )
+			public void PlacePanel( Widget parent, Style style, UIPosSpec spec )
 			{
 				// extending class needs to explicitly place itself with this method, then place its children
-				PlaceWidget( parent, style, new UIPosSpec( relative_aabb ) );
-			}
-
-			public void PlacePanel( Widget parent, Style style, ePlacement placement )
-			{
-				// extending class needs to explicitly place itself with this method, then place its children
-				PlaceWidget( parent, style, new UIPosSpec( placement, GetAssembledSize() ) );
+				PlaceWidget( parent, style, spec );
 			}
 
 			public void AddChild( Widget child )

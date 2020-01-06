@@ -34,13 +34,13 @@ namespace XNARTS
 			{
 				float padding = style.mButtonPadding;
 				xAABB2 aabb = new xAABB2( pos, pos + mLabel.GetAssembledSize() + 2.0f * new Vector2( padding, padding ) );
-				PlacePanel( parent, style, aabb );
+				PlacePanel( parent, style, new UIPosSpec( aabb ) );
 				PlaceButtonLabel( mLabel, style );
 			}
 
 			public void PlaceButton( Widget parent, Style style, ePlacement placement )
 			{
-				PlacePanel( parent, style, placement );
+				PlacePanel( parent, style, new UIPosSpec( placement, GetAssembledSize() ) );
 				PlaceButtonLabel( mLabel, style );
 			}
 

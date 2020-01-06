@@ -36,13 +36,13 @@ namespace XNARTS
 
 			public void PlaceMenu( Widget parent, Style style, ePlacement placement )
 			{
-				PlacePanel( parent, style, placement );
+				PlacePanel( parent, style, new UIPosSpec( placement, GetAssembledSize() ) );
 				PlaceButtons();
 			}
 
 			public void PlaceMenu( Widget parent, Style style, xAABB2 relative_aabb )
 			{
-				PlacePanel( parent, style, relative_aabb );
+				PlacePanel( parent, style, new UIPosSpec( relative_aabb ) );
 				PlaceButtons();
 			}
 
