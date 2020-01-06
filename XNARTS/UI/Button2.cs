@@ -38,7 +38,7 @@ namespace XNARTS
 
 			private void PlaceButtonLabel( Label label, Style style )
 			{
-				label.PlaceLabel( this, style, ePlacement.Centered );
+				label.PlaceLabel( this, style, new UIPosSpec( ePlacement.Centered, label.GetAssembledSize() ) );
 			}
 
 			public void SetPressedVisual( bool pressed )

@@ -150,12 +150,17 @@ namespace XNARTS
 
 				Label label_1 = new XUI.Label();
 				label_1.AssembleLabel( ui.GetStyle( eStyle.Frontend ), "Test Widget 1" );
-				label_1.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), ePlacement.CenteredBottom );
+
+				label_1.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.Frontend ), 
+									new UIPosSpec( ePlacement.CenteredBottom, label_1.GetAssembledSize() ) );
+
 				AddRootWidget( ui, label_1 );
 
 				XUI.Label label_2 = new XUI.Label();
 				label_2.AssembleLabel( ui.GetStyle( eStyle.GameplayUI ), "Test Widget 2" );
-				label_2.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new Vector2( 200, 200 ) );
+				Vector2 pos = new Vector2( 200, 200 );
+				xAABB2 aabb = new xAABB2( pos, pos + label_2.GetAssembledSize() );
+				label_2.PlaceLabel( ui.GetScreenWidget(), ui.GetStyle( eStyle.GameplayUI ), new UIPosSpec( aabb ) );
 				AddRootWidget( ui, label_2 );
 			}
 
@@ -170,7 +175,7 @@ namespace XNARTS
 					ePlacement p = (ePlacement)i;
 					XUI.Label label = new XUI.Label();
 					label.AssembleLabel( s, p.ToString() );
-					label.PlaceLabel( w, s, p );
+					label.PlaceLabel( w, s, new UIPosSpec( p, label.GetAssembledSize() ) );
 					AddRootWidget( ui, label );
 				}
 			}
