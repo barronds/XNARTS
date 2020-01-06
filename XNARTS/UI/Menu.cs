@@ -34,15 +34,9 @@ namespace XNARTS
 				AssembleVerticalStack( buttons, style );
 			}
 
-			public void PlaceMenu( Widget parent, Style style, ePlacement placement )
+			public void PlaceMenu( Widget parent, Style style, UIPosSpec spec )
 			{
-				PlacePanel( parent, style, new UIPosSpec( placement, GetAssembledSize() ) );
-				PlaceButtons();
-			}
-
-			public void PlaceMenu( Widget parent, Style style, xAABB2 relative_aabb )
-			{
-				PlacePanel( parent, style, new UIPosSpec( relative_aabb ) );
+				PlacePanel( parent, style, spec );
 				PlaceButtons();
 			}
 

@@ -302,7 +302,7 @@ namespace XNARTS
 				String[] texts = { "First", "Another Button", "2nd to Last", " ", "5", "Back" };
 				BasicMenu m = new BasicMenu();
 				m.AssembleMenu( s, texts );
-				m.PlaceMenu( ui.GetScreenWidget(), s, ePlacement.TopRight );
+				m.PlaceMenu( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.TopRight, m.GetAssembledSize() ) );
 				AddRootBasicMenu( ui, m );
 			}
 		}
