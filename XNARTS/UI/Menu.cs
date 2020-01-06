@@ -64,7 +64,7 @@ namespace XNARTS
 				for( int i = 0; i < GetNumChildren(); ++i )
 				{
 					Button b = (Button)GetChild( i );
-					b.PlaceButton( this, mButtonStyle, GetRelativePlacement( i ).GetMin() );
+					b.PlaceButton( this, mButtonStyle, new UIPosSpec( GetRelativePlacement( i ) ) );
 					ui.AddActiveButton( b );
 				}
 			}

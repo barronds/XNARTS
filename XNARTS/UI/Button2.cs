@@ -30,17 +30,9 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
-			public void PlaceButton( Widget parent, Style style, Vector2 pos )
+			public void PlaceButton( Widget parent, Style style, UIPosSpec spec )
 			{
-				float padding = style.mButtonPadding;
-				xAABB2 aabb = new xAABB2( pos, pos + mLabel.GetAssembledSize() + 2.0f * new Vector2( padding, padding ) );
-				PlacePanel( parent, style, new UIPosSpec( aabb ) );
-				PlaceButtonLabel( mLabel, style );
-			}
-
-			public void PlaceButton( Widget parent, Style style, ePlacement placement )
-			{
-				PlacePanel( parent, style, new UIPosSpec( placement, GetAssembledSize() ) );
+				PlacePanel( parent, style, spec );
 				PlaceButtonLabel( mLabel, style );
 			}
 

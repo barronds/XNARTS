@@ -13,7 +13,7 @@ namespace XNARTS
 		{
 			Button b = new Button();
 			b.AssembleButton( button_style, text );
-			b.PlaceButton( parent, placement_style, pos );
+			b.PlaceButton( parent, placement_style, new UIPosSpec( new xAABB2( pos, pos + b.GetAssembledSize() ) ) );
 			AddActiveButton( b );
 			AddRootWidget( b );
 			return b;
@@ -23,7 +23,7 @@ namespace XNARTS
 		{
 			Button b = new Button();
 			b.AssembleButton( button_style, text );
-			b.PlaceButton( parent, placement_style, placement );
+			b.PlaceButton( parent, placement_style, new UIPosSpec( placement, b.GetAssembledSize() ) );
 			AddActiveButton( b );
 			AddRootWidget( b );
 			return b;
