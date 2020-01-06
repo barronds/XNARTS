@@ -55,6 +55,57 @@ namespace XNARTS
 			Num
 		}
 
+		public class UIPosSpec
+		{
+			private xAABB2      mRelativeAABB;
+			private Vector2     mSize;
+			private ePlacement  mPlacement;
+			private bool        mIsAbsolute;
+
+			public UIPosSpec( ePlacement placement, Vector2 size )
+			{
+				XUtils.Assert( ((int)placement > (int)ePlacement.Invalid) && size.X > 0.0f && size.Y > 0.0f );
+				Init( placement, size, xAABB2.GetOrigin(), false );
+			}
+
+			public UIPosSpec( xAABB2 relative_aabb )
+			{
+				XUtils.Assert( relative_aabb.IsNonDegenerate() );
+				Init( ePlacement.Absolute, relative_aabb.GetSize(), relative_aabb, true );
+			}
+
+			public bool IsAbsolute()
+			{
+				return mIsAbsolute;
+			}
+
+			public ePlacement GetPlacement()
+			{
+				XUtils.Assert( !IsAbsolute() );
+				return mPlacement;
+			}
+
+			public xAABB2 GetRelativeAABB()
+			{
+				XUtils.Assert( IsAbsolute() );
+				return mRelativeAABB;
+			}
+
+			public Vector2 GetSize()
+			{
+				XUtils.Assert( !IsAbsolute() );
+				return mSize;
+			}
+
+			private void Init( ePlacement p, Vector2 size, xAABB2 aabb, bool is_absolute )
+			{
+				mPlacement = p;
+				mSize = size;
+				mRelativeAABB = aabb;
+				mIsAbsolute = is_absolute;
+			}
+		}
+
 		public class UIPosition
 		{
 			private ePlacement	mPlacement;
@@ -64,32 +115,50 @@ namespace XNARTS
 			// constructor for absolute position relative to widget.  use screen widget for screen space position.
 			public UIPosition( Widget parent, xAABB2 relative_aabb )
 			{
-				mRelativeAABB = relative_aabb;
-				Init( parent, ePlacement.Absolute );
-				ValidateAABB();
+				UIPosSpec spec = new UIPosSpec( relative_aabb );
+				Construct( parent, spec );
 			}
 
 			// constructor for placement relative to a widget.  use screen widget for screen placement.
 			public UIPosition( Widget parent, ePlacement placement, Vector2 size )
 			{
-				XUtils.Assert( placement != ePlacement.Absolute, "wrong constructor for absolute" );
-				Init( parent, placement );
+				UIPosSpec spec = new UIPosSpec( placement, size );
+				Construct( parent, spec );
+			}
 
-				switch ( placement )
+			public UIPosition( Widget parent, UIPosSpec spec )
+			{
+				Construct( parent, spec );
+			}
+
+			private void Construct( Widget parent, UIPosSpec spec )
+			{
+				if( spec.IsAbsolute() )
 				{
-					case ePlacement.Centered:			Place( size, 0.5f, 0.5f, -0.5f, -0.5f, 0.0f, 0.0f );	break;
-					case ePlacement.CenteredLeft:		Place( size, 0.0f, 0.5f, 0.0f, -0.5f, 1.0f, 0.0f );		break;
-					case ePlacement.CenteredRight:		Place( size, 1.0f, 0.5f, -1.0f, -0.5f, -1.0f, 0.0f );	break;
-					case ePlacement.CenteredTop:		Place( size, 0.5f, 0.0f, -0.5f, 0.0f, 0.0f, 1.0f );		break;
-					case ePlacement.CenteredBottom:		Place( size, 0.5f, 1.0f, -0.5f, -1.0f, 0.0f, -1.0f );	break;
-					case ePlacement.TopLeft:			Place( size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f );		break;
-					case ePlacement.TopRight:			Place( size, 1.0f, 0.0f, -1.0f, 0.0f, -1.0f, 1.0f );	break;
-					case ePlacement.BottomLeft:			Place( size, 0.0f, 1.0f, 0.0f, -1.0f, 1.0f, -1.0f );	break;
-					case ePlacement.BottomRight:		Place( size, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f );	break;
+					mRelativeAABB = spec.GetRelativeAABB();
+					Init( parent, ePlacement.Absolute );
+				}
+				else
+				{
+					Init( parent, spec.GetPlacement() );
+					Vector2 size = spec.GetSize();
 
-					default:
-						XUtils.Assert( false, "placement type not yet supported" );
-						break;
+					switch ( spec.GetPlacement() )
+					{
+						case ePlacement.Centered:		Place( size, 0.5f, 0.5f, -0.5f, -0.5f, 0.0f, 0.0f );	break;
+						case ePlacement.CenteredLeft:	Place( size, 0.0f, 0.5f, 0.0f, -0.5f, 1.0f, 0.0f );		break;
+						case ePlacement.CenteredRight:	Place( size, 1.0f, 0.5f, -1.0f, -0.5f, -1.0f, 0.0f );	break;
+						case ePlacement.CenteredTop:	Place( size, 0.5f, 0.0f, -0.5f, 0.0f, 0.0f, 1.0f );		break;
+						case ePlacement.CenteredBottom: Place( size, 0.5f, 1.0f, -0.5f, -1.0f, 0.0f, -1.0f );	break;
+						case ePlacement.TopLeft:		Place( size, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f );		break;
+						case ePlacement.TopRight:		Place( size, 1.0f, 0.0f, -1.0f, 0.0f, -1.0f, 1.0f );	break;
+						case ePlacement.BottomLeft:		Place( size, 0.0f, 1.0f, 0.0f, -1.0f, 1.0f, -1.0f );	break;
+						case ePlacement.BottomRight:	Place( size, 1.0f, 1.0f, -1.0f, -1.0f, -1.0f, -1.0f );	break;
+
+						default:
+							XUtils.Assert( false, "placement type not yet supported" );
+							break;
+					}
 				}
 
 				ValidateAABB();
