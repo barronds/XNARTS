@@ -49,9 +49,8 @@ namespace XNARTS
 			private eConstructionState	mConstructionState;
 			private Vector2             mAssembledSize;
 			
-			// TODO: maybe this isn't right - maybe assemble means all elements exist are are assembled.
-			// ie, when assemble is called, you assemble your children, recursively.
-			// then the same for place.  will know more when i've implemented it for all the classes so far and used it.
+			// assemble children before self.  place self before children.
+			// 'assemble up, place down'
 			enum eConstructionState
 			{
 				Constructed,	// starts constructed

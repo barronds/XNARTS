@@ -35,6 +35,8 @@ namespace XNARTS
 			RemoveRootWidget( b );
 		}
 
+		//public BasicMenu CreateBasicMenu( Style menu_style, String[] texts, Widget parent, Style placement_style, ePlacement)
+
 		public void DestroyBasicMenu( BasicMenu m )
 		{
 			m.Destroy();
