@@ -57,52 +57,111 @@ namespace XNARTS
 
 		public class UIPosSpec
 		{
-			private xAABB2      mRelativeAABB;
-			private Vector2     mSize;
-			private ePlacement  mPlacement;
-			private bool        mIsAbsolute;
+			private xAABB2				mRelativeAABB;
+			private Vector2				mSize;
+			private ePlacement			mPlacement;
+			private bool				mIsAbsolute;
+			private eConstructionState  mConstructionState;
+			private Vector2             mPartialConstructionPos;
+
+			// facilitate partial construction.  this allows a client to construct a UIPosSpec object
+			// without a complete specification.  this reduces by half the number of factory functions
+			// necessary in the UI API.  the only valid next operation on this object is to finish construction.
+			// (other than to verify the construction state).
+			private enum eConstructionState
+			{
+				Pos,
+				Placement,
+				Complete
+			}
 
 			public UIPosSpec( ePlacement placement, Vector2 size )
 			{
-				XUtils.Assert( ((int)placement > (int)ePlacement.Invalid) && size.X > 0.0f && size.Y > 0.0f );
-				Init( placement, size, xAABB2.GetOrigin(), false );
+				XUtils.Assert(	((int)placement > (int)ePlacement.Invalid) && 
+								placement != ePlacement.Absolute && 
+								size.X > 0.0f && size.Y > 0.0f );
+
+				FullInit( placement, size, xAABB2.GetOrigin(), false );
 			}
 
 			public UIPosSpec( xAABB2 relative_aabb )
 			{
 				XUtils.Assert( relative_aabb.IsNonDegenerate() );
-				Init( ePlacement.Absolute, relative_aabb.GetSize(), relative_aabb, true );
+				FullInit( ePlacement.Absolute, relative_aabb.GetSize(), relative_aabb, true );
+			}
+
+			// partial construction.  all operations illegal until Complete() is called
+			public UIPosSpec( Vector2 pos )
+			{
+				mPartialConstructionPos = pos;
+				mConstructionState = eConstructionState.Pos;
+			}
+
+			// partial construction.  all operations illegal until Complete() is called
+			public UIPosSpec( ePlacement placement )
+			{
+				XUtils.Assert( ((int)placement > (int)ePlacement.Invalid) && placement != ePlacement.Absolute );
+				mPlacement = placement;
+				mConstructionState = eConstructionState.Placement;
+			}
+
+			public void Complete( Vector2 size )
+			{
+				XUtils.Assert( size.X > 0.0f && size.Y > 0.0f );
+
+				if ( mConstructionState == eConstructionState.Placement )
+				{
+					FullInit( mPlacement, size, xAABB2.GetOrigin(), false );
+				}
+				else if ( mConstructionState == eConstructionState.Pos )
+				{
+					FullInit( ePlacement.Absolute, size, new xAABB2( mPartialConstructionPos, mPartialConstructionPos + size ), true );
+				}
+				else
+				{
+					XUtils.Assert( false, "already fully initialized" );
+				}
+			}
+
+			public bool IsComplete()
+			{
+				return mConstructionState == eConstructionState.Complete;
 			}
 
 			public bool IsAbsolute()
 			{
+				XUtils.Assert( mConstructionState == eConstructionState.Complete );
 				return mIsAbsolute;
 			}
 
 			public ePlacement GetPlacement()
 			{
+				XUtils.Assert( mConstructionState == eConstructionState.Complete );
 				XUtils.Assert( !IsAbsolute() );
 				return mPlacement;
 			}
 
 			public xAABB2 GetRelativeAABB()
 			{
+				XUtils.Assert( mConstructionState == eConstructionState.Complete );
 				XUtils.Assert( IsAbsolute() );
 				return mRelativeAABB;
 			}
 
 			public Vector2 GetSize()
 			{
+				XUtils.Assert( mConstructionState == eConstructionState.Complete );
 				XUtils.Assert( !IsAbsolute() );
 				return mSize;
 			}
 
-			private void Init( ePlacement p, Vector2 size, xAABB2 aabb, bool is_absolute )
+			private void FullInit( ePlacement p, Vector2 size, xAABB2 aabb, bool is_absolute )
 			{
 				mPlacement = p;
 				mSize = size;
 				mRelativeAABB = aabb;
 				mIsAbsolute = is_absolute;
+				mConstructionState = eConstructionState.Complete;
 			}
 		}
 

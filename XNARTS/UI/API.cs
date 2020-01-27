@@ -9,21 +9,12 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		public Button CreateButton( Style button_style, String text, Widget parent, Style placement_style, Vector2 pos )
+		public Button CreateButton( Style button_style, String text, Widget parent, Style placement_style, UIPosSpec spec )
 		{
 			Button b = new Button();
 			b.AssembleButton( button_style, text );
-			b.PlaceButton( parent, placement_style, new UIPosSpec( new xAABB2( pos, pos + b.GetAssembledSize() ) ) );
-			AddActiveButton( b );
-			AddRootWidget( b );
-			return b;
-		}
-
-		public Button CreateButton( Style button_style, String text, Widget parent, Style placement_style, ePlacement placement )
-		{
-			Button b = new Button();
-			b.AssembleButton( button_style, text );
-			b.PlaceButton( parent, placement_style, new UIPosSpec( placement, b.GetAssembledSize() ) );
+			spec.Complete( b.GetAssembledSize() );
+			b.PlaceButton( parent, placement_style, spec );
 			AddActiveButton( b );
 			AddRootWidget( b );
 			return b;

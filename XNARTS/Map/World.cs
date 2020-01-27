@@ -109,7 +109,7 @@ namespace XNARTS
 			XUI.Style button_style = ui.GetStyle( XUI.eStyle.GameplayUI );
 
 			mRegnerateMapButton = ui.CreateButton(	button_style, "New Regenerate Map Button", ui.GetScreenWidget(), button_style,
-													new Vector2( 30, 30 ) );
+													new XUI.UIPosSpec( new Vector2( 30, 30 ) ) );
 
 			//mRegnerateMapButton = ui._CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
 			mMapTypeButton = ui._CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );

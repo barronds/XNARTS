@@ -259,10 +259,10 @@ namespace XNARTS
 				Style style_2 = ui.GetStyle( eStyle.FrontendTest );
 
 				XUI.Button bap_1 = ui.CreateButton( style_1, "Button As Panel 1", ui.GetScreenWidget(), style_1, 
-													ePlacement.Centered );
+													new UIPosSpec( ePlacement.Centered ) );
 
 				XUI.Button bap_2 = ui.CreateButton( style_2, "Button As Panel 2", ui.GetScreenWidget(), style_2,
-													new Vector2( 100, 800 ) );
+													new UIPosSpec( new Vector2( 100, 800 ) ) );
 				AddRootButton( bap_1 );
 				AddRootButton( bap_2 );
 			}
