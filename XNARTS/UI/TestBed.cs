@@ -89,7 +89,7 @@ namespace XNARTS
 					}
 				}
 
-				if ( trigger_test )
+				if( trigger_test )
 				{
 					CleanupRootWidgets();
 					mTestFuncs[ mTestFuncIndex ]();
@@ -99,7 +99,20 @@ namespace XNARTS
 
 			private void Update_TestInput()
 			{
-				mListener_ButtonUp.IgnoreAll();
+				XListener<ButtonUpEvent>.Enumerator e = mListener_ButtonUp.CreateEnumerator();
+
+				while( e.MoveNext() )
+				{
+					for( int b = 0; b < mRootBasicMenus.Count(); ++b )
+					{
+						int input_index =  mRootBasicMenus[ b ].GetInputIndex( e.GetCurrent().mID );
+
+						if( input_index > -1 )
+						{
+							Console.WriteLine( "TestBed - Basic Menu Input (menu " + b + ", button index " + input_index + ")" );
+						}
+					}
+				}
 			}
 
 			private void AddRootWidget( XUI ui, Widget w )

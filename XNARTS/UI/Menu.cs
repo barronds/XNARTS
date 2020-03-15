@@ -12,9 +12,12 @@ namespace XNARTS
 		public class BasicMenu : VerticalStack
 		{
 			Style mButtonStyle;
+			Dictionary< long, int > mUIDMap;
 
 			public BasicMenu()
-			{ }
+			{
+				mUIDMap = new Dictionary<long, int>();
+			}
 
 			public void AssembleMenu( Style style, String[] texts )
 			{
@@ -29,6 +32,7 @@ namespace XNARTS
 					XUtils.Assert( padded_texts.Length > 0 );
 					buttons[ i ] = new Button();
 					buttons[ i ].AssembleButton( style, padded_texts[ i ] );
+					mUIDMap.Add( buttons[ i ].GetUID(), i );
 				}
 
 				AssembleVerticalStack( buttons, style );
@@ -38,6 +42,17 @@ namespace XNARTS
 			{
 				PlacePanel( parent, style, spec );
 				PlaceButtons();
+			}
+
+			public int GetInputIndex( long uid )
+			{
+				if( mUIDMap.ContainsKey( uid ) )
+				{
+					mUIDMap.TryGetValue( uid, out int text_index );
+					return text_index;
+				}
+
+				return -1;
 			}
 
 			public void Destroy()
