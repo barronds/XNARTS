@@ -48,12 +48,18 @@ namespace XNARTS
 
 			public override void Render( XSimpleDraw simple_draw )
 			{
-				base.Render( simple_draw );
+				// not going to base.Render the panel because the background changes when pressed.
+				// pick up the functionality of that Render call, the placed assert.
+				//base.Render( simple_draw );
+				XUtils.Assert( IsPlaced() );
+
 				xAABB2 aabb = GetPosition().GetScreenAABB();
 				Style s = GetStyle();
 				Color border = s.mBorderColor;
 				Color background = mPressedVisual ? s.mInteractionBackgroundColor : s.mBackgroundColor;
 				XUI.Instance().Util_DrawBox( simple_draw, background, s.mBorderColor, aabb );
+
+				// render the children (labels) normally
 				RenderChildren( simple_draw );
 			}
 		}
