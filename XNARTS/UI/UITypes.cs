@@ -288,8 +288,10 @@ namespace XNARTS
 			{
 				if( mParent != null )
 				{
+					float epsilon = 1e-4f;
 					xAABB2 parent_aabb = new xAABB2( Vector2.Zero, mParent.GetPosition().GetRelatveAABB().GetSize() );
-					XUtils.Assert( parent_aabb.Contains( mRelativeAABB.GetMin() ) && parent_aabb.Contains( mRelativeAABB.GetMax() ) );
+					XUtils.Assert(	parent_aabb.Contains( mRelativeAABB.GetMin(), epsilon ) && 
+									parent_aabb.Contains( mRelativeAABB.GetMax(), epsilon ) );
 				}
 			}
 		}

@@ -352,13 +352,15 @@ namespace XNARTS
 			private void Test_FullMenu()
 			{
 				XUI ui = XUI.Instance();
-				Style s = ui.GetStyle( eStyle.Frontend );
+				Style o = ui.GetStyle( eStyle.Frontend );
+				Style t = ui.GetStyle( eStyle.FrontendTitle );
+				Style c = ui.GetStyle( eStyle.FrontendControl );
 				String title = "Test Full Menu";
 				String[] options = { "First", "Another Button", "2nd to Last", " ", "5", "Reset" };
 				String[] controls = { "Back", "Exit" };
 				FullMenu m = new FullMenu();
-				m.AssembleFullMenu( s, title, s, options, s, controls, s );
-				m.PlaceFullMenu( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.Centered, m.GetAssembledSize() ) );
+				m.AssembleFullMenu( o, title, t, options, o, controls, c );
+				m.PlaceFullMenu( ui.GetScreenWidget(), o, new UIPosSpec( ePlacement.Centered, m.GetAssembledSize() ) );
 				AddRootFullMenu( ui, m );
 			}
 		}

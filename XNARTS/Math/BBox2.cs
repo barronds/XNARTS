@@ -154,10 +154,22 @@ namespace XNARTS
 		}
 
 
-		public bool Contains( Vector2 point )
+		public bool Contains( Vector2 point, float epsilon = 0.0f )
 		{
-			XUtils.Assert( mIsValid );
-			return point.X >= mMin.X && point.X <= mMax.X && point.Y >= mMin.Y && point.Y <= mMax.Y;
+			XUtils.Assert( mIsValid && epsilon >= 0.0f );
+
+			if( epsilon > 0.0f )
+			{
+				Vector2 e = epsilon * Vector2.One;
+				Vector2 min = mMin - e;
+				Vector2 max = mMax + e;
+				return point.X >= min.X && point.X <= max.X && point.Y >= min.Y && point.Y <= max.Y;
+			}
+			else
+			{
+				return point.X >= mMin.X && point.X <= mMax.X && point.Y >= mMin.Y && point.Y <= mMax.Y;
+
+			}
 		}
 
 

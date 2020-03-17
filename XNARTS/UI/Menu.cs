@@ -19,11 +19,14 @@ namespace XNARTS
 				mUIDMap = new Dictionary<long, int>();
 			}
 
-			public void AssembleMenu( Style style, String[] texts )
+			// use min_string_length > 0 if you want buttons to have a min width.
+			// useful for creating menus within a vertical stack having buttons
+			// of the same width.  use GetLongestString().
+			public void AssembleMenu( Style style, String[] texts, int min_string_length = 0 )
 			{
 				XUtils.Assert( texts.Count() > 0 );
 				mButtonStyle = style;
-				String[] padded_texts = PadButtonTexts( texts );
+				String[] padded_texts = PadButtonTexts( texts, min_string_length );
 
 				Button[] buttons = new Button[ padded_texts.Count() ];
 
@@ -66,6 +69,18 @@ namespace XNARTS
 				}
 			}
 
+			public static int GetLongestString( String[] strings )
+			{
+				int longest = 0;
+
+				for ( int i = 0; i < strings.Length; ++i )
+				{
+					longest = Math.Max( longest, strings[ i ].Length );
+				}
+
+				return longest;
+			}
+
 			private void PlaceButtons()
 			{
 				XUI ui = XUI.Instance();
@@ -78,19 +93,7 @@ namespace XNARTS
 				}
 			}
 
-			private int GetLongestString( String[] strings )
-			{
-				int longest = 0;
-
-				for ( int i = 0; i < strings.Length; ++i )
-				{
-					longest = Math.Max( longest, strings[ i ].Length );
-				}
-
-				return longest;
-			}
-
-			private String PadButtonText( String text, int longest )
+			private static String PadButtonText( String text, int longest )
 			{
 				int length = text.Length;
 				int shortfall = longest - length;
@@ -99,9 +102,9 @@ namespace XNARTS
 				return padding + text + padding;
 			}
 
-			private String[] PadButtonTexts( String[] input )
+			private static String[] PadButtonTexts( String[] input, int min_string_length )
 			{
-				int longest_text_length = GetLongestString( input );
+				int longest_text_length = Math.Max( GetLongestString( input ), min_string_length );
 				String[] output = new string[ input.Length ];
 
 				for ( int i = 0; i < input.Length; ++i )
@@ -143,11 +146,17 @@ namespace XNARTS
 				Label title_label = new Label();
 				title_label.AssembleLabel( title_style, title );
 
+				int[] longest_strings = {   title.Length,
+											BasicMenu.GetLongestString( options ),
+											BasicMenu.GetLongestString( controls ) };
+
+				int longest = XMath.MaxArr( longest_strings );
+
 				BasicMenu options_menu = new BasicMenu();
-				options_menu.AssembleMenu( options_style, options );
+				options_menu.AssembleMenu( options_style, options, longest );
 
 				BasicMenu controls_menu = new BasicMenu();
-				controls_menu.AssembleMenu( controls_style, controls );
+				controls_menu.AssembleMenu( controls_style, controls, longest );
 
 				// order matters here, must correspond to eChild layout
 				Widget[] widgets = { title_label, options_menu, controls_menu };
