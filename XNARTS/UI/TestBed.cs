@@ -22,6 +22,7 @@ namespace XNARTS
 			private List< Widget >                      mRootWidgets;
 			private List< Button >                      mRootButtons;
 			private List< BasicMenu >                   mRootBasicMenus;
+			private List< FullMenu >                    mRootFullMenus;
 
 
 			public TestBed()
@@ -31,6 +32,7 @@ namespace XNARTS
 				mRootWidgets = new List<Widget>();
 				mRootButtons = new List<Button>();
 				mRootBasicMenus = new List<BasicMenu>();
+				mRootFullMenus = new List<FullMenu>();
 
 				// update this manually when a test func is added
 				mTestFuncs = new List<TestFunc>();
@@ -40,6 +42,7 @@ namespace XNARTS
 				mTestFuncs.Add( Test_Button );
 				mTestFuncs.Add( Test_VerticalStack );
 				mTestFuncs.Add( Test_BasicMenu );
+				mTestFuncs.Add( Test_FullMenu );
 			}
 
 			public void Init()
@@ -112,6 +115,22 @@ namespace XNARTS
 							Console.WriteLine( "TestBed - Basic Menu Input (menu " + b + ", button index " + input_index + ")" );
 						}
 					}
+
+					for( int f = 0; f < mRootFullMenus.Count(); ++f )
+					{
+						int options_index = mRootFullMenus[ f ].GetOptionsInputIndex( e.GetCurrent().mID );
+						int controls_index = mRootFullMenus[ f ].GetControlsInputIndex( e.GetCurrent().mID );
+
+						if( options_index > -1 )
+						{
+							Console.WriteLine( "TestBed - Full Menu Option Input (menu " + f + ", button index " + options_index + ")" );
+						}
+
+						if ( controls_index > -1 )
+						{
+							Console.WriteLine( "TestBed - Full Menu Controls Input (menu " + f + ", button index " + controls_index + ")" );
+						}
+					}
 				}
 			}
 
@@ -132,6 +151,12 @@ namespace XNARTS
 				ui.AddRootWidget( m );
 			}
 
+			private void AddRootFullMenu( XUI ui, FullMenu m )
+			{
+				mRootFullMenus.Add( m );
+				ui.AddRootWidget( m );
+			}
+
 			private void CleanupRootWidgets()
 			{
 				XUI ui = XUI.Instance();
@@ -149,12 +174,17 @@ namespace XNARTS
 				for( int i = 0; i < mRootBasicMenus.Count(); ++i )
 				{
 					ui.DestroyBasicMenu( mRootBasicMenus[ i ] );
+				}
 
+				for( int i = 0; i < mRootFullMenus.Count(); ++i )
+				{
+					ui.DestroyFullMenu( mRootFullMenus[ i ] );
 				}
 
 				mRootWidgets.Clear();
 				mRootButtons.Clear();
 				mRootBasicMenus.Clear();
+				mRootFullMenus.Clear();
 			}
 
 			private void Test_Label()
@@ -317,6 +347,19 @@ namespace XNARTS
 				m.AssembleMenu( s, texts );
 				m.PlaceMenu( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.TopRight, m.GetAssembledSize() ) );
 				AddRootBasicMenu( ui, m );
+			}
+
+			private void Test_FullMenu()
+			{
+				XUI ui = XUI.Instance();
+				Style s = ui.GetStyle( eStyle.Frontend );
+				String title = "Test Full Menu";
+				String[] options = { "First", "Another Button", "2nd to Last", " ", "5", "Reset" };
+				String[] controls = { "Back", "Exit" };
+				FullMenu m = new FullMenu();
+				m.AssembleFullMenu( s, title, s, options, s, controls, s );
+				m.PlaceFullMenu( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.Centered, m.GetAssembledSize() ) );
+				AddRootFullMenu( ui, m );
 			}
 		}
 
