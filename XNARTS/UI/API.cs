@@ -26,7 +26,19 @@ namespace XNARTS
 			RemoveRootWidget( b );
 		}
 
-		//public BasicMenu CreateBasicMenu( Style menu_style, String[] texts, Widget parent, Style placement_style, ePlacement)
+		public BasicMenu CreateBasicMenu( eStyle menu_style, String[] texts, Widget parent, eStyle placement_style, ePlacement placement )
+		{
+			XUI ui = XUI.Instance();
+			Style menu_style_actual = ui.GetStyle( menu_style );
+			Style placement_style_actual = ui.GetStyle( placement_style );
+			BasicMenu m = new BasicMenu();
+
+			m.AssembleMenu( menu_style_actual, texts );
+			m.PlaceMenu( parent, placement_style_actual, new UIPosSpec( placement, m.GetAssembledSize() ) );
+
+			ui.AddRootWidget( m );
+			return m;
+		}
 
 		public void DestroyBasicMenu( BasicMenu m )
 		{

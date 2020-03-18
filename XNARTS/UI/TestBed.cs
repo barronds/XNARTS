@@ -145,12 +145,6 @@ namespace XNARTS
 				mRootButtons.Add( b );
 			}
 
-			private void AddRootBasicMenu( XUI ui, BasicMenu m )
-			{
-				mRootBasicMenus.Add( m );
-				ui.AddRootWidget( m );
-			}
-
 			private void AddRootFullMenu( XUI ui, FullMenu m )
 			{
 				mRootFullMenus.Add( m );
@@ -341,12 +335,9 @@ namespace XNARTS
 			private void Test_BasicMenu()
 			{
 				XUI ui = XUI.Instance();
-				Style s = ui.GetStyle( eStyle.Frontend );
 				String[] texts = { "First", "Another Button", "2nd to Last", " ", "5", "Back" };
-				BasicMenu m = new BasicMenu();
-				m.AssembleMenu( s, texts );
-				m.PlaceMenu( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.TopRight, m.GetAssembledSize() ) );
-				AddRootBasicMenu( ui, m );
+				BasicMenu m = ui.CreateBasicMenu( eStyle.Frontend, texts, ui.GetScreenWidget(), eStyle.Frontend, ePlacement.TopRight );
+				mRootBasicMenus.Add( m );
 			}
 
 			private void Test_FullMenu()
