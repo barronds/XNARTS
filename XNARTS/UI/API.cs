@@ -31,8 +31,8 @@ namespace XNARTS
 			XUI ui = XUI.Instance();
 			Style menu_style_actual = ui.GetStyle( menu_style );
 			Style placement_style_actual = ui.GetStyle( placement_style );
-			BasicMenu m = new BasicMenu();
 
+			BasicMenu m = new BasicMenu();
 			m.AssembleMenu( menu_style_actual, texts );
 			m.PlaceMenu( parent, placement_style_actual, new UIPosSpec( placement, m.GetAssembledSize() ) );
 
@@ -44,6 +44,24 @@ namespace XNARTS
 		{
 			m.Destroy();
 			RemoveRootWidget( m );
+		}
+
+		public FullMenu CreateFullMenu( eStyle title_style, String title,
+										eStyle options_style, String[] options,
+										eStyle controls_style, String[] controls,
+										eStyle placement_style, Widget parent, ePlacement placement )
+		{
+			XUI ui = XUI.Instance();
+			Style o = ui.GetStyle( options_style );
+			Style t = ui.GetStyle( title_style );
+			Style c = ui.GetStyle( controls_style );
+
+			FullMenu m = new FullMenu();
+			m.AssembleFullMenu( o, title, t, options, o, controls, c );
+			m.PlaceFullMenu( parent, o, new UIPosSpec( placement, m.GetAssembledSize() ) );
+
+			ui.AddRootWidget( m );
+			return m;
 		}
 
 		public void DestroyFullMenu( FullMenu m )
