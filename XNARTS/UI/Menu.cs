@@ -153,7 +153,11 @@ namespace XNARTS
 				controls_menu.AssembleMenu( controls_style, controls );
 
 				// make each menu the width of the max of each
-				float max_width = Math.Max( options_menu.GetButtonWidth(), controls_menu.GetButtonWidth() );
+				float[] width_arr = {	title_label.GetAssembledSize().X, 
+										options_menu.GetButtonWidth(), 
+										controls_menu.GetButtonWidth() };
+
+				float max_width = XMath.MaxArr( width_arr );
 				options_menu.ReassembleMenu( max_width );
 				controls_menu.ReassembleMenu( max_width );
 

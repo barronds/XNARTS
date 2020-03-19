@@ -38,14 +38,16 @@ namespace XNARTS
 			return (float)Math.Sqrt( (double)val );
 		}
 
-		public static int MaxArr( int[] values )
+		public static float MaxArr( float[] values )
 		{
 			XUtils.Assert( values.Length > 0 );
-			int max = values[ 0 ];
+			float max = values[ 0 ];
+
 			for( int i = 1; i < values.Length; ++i )
 			{
-				max = System.Math.Max( max, values[ i ] );
+				max = values[ i ] > max ? values[ i ] : max;
 			}
+
 			return max;
 		}
 	}
