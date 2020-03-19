@@ -24,6 +24,11 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
+			public void ReassembleLabel( Vector2 size )
+			{
+				ReassembleWidget( size );
+			}
+
 			public void PlaceLabel( Widget parent, Style style, UIPosSpec spec )
 			{
 				PlaceWidget( parent, style, spec );

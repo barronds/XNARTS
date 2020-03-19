@@ -66,6 +66,7 @@
     <Compile Include="UI\Menu.cs" />
     <Compile Include="UI\MenuItem.cs" />
     <Compile Include="UI\Panel.cs" />
+    <Compile Include="UI\Spacer.cs" />
     <Compile Include="UI\VerticalStack.cs" />
     <Compile Include="UI\WidgetManager.cs" />
     <Compile Include="UI\Render.cs" />

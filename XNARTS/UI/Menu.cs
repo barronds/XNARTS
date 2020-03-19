@@ -125,9 +125,12 @@ namespace XNARTS
 
 			private enum eChild
 			{
+				Spacer0,
 				Title,
+				Spacer1,
 				Options,
-				Controls
+				Controls,
+				Spacer2,
 			}
 
 			public FullMenu()
@@ -146,6 +149,15 @@ namespace XNARTS
 				Label title_label = new Label();
 				title_label.AssembleLabel( title_style, title );
 
+				Spacer spacer0 = new Spacer();
+				Spacer spacer1 = new Spacer();
+				Spacer spacer2 = new Spacer();
+				const float kSpacerScalar = 0.4f;
+				Vector2 spacer_size = kSpacerScalar * title_label.GetAssembledSize();
+				spacer0.AssembleSpacer( spacer_size );
+				spacer1.AssembleSpacer( spacer_size );
+				spacer2.AssembleSpacer( spacer_size );
+
 				BasicMenu options_menu = new BasicMenu();
 				options_menu.AssembleMenu( options_style, options );
 
@@ -162,7 +174,7 @@ namespace XNARTS
 				controls_menu.ReassembleMenu( max_width );
 
 				// order matters here, must correspond to eChild layout
-				Widget[] widgets = { title_label, options_menu, controls_menu };
+				Widget[] widgets = { spacer0, title_label, spacer1, options_menu, controls_menu, spacer2 };
 				AssembleVerticalStack( widgets, style );
 			}
 
@@ -190,7 +202,12 @@ namespace XNARTS
 
 			private void PlaceWidgets()
 			{
+				GetSpacer( eChild.Spacer0 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer0 ) ) );
+				GetSpacer( eChild.Spacer1 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer1 ) ) );
+				GetSpacer( eChild.Spacer2 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer2 ) ) );
+
 				GetTitle().PlaceLabel( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Title ) ) );
+
 				GetMenu( eChild.Options ).PlaceMenu( this, mOptionsStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Options ) ) );
 				GetMenu( eChild.Controls ).PlaceMenu( this, mControlsStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Controls ) ) );
 			}
@@ -204,6 +221,11 @@ namespace XNARTS
 			private Label GetTitle()
 			{
 				return (Label)GetChild( (int)eChild.Title );
+			}
+
+			private Spacer GetSpacer( eChild spacer )
+			{
+				return (Spacer)GetChild( (int)spacer );
 			}
 		}
 

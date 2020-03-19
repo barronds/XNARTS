@@ -21,6 +21,7 @@ namespace XNARTS
 			FrontendTitle,
 			FrontendControl,
 			FrontendTest,
+			FrontendDebug,
 			Screen,
 
 			Num
@@ -117,6 +118,9 @@ namespace XNARTS
 			AddStyle( eStyle.FrontendControl, new Style(	eStyle.FrontendControl, eFont.Consolas36, ui_meta, ui_background,
 															Color.Lerp( ui_background, Color.White, k_pressed_blend ),
 															ui_background, 0.0f, 0.0f, 0.0f ) );
+
+			AddStyle( eStyle.FrontendDebug, new Style(	eStyle.FrontendDebug, eFont.Consolas36, Color.Purple, Color.Yellow,
+														Color.Magenta, Color.Aqua, 0.0f, 0.0f, 0.0f ) );
 
 			AddStyle( eStyle.Screen, new Style( eStyle.Screen, eFont.Consolas36, ui_meta, ui_background,
 												Color.Lerp( ui_background, Color.White, k_pressed_blend ),
