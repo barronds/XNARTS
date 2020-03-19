@@ -9,7 +9,7 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		public class VerticalStack : Panel
+		public class LinearStack : Panel
 		{
 			// inheriting class should:
 			// - create and assemble widgets individually outside this class
@@ -20,9 +20,17 @@ namespace XNARTS
 
 			xAABB2[] mRelativePlacements;
 			Style mStyle;
+			eDirection mDirection;
 
-			public VerticalStack()
+			public enum eDirection
 			{
+				Horizontal,
+				Vertical
+			}
+
+			public LinearStack( eDirection direction )
+			{
+				mDirection = direction;
 			}
 
 			public xAABB2 GetRelativePlacement( int i )
@@ -51,27 +59,32 @@ namespace XNARTS
 
 			private Vector2 CalcPlacements()
 			{
+				// direction is x or y
+				Vector2 dir = (mDirection == eDirection.Horizontal) ? Vector2.UnitX : Vector2.UnitY;
+				Vector2 perp = (mDirection == eDirection.Horizontal) ? Vector2.UnitY : Vector2.UnitX;
+
 				// calculate own aabb from already sized widgets
 				int num = GetNumChildren();
 				XUtils.Assert( num > 0 );
-				float vertical_sum = 0.0f;
-				float horizontal_max = 0.0f;
+				float dir_sum = 0.0f;
+				float perpendicular_max = 0.0f;
 
 				for ( int i = 0; i < num; ++i )
 				{
 					Vector2 size = GetChild( i ).GetAssembledSize();
-					vertical_sum += size.Y;
+					dir_sum += Vector2.Dot( dir, size );
+					float perp_size = Vector2.Dot( perp, size );
 
-					if ( size.X > horizontal_max )
+					if ( perp_size > perpendicular_max )
 					{
-						horizontal_max = size.X;
+						perpendicular_max = perp_size;
 					}
 				}
 
-				float total_y = (num + 1) * mStyle.mPackingPadding + vertical_sum;
-				float total_x = horizontal_max + 2 * mStyle.mPackingPadding;
-				float center_x = 0.5f * total_x;
-				float y_cursor = mStyle.mPackingPadding;
+				float total_dir = (num + 1) * mStyle.mPackingPadding + dir_sum;
+				float total_perp = perpendicular_max + 2 * mStyle.mPackingPadding;
+				float center_perp = 0.5f * total_perp;
+				float dir_cursor = mStyle.mPackingPadding;
 
 				mRelativePlacements = new xAABB2[ GetNumChildren() ];
 
@@ -79,14 +92,18 @@ namespace XNARTS
 				{
 					// center justification, could add more options later (left, right)
 					Vector2 size = GetChild( i ).GetAssembledSize();
-					Vector2 top_left = new Vector2( center_x - 0.5f * size.X, y_cursor );
+					
+					Vector2 top_left =	center_perp * perp - 
+										(0.5f * Vector2.Dot( size, perp )) * perp + 
+										dir_cursor * dir;
+					
 					xAABB2 relative = new xAABB2( top_left, top_left + size );
 					mRelativePlacements[ i ] = relative;
-					y_cursor += mStyle.mPackingPadding + size.Y;
+					dir_cursor += mStyle.mPackingPadding + Vector2.Dot( dir, size );
 				}
 
 				// return the size
-				return new Vector2( total_x, total_y );
+				return total_perp * perp + total_dir * dir;
 			}
 		}
 	}

@@ -9,12 +9,12 @@ namespace XNARTS
 {
 	public partial class XUI
 	{
-		public class BasicMenu : VerticalStack
+		public class BasicMenu : LinearStack
 		{
 			Style mButtonStyle;
 			Dictionary< long, int > mUIDMap;
 
-			public BasicMenu()
+			public BasicMenu() : base( LinearStack.eDirection.Vertical )
 			{
 				mUIDMap = new Dictionary<long, int>();
 			}
@@ -117,7 +117,7 @@ namespace XNARTS
 		}
 
 
-		public class FullMenu : VerticalStack
+		public class FullMenu : LinearStack
 		{
 			Style mTitleStyle;
 			Style mOptionsStyle;
@@ -133,7 +133,7 @@ namespace XNARTS
 				Spacer2,
 			}
 
-			public FullMenu()
+			public FullMenu() : base( LinearStack.eDirection.Vertical )
 			{ }
 
 			public void AssembleFullMenu(	Style style, String title, Style title_style, 

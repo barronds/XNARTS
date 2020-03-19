@@ -40,7 +40,7 @@ namespace XNARTS
 				mTestFuncs.Add( Test_Positioning );
 				mTestFuncs.Add( Test_Panel );
 				mTestFuncs.Add( Test_Button );
-				mTestFuncs.Add( Test_VerticalStack );
+				mTestFuncs.Add( Test_LinearStack );
 				mTestFuncs.Add( Test_BasicMenu );
 				mTestFuncs.Add( Test_FullMenu );
 			}
@@ -298,7 +298,7 @@ namespace XNARTS
 				AddRootButton( bap_2 );
 			}
 
-			private void Test_VerticalStack()
+			private void Test_LinearStack()
 			{
 				XUI ui = XUI.Instance();
 				Style s = ui.GetStyle( eStyle.GameplayUI );
@@ -313,17 +313,39 @@ namespace XNARTS
 				panel_3.AssemblePanel( new Vector2( 70, 70 ) );
 				panel_4.AssemblePanel( new Vector2( 20, 100 ) );
 
-				XUI.Widget[] widgets = { panel_1, panel_2, panel_3, panel_4 };
-				XUI.VerticalStack stack = new VerticalStack();
-				stack.AssembleVerticalStack( widgets, s );
-				stack.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.Centered, stack.GetAssembledSize() ) );
+				XUI.Widget[] widgets1 = { panel_1, panel_2, panel_3, panel_4 };
+				XUI.LinearStack stack1 = new LinearStack( LinearStack.eDirection.Vertical );
+				stack1.AssembleVerticalStack( widgets1, s );
+				stack1.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.Centered, stack1.GetAssembledSize() ) );
 
-				panel_1.PlacePanel( stack, s, new UIPosSpec( stack.GetRelativePlacement( 0 ) ) );
-				panel_2.PlacePanel( stack, s, new UIPosSpec( stack.GetRelativePlacement( 1 ) ) );
-				panel_3.PlacePanel( stack, s, new UIPosSpec( stack.GetRelativePlacement( 2 ) ) );
-				panel_4.PlacePanel( stack, s, new UIPosSpec( stack.GetRelativePlacement( 3 ) ) );
+				panel_1.PlacePanel( stack1, s, new UIPosSpec( stack1.GetRelativePlacement( 0 ) ) );
+				panel_2.PlacePanel( stack1, s, new UIPosSpec( stack1.GetRelativePlacement( 1 ) ) );
+				panel_3.PlacePanel( stack1, s, new UIPosSpec( stack1.GetRelativePlacement( 2 ) ) );
+				panel_4.PlacePanel( stack1, s, new UIPosSpec( stack1.GetRelativePlacement( 3 ) ) );
 
-				AddRootWidget( ui, stack );
+				AddRootWidget( ui, stack1 );
+
+				XUI.Panel panel_5 = new XUI.Panel();
+				XUI.Panel panel_6 = new XUI.Panel();
+				XUI.Panel panel_7 = new XUI.Panel();
+				XUI.Panel panel_8 = new XUI.Panel();
+
+				panel_5.AssemblePanel( new Vector2( 50, 20 ) );
+				panel_6.AssemblePanel( new Vector2( 100, 30 ) );
+				panel_7.AssemblePanel( new Vector2( 70, 70 ) );
+				panel_8.AssemblePanel( new Vector2( 20, 100 ) );
+
+				XUI.Widget[] widgets2 = { panel_5, panel_6, panel_7, panel_8 };
+				XUI.LinearStack stack2 = new LinearStack( LinearStack.eDirection.Horizontal );
+				stack2.AssembleVerticalStack( widgets2, s );
+				stack2.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.CenteredBottom, stack2.GetAssembledSize() ) );
+
+				panel_5.PlacePanel( stack2, s, new UIPosSpec( stack2.GetRelativePlacement( 0 ) ) );
+				panel_6.PlacePanel( stack2, s, new UIPosSpec( stack2.GetRelativePlacement( 1 ) ) );
+				panel_7.PlacePanel( stack2, s, new UIPosSpec( stack2.GetRelativePlacement( 2 ) ) );
+				panel_8.PlacePanel( stack2, s, new UIPosSpec( stack2.GetRelativePlacement( 3 ) ) );
+
+				AddRootWidget( ui, stack2 );
 			}
 
 			private void Test_BasicMenu()

@@ -19,7 +19,6 @@ namespace XNARTS
 			AddRootWidget( b );
 			return b;
 		}
-
 		public void DestroyButton( Button b )
 		{
 			RemoveActiveButton( b );
@@ -39,7 +38,6 @@ namespace XNARTS
 			ui.AddRootWidget( m );
 			return m;
 		}
-
 		public void DestroyBasicMenu( BasicMenu m )
 		{
 			m.Destroy();
@@ -63,7 +61,6 @@ namespace XNARTS
 			ui.AddRootWidget( m );
 			return m;
 		}
-
 		public void DestroyFullMenu( FullMenu m )
 		{
 			m.Destroy();
