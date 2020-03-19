@@ -19,6 +19,7 @@ namespace XNARTS
 			// - TODO: unify place() if possible so that we can generically call it within here.
 
 			xAABB2[] mRelativePlacements;
+			Style mStyle;
 
 			public VerticalStack()
 			{
@@ -37,21 +38,28 @@ namespace XNARTS
 					AddChild( widgets[ i ] );
 				}
 
-				Vector2 size = CalcPlacements( widgets, style );
+				mStyle = style;
+				Vector2 size = CalcPlacements();
 				base.AssemblePanel( size );
 			}
 
-			private Vector2 CalcPlacements( Widget[] widgets, Style style )
+			public void ReassembleVerticalStack()
+			{
+				Vector2 size = CalcPlacements();
+				ReassemblePanel( size );
+			}
+
+			private Vector2 CalcPlacements()
 			{
 				// calculate own aabb from already sized widgets
-				int num = widgets.Count();
+				int num = GetNumChildren();
 				XUtils.Assert( num > 0 );
 				float vertical_sum = 0.0f;
 				float horizontal_max = 0.0f;
 
 				for ( int i = 0; i < num; ++i )
 				{
-					Vector2 size = widgets[ i ].GetAssembledSize();
+					Vector2 size = GetChild( i ).GetAssembledSize();
 					vertical_sum += size.Y;
 
 					if ( size.X > horizontal_max )
@@ -60,21 +68,21 @@ namespace XNARTS
 					}
 				}
 
-				float total_y = (num + 1) * style.mPackingPadding + vertical_sum;
-				float total_x = horizontal_max + 2 * style.mPackingPadding;
+				float total_y = (num + 1) * mStyle.mPackingPadding + vertical_sum;
+				float total_x = horizontal_max + 2 * mStyle.mPackingPadding;
 				float center_x = 0.5f * total_x;
-				float y_cursor = style.mPackingPadding;
+				float y_cursor = mStyle.mPackingPadding;
 
-				mRelativePlacements = new xAABB2[ widgets.Count() ];
+				mRelativePlacements = new xAABB2[ GetNumChildren() ];
 
 				for ( int i = 0; i < num; ++i )
 				{
 					// center justification, could add more options later (left, right)
-					Vector2 size = widgets[ i ].GetAssembledSize();
+					Vector2 size = GetChild( i ).GetAssembledSize();
 					Vector2 top_left = new Vector2( center_x - 0.5f * size.X, y_cursor );
 					xAABB2 relative = new xAABB2( top_left, top_left + size );
 					mRelativePlacements[ i ] = relative;
-					y_cursor += style.mPackingPadding + size.Y;
+					y_cursor += mStyle.mPackingPadding + size.Y;
 				}
 
 				// return the size

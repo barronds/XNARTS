@@ -71,6 +71,14 @@ namespace XNARTS
 				mConstructionState = eConstructionState.Assembled;
 			}
 
+			// optional, handy if having assembled a bunch of widgets, it is realized that 
+			// some need to be of different size.  probably bigger.
+			public void ReassembleWidget( Vector2 size )
+			{
+				XUtils.Assert( mConstructionState == eConstructionState.Assembled );
+				mAssembledSize = size;
+			}
+
 			public void PlaceWidget( Widget parent, Style style, UIPosSpec spec )
 			{
 				PlaceWidgetCommon( style );

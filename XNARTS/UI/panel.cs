@@ -29,6 +29,16 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
+			public void ReassemblePanel( Vector2 size )
+			{
+				for ( int c = 0; c < mChildren.Count; ++c )
+				{
+					XUtils.Assert( mChildren[ c ].IsAssembled() );
+				}
+
+				ReassembleWidget( size );
+			}
+
 			public void PlacePanel( Widget parent, Style style, UIPosSpec spec )
 			{
 				// extending class needs to explicitly place itself with this method, then place its children

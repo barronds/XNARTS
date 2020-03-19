@@ -22,23 +22,52 @@ namespace XNARTS
 			// use min_string_length > 0 if you want buttons to have a min width.
 			// useful for creating menus within a vertical stack having buttons
 			// of the same width.  use GetLongestString().
-			public void AssembleMenu( Style style, String[] texts, int min_string_length = 0 )
+			public void AssembleMenu( Style style, String[] texts )
 			{
 				XUtils.Assert( texts.Count() > 0 );
 				mButtonStyle = style;
-				String[] padded_texts = PadButtonTexts( texts, min_string_length );
-
-				Button[] buttons = new Button[ padded_texts.Count() ];
+				Button[] buttons = new Button[ texts.Count() ];
 
 				for( int i = 0; i < texts.Count(); ++i )
 				{
-					XUtils.Assert( padded_texts.Length > 0 );
+					XUtils.Assert( texts.Length > 0 );
 					buttons[ i ] = new Button();
-					buttons[ i ].AssembleButton( style, padded_texts[ i ] );
+					buttons[ i ].AssembleButton( style, texts[ i ] );
 					mUIDMap.Add( buttons[ i ].GetUID(), i );
 				}
 
+				// but all buttons need to be as big as the biggest
+				float max_width = 0.0f;
+
+				for( int i = 0; i < buttons.Count(); ++i )
+				{
+					Vector2 size = buttons[ i ].GetAssembledSize();
+					max_width = Math.Max( max_width, size.X );
+				}
+
+				for( int i = 0; i < buttons.Count(); ++i )
+				{
+					Vector2 new_size = new Vector2( max_width, buttons[ i ].GetAssembledSize().Y );
+					buttons[ i ].ReassembleWidget( new_size );
+				}
+
 				AssembleVerticalStack( buttons, style );
+			}
+
+			public void ReassembleMenu( float button_width )
+			{
+				//Vector2 menu_size = GetAssembledSize();
+				//menu_size.X = Math.Max( menu_size.X, button_width );
+				//ReassembleWidget( menu_size );
+
+				for( int i = 0; i < GetNumChildren(); ++i )
+				{
+					Vector2 size = GetChild( i ).GetAssembledSize();
+					size.X = button_width;
+					GetChild( i ).ReassembleWidget( size );
+				}
+
+				ReassembleVerticalStack();
 			}
 
 			public void PlaceMenu( Widget parent, Style style, UIPosSpec spec )
@@ -69,16 +98,9 @@ namespace XNARTS
 				}
 			}
 
-			public static int GetLongestString( String[] strings )
+			public float GetButtonWidth()
 			{
-				int longest = 0;
-
-				for ( int i = 0; i < strings.Length; ++i )
-				{
-					longest = Math.Max( longest, strings[ i ].Length );
-				}
-
-				return longest;
+				return GetChild( 0 ).GetAssembledSize().X;
 			}
 
 			private void PlaceButtons()
@@ -91,28 +113,6 @@ namespace XNARTS
 					b.PlaceButton( this, mButtonStyle, new UIPosSpec( GetRelativePlacement( i ) ) );
 					ui.AddActiveButton( b );
 				}
-			}
-
-			private static String PadButtonText( String text, int longest )
-			{
-				int length = text.Length;
-				int shortfall = longest - length;
-				int even_floor_half_shortfall = shortfall / 2;
-				String padding = XUtils.GetNSpaces( even_floor_half_shortfall );
-				return padding + text + padding;
-			}
-
-			private static String[] PadButtonTexts( String[] input, int min_string_length )
-			{
-				int longest_text_length = Math.Max( GetLongestString( input ), min_string_length );
-				String[] output = new string[ input.Length ];
-
-				for ( int i = 0; i < input.Length; ++i )
-				{
-					output[ i ] = PadButtonText( input[ i ], longest_text_length );
-				}
-
-				return output;
 			}
 		}
 
@@ -146,17 +146,16 @@ namespace XNARTS
 				Label title_label = new Label();
 				title_label.AssembleLabel( title_style, title );
 
-				int[] longest_strings = {   title.Length,
-											BasicMenu.GetLongestString( options ),
-											BasicMenu.GetLongestString( controls ) };
-
-				int longest = XMath.MaxArr( longest_strings );
-
 				BasicMenu options_menu = new BasicMenu();
-				options_menu.AssembleMenu( options_style, options, longest );
+				options_menu.AssembleMenu( options_style, options );
 
 				BasicMenu controls_menu = new BasicMenu();
-				controls_menu.AssembleMenu( controls_style, controls, longest );
+				controls_menu.AssembleMenu( controls_style, controls );
+
+				// make each menu the width of the max of each
+				float max_width = Math.Max( options_menu.GetButtonWidth(), controls_menu.GetButtonWidth() );
+				options_menu.ReassembleMenu( max_width );
+				controls_menu.ReassembleMenu( max_width );
 
 				// order matters here, must correspond to eChild layout
 				Widget[] widgets = { title_label, options_menu, controls_menu };
