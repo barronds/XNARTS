@@ -31,9 +31,11 @@ namespace XNARTS
 
 			public void ReassemblePanel( Vector2 size )
 			{
+				xAABB2 new_aabb = new xAABB2( Vector2.Zero, size );
+
 				for ( int c = 0; c < mChildren.Count; ++c )
 				{
-					XUtils.Assert( mChildren[ c ].IsAssembled() );
+					XUtils.Assert( new_aabb.Contains( mChildren[ c ].GetAssembledSize() ) );
 				}
 
 				ReassembleWidget( size );

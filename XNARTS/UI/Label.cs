@@ -26,6 +26,7 @@ namespace XNARTS
 
 			public void ReassembleLabel( Vector2 size )
 			{
+				XUtils.Assert( new xAABB2( Vector2.Zero, size ).Contains( GetAssembledSize() ) );
 				ReassembleWidget( size );
 			}
 

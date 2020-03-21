@@ -30,6 +30,12 @@ namespace XNARTS
 				AssembleWidget( size );
 			}
 
+			public void ReassembleButton( Vector2 size )
+			{
+				XUtils.Assert( new xAABB2( Vector2.Zero, size ).Contains( mLabel.GetAssembledSize() ) );
+				ReassemblePanel( size );
+			}
+
 			public void PlaceButton( Widget parent, Style style, UIPosSpec spec )
 			{
 				PlacePanel( parent, style, spec );

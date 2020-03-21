@@ -72,7 +72,7 @@ namespace XNARTS
 			}
 
 			// optional, handy if having assembled a bunch of widgets, it is realized that 
-			// some need to be of different size.  probably bigger.
+			// some need to be of different size. 
 			public void ReassembleWidget( Vector2 size )
 			{
 				XUtils.Assert( mConstructionState == eConstructionState.Assembled );
@@ -101,6 +101,7 @@ namespace XNARTS
 
 			public Vector2 GetAssembledSize()
 			{
+				XUtils.Assert( IsConstructionStateAtLeast( eConstructionState.Assembled ) );
 				return mAssembledSize;
 			}
 
