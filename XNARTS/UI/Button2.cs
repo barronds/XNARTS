@@ -11,35 +11,35 @@ namespace XNARTS
 	{
 		public class Button : Panel
 		{
-			private bool	mPressedVisual;
-			private Label   mLabel;
+			private bool mPressedVisual;
 
 			public Button()
 			{
-				mLabel = new Label();
-				AddChild( mLabel );
+				Label label = new Label();
+				AddChild( label );
 			}
 
 			public void AssembleButton( Style style, String text )
 			{
 				mPressedVisual = false;
-				mLabel.AssembleLabel( style, text );
+				Label label = (Label)GetChild( 0 );
+				label.AssembleLabel( style, text );
 				eFont font = style.mNormalFont;
 				float padding = style.mButtonPadding;
-				Vector2 size = mLabel.GetAssembledSize() + 2.0f * new Vector2( padding, padding );
+				Vector2 size = label.GetAssembledSize() + 2.0f * new Vector2( padding, padding );
 				AssembleWidget( size );
 			}
 
 			public void ReassembleButton( Vector2 size )
 			{
-				XUtils.Assert( new xAABB2( Vector2.Zero, size ).Contains( mLabel.GetAssembledSize() ) );
+				XUtils.Assert( new xAABB2( Vector2.Zero, size ).Contains( ((Label)GetChild( 0 )).GetAssembledSize() ) );
 				ReassemblePanel( size );
 			}
 
 			public void PlaceButton( Widget parent, Style style, UIPosSpec spec )
 			{
 				PlacePanel( parent, style, spec );
-				PlaceButtonLabel( mLabel, style );
+				PlaceButtonLabel( (Label)GetChild( 0 ), style );
 			}
 
 			private void PlaceButtonLabel( Label label, Style style )
