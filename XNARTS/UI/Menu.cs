@@ -44,27 +44,27 @@ namespace XNARTS
 					max_perp = Math.Max( max_perp, Vector2.Dot( size, perp ) );
 				}
 
-				for( int i = 0; i < buttons.Count(); ++i )
-				{
-					Vector2 new_size = Vector2.Dot( buttons[ i ].GetAssembledSize(), dir ) * dir + max_perp * perp;
-					buttons[ i ].ReassembleWidget( new_size );
-				}
-
+				ReassembleButtons( max_perp );
 				AssembleLinearStack( buttons, style );
 			}
 
 			public void ReassembleMenu( float button_perp )
 			{
-				for( int i = 0; i < GetNumChildren(); ++i )
+				ReassembleButtons( button_perp );
+				ReassembleLinearStack();
+			}
+
+			private void ReassembleButtons( float button_perp )
+			{
+				Vector2 dir = GetDir();
+				Vector2 perp = GetPerp();
+
+				for ( int i = 0; i < GetNumChildren(); ++i )
 				{
-					Vector2 dir = GetDir();
-					Vector2 perp = GetPerp();
 					Vector2 size = GetChild( i ).GetAssembledSize();
 					Vector2 new_size = Vector2.Dot( size, dir ) * dir + button_perp * perp;
 					GetChild( i ).ReassembleWidget( new_size );
 				}
-
-				ReassembleLinearStack();
 			}
 
 			public void PlaceMenu( Widget parent, Style style, UIPosSpec spec )
