@@ -63,7 +63,7 @@ namespace XNARTS
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.ScreenSpace_Transient ).Init(	graphics_device, 
 																						persistent: false,
 																						max_lines: 200,
-																						max_triangles: 50 );
+																						max_triangles: 100 );
 
 			XSimpleDraw.CreateInstance( xeSimpleDrawType.ScreenSpace_Persistent ).Init( graphics_device, 
 																						persistent: true,

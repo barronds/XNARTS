@@ -18,8 +18,7 @@ namespace XNARTS
 		WorldSpace_Persistent_Map,
 	}
 
-
-    public class XSimpleDraw : XPluralton< xeSimpleDrawType, XSimpleDraw >
+	public class XSimpleDraw : XPluralton< xeSimpleDrawType, XSimpleDraw >
     {
         public struct xBatchId
         {
@@ -30,23 +29,21 @@ namespace XNARTS
                 mId = id;
             }
         }
+		
+        int							mMaxLines;
+        int							mNumLines;
+        VertexPositionColor []		mLines;
 
-        int						mMaxLines;
-        int                     mNumLines;
-        VertexPositionColor []  mLines;
+		int							mMaxTriangles;
+		int							mNumTriangles;
+		VertexPositionColor []		mTriangles;
 
-		int						mMaxTriangles;
-		int						mNumTriangles;
-		VertexPositionColor []	mTriangles;
+        private GraphicsDevice		mGraphicsDevice;
+		private bool				mPersistent;
 
-        private GraphicsDevice	mGraphicsDevice;
-		private bool			mPersistent;
-
-
-		// private constructor as per pluralton
-		private XSimpleDraw()
-		{}
-
+		// public single param constructor as per pluralton, DO NOT CONSTRUCT AN INSTANCE MANUALLY
+		public XSimpleDraw( xeSimpleDrawType pluralton_key, int pluralton_only_constructor ) : base( pluralton_key, pluralton_only_constructor )
+		{ }
 
         public void Init( GraphicsDevice graphics_device, bool persistent, int max_lines, int max_triangles )
         {

@@ -315,7 +315,7 @@ namespace XNARTS
 
 				XUI.Widget[] widgets1 = { panel_1, panel_2, panel_3, panel_4 };
 				XUI.LinearStack stack1 = new LinearStack( LinearStack.eDirection.Vertical );
-				stack1.AssembleVerticalStack( widgets1, s );
+				stack1.AssembleLinearStack( widgets1, s );
 				stack1.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.Centered, stack1.GetAssembledSize() ) );
 
 				panel_1.PlacePanel( stack1, s, new UIPosSpec( stack1.GetRelativePlacement( 0 ) ) );
@@ -337,7 +337,7 @@ namespace XNARTS
 
 				XUI.Widget[] widgets2 = { panel_5, panel_6, panel_7, panel_8 };
 				XUI.LinearStack stack2 = new LinearStack( LinearStack.eDirection.Horizontal );
-				stack2.AssembleVerticalStack( widgets2, s );
+				stack2.AssembleLinearStack( widgets2, s );
 				stack2.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.CenteredBottom, stack2.GetAssembledSize() ) );
 
 				panel_5.PlacePanel( stack2, s, new UIPosSpec( stack2.GetRelativePlacement( 0 ) ) );
@@ -346,6 +346,111 @@ namespace XNARTS
 				panel_8.PlacePanel( stack2, s, new UIPosSpec( stack2.GetRelativePlacement( 3 ) ) );
 
 				AddRootWidget( ui, stack2 );
+
+				XUI.Panel panel_10 = new XUI.Panel();
+				XUI.Panel panel_11 = new XUI.Panel();
+				XUI.Panel panel_12 = new XUI.Panel();
+				XUI.Panel panel_13 = new XUI.Panel();
+
+				panel_10.AssemblePanel( new Vector2( 50, 20 ) );
+				panel_11.AssemblePanel( new Vector2( 100, 30 ) );
+				panel_12.AssemblePanel( new Vector2( 70, 70 ) );
+				panel_13.AssemblePanel( new Vector2( 20, 100 ) );
+
+				XUI.Widget[] widgets3 = { panel_10, panel_11, panel_12, panel_13 };
+				XUI.LinearStack stack3 = new LinearStack( LinearStack.eDirection.Vertical );
+				stack3.AssembleLinearStack( widgets3, s );
+				Vector2 original_size_3 = stack3.GetAssembledSize();
+				stack3.ReassembleLinearStack( 1.3f * original_size_3 );
+				stack3.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.CenteredTop, stack3.GetAssembledSize() ) );
+
+				panel_10.PlacePanel( stack3, s, new UIPosSpec( stack3.GetRelativePlacement( 0 ) ) );
+				panel_11.PlacePanel( stack3, s, new UIPosSpec( stack3.GetRelativePlacement( 1 ) ) );
+				panel_12.PlacePanel( stack3, s, new UIPosSpec( stack3.GetRelativePlacement( 2 ) ) );
+				panel_13.PlacePanel( stack3, s, new UIPosSpec( stack3.GetRelativePlacement( 3 ) ) );
+
+				AddRootWidget( ui, stack3 );
+
+				XUI.Panel panel_14 = new XUI.Panel();
+				XUI.Panel panel_15 = new XUI.Panel();
+				XUI.Panel panel_16 = new XUI.Panel();
+				XUI.Panel panel_17 = new XUI.Panel();
+
+				panel_14.AssemblePanel( new Vector2( 50, 20 ) );
+				panel_15.AssemblePanel( new Vector2( 100, 30 ) );
+				panel_16.AssemblePanel( new Vector2( 70, 70 ) );
+				panel_17.AssemblePanel( new Vector2( 20, 100 ) );
+
+				XUI.Widget[] widgets4 = { panel_14, panel_15, panel_16, panel_17 };
+				XUI.LinearStack stack4 = new LinearStack( LinearStack.eDirection.Horizontal );
+				stack4.AssembleLinearStack( widgets4, s );
+				Vector2 original_size_4 = stack4.GetAssembledSize();
+				stack4.ReassembleLinearStack( new Vector2( original_size_4.X + 100, original_size_4.Y ) );
+				stack4.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.CenteredRight, stack4.GetAssembledSize() ) );
+
+				panel_14.PlacePanel( stack4, s, new UIPosSpec( stack4.GetRelativePlacement( 0 ) ) );
+				panel_15.PlacePanel( stack4, s, new UIPosSpec( stack4.GetRelativePlacement( 1 ) ) );
+				panel_16.PlacePanel( stack4, s, new UIPosSpec( stack4.GetRelativePlacement( 2 ) ) );
+				panel_17.PlacePanel( stack4, s, new UIPosSpec( stack4.GetRelativePlacement( 3 ) ) );
+
+				AddRootWidget( ui, stack4 );
+
+				XUI.Panel panel_21 = new XUI.Panel();
+				XUI.Panel panel_22 = new XUI.Panel();
+				XUI.Panel panel_23 = new XUI.Panel();
+				XUI.Panel panel_24 = new XUI.Panel();
+
+				panel_21.AssemblePanel( new Vector2( 50, 20 ) );
+				panel_22.AssemblePanel( new Vector2( 100, 30 ) );
+				panel_23.AssemblePanel( new Vector2( 70, 70 ) );
+				panel_24.AssemblePanel( new Vector2( 20, 100 ) );
+
+				XUI.Widget[] widgets5 = { panel_21, panel_22, panel_23, panel_24 };
+				XUI.LinearStack stack5 = new LinearStack( LinearStack.eDirection.Horizontal );
+				stack5.AssembleLinearStack( widgets5, s );
+				panel_24.ReassemblePanel( new Vector2( 20, 20 ) );
+				stack5.ReassembleLinearStack();
+				stack5.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.CenteredLeft, stack5.GetAssembledSize() ) );
+
+				panel_21.PlacePanel( stack5, s, new UIPosSpec( stack5.GetRelativePlacement( 0 ) ) );
+				panel_22.PlacePanel( stack5, s, new UIPosSpec( stack5.GetRelativePlacement( 1 ) ) );
+				panel_23.PlacePanel( stack5, s, new UIPosSpec( stack5.GetRelativePlacement( 2 ) ) );
+				panel_24.PlacePanel( stack5, s, new UIPosSpec( stack5.GetRelativePlacement( 3 ) ) );
+
+				AddRootWidget( ui, stack5 );
+
+				XUI.Panel panel_25 = new XUI.Panel();
+				XUI.Panel panel_26 = new XUI.Panel();
+
+				panel_25.AssemblePanel( new Vector2( 50, 20 ) );
+				panel_26.AssemblePanel( new Vector2( 100, 30 ) );
+
+				XUI.Widget[] widgets6 = { panel_25, panel_26 };
+				XUI.LinearStack stack6 = new LinearStack( LinearStack.eDirection.Vertical );
+				stack6.AssembleLinearStack( widgets6, s );
+				Vector2 original_size_6 = stack6.GetAssembledSize();
+				stack6.ReassembleLinearStack( new Vector2( original_size_6.X, original_size_6.Y + 200 ) );
+				stack6.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.BottomLeft, stack6.GetAssembledSize() ) );
+
+				panel_25.PlacePanel( stack6, s, new UIPosSpec( stack6.GetRelativePlacement( 0 ) ) );
+				panel_26.PlacePanel( stack6, s, new UIPosSpec( stack6.GetRelativePlacement( 1 ) ) );
+
+				AddRootWidget( ui, stack6 );
+
+				XUI.Panel panel_27 = new XUI.Panel();
+
+				panel_27.AssemblePanel( new Vector2( 50, 20 ) );
+
+				XUI.Widget[] widgets7 = { panel_27 };
+				XUI.LinearStack stack7 = new LinearStack( LinearStack.eDirection.Horizontal );
+				stack7.AssembleLinearStack( widgets7, s );
+				Vector2 original_size_7 = stack7.GetAssembledSize();
+				stack7.ReassembleLinearStack( new Vector2( original_size_7.X + 100, original_size_7.Y + 200 ) );
+				stack7.PlacePanel( ui.GetScreenWidget(), s, new UIPosSpec( ePlacement.TopRight, stack7.GetAssembledSize() ) );
+
+				panel_27.PlacePanel( stack7, s, new UIPosSpec( stack7.GetRelativePlacement( 0 ) ) );
+
+				AddRootWidget( ui, stack7 );
 			}
 
 			private void Test_BasicMenu()

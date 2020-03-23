@@ -20,7 +20,8 @@ namespace XNARTS
 
 			xAABB2[] mRelativePlacements;
 			Style mStyle;
-			eDirection mDirection;
+			Vector2 mDir;
+			Vector2 mPerp;
 
 			public enum eDirection
 			{
@@ -30,7 +31,9 @@ namespace XNARTS
 
 			public LinearStack( eDirection direction )
 			{
-				mDirection = direction;
+				// direction is x or y
+				mDir = (direction == eDirection.Horizontal) ? Vector2.UnitX : Vector2.UnitY;
+				mPerp = (direction == eDirection.Horizontal) ? Vector2.UnitY : Vector2.UnitX;
 			}
 
 			public xAABB2 GetRelativePlacement( int i )
@@ -39,7 +42,7 @@ namespace XNARTS
 				return mRelativePlacements[ i ];
 			}
 
-			public void AssembleVerticalStack( Widget[] widgets, Style style )
+			public void AssembleLinearStack( Widget[] widgets, Style style )
 			{
 				for( int i = 0; i < widgets.Count(); ++i )
 				{
@@ -47,22 +50,96 @@ namespace XNARTS
 				}
 
 				mStyle = style;
-				Vector2 size = CalcPlacements();
+				Vector2 size = CalcPackedPlacements();
 				base.AssemblePanel( size );
 			}
 
-			public void ReassembleVerticalStack()
+			// size of one or more children is assumed to have changed, re-pack normally and resize this widget.
+			public void ReassembleLinearStack()
 			{
-				Vector2 size = CalcPlacements();
+				Vector2 size = CalcPackedPlacements();
 				ReassemblePanel( size );
 			}
 
-			private Vector2 CalcPlacements()
+			// dictate size of this widget, children will be equally spaced inside but edge ones
+			// will be up against the edge according to the style's padding.  A single child would be centered.
+			public void ReassembleLinearStack( Vector2 size )
 			{
-				// direction is x or y
-				Vector2 dir = (mDirection == eDirection.Horizontal) ? Vector2.UnitX : Vector2.UnitY;
-				Vector2 perp = (mDirection == eDirection.Horizontal) ? Vector2.UnitY : Vector2.UnitX;
+				CalcSpacedPlacements( size );
+				ReassemblePanel( size );
+			}
 
+			private void CalcSpacedPlacements( Vector2 size )
+			{
+				int n = GetNumChildren();
+				float total_dir = Vector2.Dot( size, mDir );
+				float total_perp = Vector2.Dot( size, mPerp );
+				float total_child_dir = 0.0f;
+
+				for ( int i = 0; i < n; ++i )
+				{
+					total_child_dir += Vector2.Dot( GetChild( i ).GetAssembledSize(), mDir );
+				}
+
+				if ( n == 1 )
+				{
+					Vector2 child_size =  GetChild( 0 ).GetAssembledSize();
+					float child_perp = Vector2.Dot(child_size, mPerp );
+
+					Vector2 top_left =  0.5f * (total_dir - total_child_dir) * mDir +
+										0.5f * (total_perp - child_perp) * mPerp;
+
+					mRelativePlacements[ 0 ].Set( top_left, top_left + child_size );
+					return;
+				}
+
+				int last_child = n - 1;
+				Vector2 dir_space = mStyle.mPackingPadding * mDir;
+				Vector2 first_child_size = GetChild( 0 ).GetAssembledSize();
+				Vector2 last_child_size = GetChild( last_child ).GetAssembledSize();
+
+				float first_child_perp_pad = 0.5f * (total_perp - Vector2.Dot( first_child_size, mPerp ));
+				Vector2 first_child_top_left = dir_space + first_child_perp_pad * mPerp;
+
+				float last_child_perp_pad = 0.5f * (total_perp - Vector2.Dot( last_child_size, mPerp ));
+				Vector2 last_child_bottom_right = size - dir_space - last_child_perp_pad * mPerp;
+
+				mRelativePlacements[ 0 ].Set( first_child_top_left, first_child_top_left + first_child_size );
+				mRelativePlacements[ last_child ].Set( last_child_bottom_right - last_child_size, last_child_bottom_right );
+
+				if( n == 2 )
+				{
+					return;
+				}
+
+				float remaining_dir =   total_dir -
+										Vector2.Dot( first_child_size, mDir ) -
+										Vector2.Dot( last_child_size, mDir ) -
+										2.0f * mStyle.mPackingPadding;
+
+				float remaining_child_dir = total_child_dir -
+											Vector2.Dot( first_child_size, mDir ) -
+											Vector2.Dot( last_child_size, mDir );
+
+				float final_pad_size = (remaining_dir - remaining_child_dir) / (n - 1);
+				Vector2 remaining_dir_pad = final_pad_size * mDir;
+				float dir_cursor = Vector2.Dot( mRelativePlacements[ 0 ].GetMax(), mDir );
+
+				for( int i = 1; i < last_child; ++i )
+				{
+					Vector2 child_size = GetChild( i ).GetAssembledSize();
+
+					Vector2 top_left =  dir_cursor * mDir +
+										remaining_dir_pad +
+										0.5f * (total_perp - Vector2.Dot( child_size, mPerp )) * mPerp;
+
+					mRelativePlacements[ i ].Set( top_left, top_left + child_size );
+					dir_cursor += final_pad_size + Vector2.Dot( child_size, mDir );
+				}
+			}
+
+			private Vector2 CalcPackedPlacements()
+			{
 				// calculate own aabb from already sized widgets
 				int num = GetNumChildren();
 				XUtils.Assert( num > 0 );
@@ -72,8 +149,8 @@ namespace XNARTS
 				for ( int i = 0; i < num; ++i )
 				{
 					Vector2 size = GetChild( i ).GetAssembledSize();
-					dir_sum += Vector2.Dot( dir, size );
-					float perp_size = Vector2.Dot( perp, size );
+					dir_sum += Vector2.Dot( mDir, size );
+					float perp_size = Vector2.Dot( mPerp, size );
 
 					if ( perp_size > perpendicular_max )
 					{
@@ -93,17 +170,17 @@ namespace XNARTS
 					// center justification, could add more options later (left, right)
 					Vector2 size = GetChild( i ).GetAssembledSize();
 					
-					Vector2 top_left =	center_perp * perp - 
-										(0.5f * Vector2.Dot( size, perp )) * perp + 
-										dir_cursor * dir;
+					Vector2 top_left =	center_perp * mPerp - 
+										(0.5f * Vector2.Dot( size, mPerp )) * mPerp + 
+										dir_cursor * mDir;
 					
 					xAABB2 relative = new xAABB2( top_left, top_left + size );
 					mRelativePlacements[ i ] = relative;
-					dir_cursor += mStyle.mPackingPadding + Vector2.Dot( dir, size );
+					dir_cursor += mStyle.mPackingPadding + Vector2.Dot( mDir, size );
 				}
 
 				// return the size
-				return total_perp * perp + total_dir * dir;
+				return total_perp * mPerp + total_dir * mDir;
 			}
 		}
 	}

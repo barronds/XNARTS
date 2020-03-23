@@ -51,7 +51,7 @@ namespace XNARTS
 					buttons[ i ].ReassembleWidget( new_size );
 				}
 
-				AssembleVerticalStack( buttons, style );
+				AssembleLinearStack( buttons, style );
 			}
 
 			public void ReassembleMenu( float button_width )
@@ -67,7 +67,7 @@ namespace XNARTS
 					GetChild( i ).ReassembleWidget( size );
 				}
 
-				ReassembleVerticalStack();
+				ReassembleLinearStack();
 			}
 
 			public void PlaceMenu( Widget parent, Style style, UIPosSpec spec )
@@ -175,7 +175,7 @@ namespace XNARTS
 
 				// order matters here, must correspond to eChild layout
 				Widget[] widgets = { spacer0, title_label, spacer1, options_menu, controls_menu, spacer2 };
-				AssembleVerticalStack( widgets, style );
+				AssembleLinearStack( widgets, style );
 			}
 
 			public void PlaceFullMenu( Widget parent, Style style, UIPosSpec spec )
