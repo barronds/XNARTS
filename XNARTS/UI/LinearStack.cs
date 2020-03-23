@@ -69,6 +69,16 @@ namespace XNARTS
 				ReassemblePanel( size );
 			}
 
+			public Vector2 GetDir()
+			{
+				return mDir;
+			}
+
+			public Vector2 GetPerp()
+			{
+				return mPerp;
+			}
+
 			private void CalcSpacedPlacements( Vector2 size )
 			{
 				int n = GetNumChildren();

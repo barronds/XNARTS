@@ -19,9 +19,6 @@ namespace XNARTS
 				mUIDMap = new Dictionary<long, int>();
 			}
 
-			// use min_string_length > 0 if you want buttons to have a min width.
-			// useful for creating menus within a vertical stack having buttons
-			// of the same width.  use GetLongestString().
 			public void AssembleMenu( Style style, String[] texts )
 			{
 				XUtils.Assert( texts.Count() > 0 );
@@ -36,35 +33,35 @@ namespace XNARTS
 					mUIDMap.Add( buttons[ i ].GetUID(), i );
 				}
 
-				// but all buttons need to be as big as the biggest
-				float max_width = 0.0f;
+				// but all buttons need to be as big (perp) as the biggest
+				float max_perp = 0.0f;
+				Vector2 perp = GetPerp();
+				Vector2 dir = GetDir();
 
 				for( int i = 0; i < buttons.Count(); ++i )
 				{
 					Vector2 size = buttons[ i ].GetAssembledSize();
-					max_width = Math.Max( max_width, size.X );
+					max_perp = Math.Max( max_perp, Vector2.Dot( size, perp ) );
 				}
 
 				for( int i = 0; i < buttons.Count(); ++i )
 				{
-					Vector2 new_size = new Vector2( max_width, buttons[ i ].GetAssembledSize().Y );
+					Vector2 new_size = Vector2.Dot( buttons[ i ].GetAssembledSize(), dir ) * dir + max_perp * perp;
 					buttons[ i ].ReassembleWidget( new_size );
 				}
 
 				AssembleLinearStack( buttons, style );
 			}
 
-			public void ReassembleMenu( float button_width )
+			public void ReassembleMenu( float button_perp )
 			{
-				//Vector2 menu_size = GetAssembledSize();
-				//menu_size.X = Math.Max( menu_size.X, button_width );
-				//ReassembleWidget( menu_size );
-
 				for( int i = 0; i < GetNumChildren(); ++i )
 				{
+					Vector2 dir = GetDir();
+					Vector2 perp = GetPerp();
 					Vector2 size = GetChild( i ).GetAssembledSize();
-					size.X = button_width;
-					GetChild( i ).ReassembleWidget( size );
+					Vector2 new_size = Vector2.Dot( size, dir ) * dir + button_perp * perp;
+					GetChild( i ).ReassembleWidget( new_size );
 				}
 
 				ReassembleLinearStack();
