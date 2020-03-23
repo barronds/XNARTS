@@ -23,12 +23,6 @@ namespace XNARTS
 			Vector2 mDir;
 			Vector2 mPerp;
 
-			public enum eDirection
-			{
-				Horizontal,
-				Vertical
-			}
-
 			public LinearStack( eDirection direction )
 			{
 				// direction is x or y

@@ -55,6 +55,12 @@ namespace XNARTS
 			Num
 		}
 
+		public enum eDirection
+		{
+			Horizontal,
+			Vertical
+		}
+
 		public class UIPosSpec
 		{
 			private xAABB2				mRelativeAABB;

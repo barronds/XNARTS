@@ -14,7 +14,7 @@ namespace XNARTS
 			Style mButtonStyle;
 			Dictionary< long, int > mUIDMap;
 
-			public BasicMenu() : base( LinearStack.eDirection.Vertical )
+			public BasicMenu( eDirection direction ) : base( direction )
 			{
 				mUIDMap = new Dictionary<long, int>();
 			}
@@ -130,7 +130,7 @@ namespace XNARTS
 				Spacer2,
 			}
 
-			public FullMenu() : base( LinearStack.eDirection.Vertical )
+			public FullMenu() : base( eDirection.Vertical )
 			{ }
 
 			public void AssembleFullMenu(	Style style, String title, Style title_style, 
@@ -155,10 +155,10 @@ namespace XNARTS
 				spacer1.AssembleSpacer( spacer_size );
 				spacer2.AssembleSpacer( spacer_size );
 
-				BasicMenu options_menu = new BasicMenu();
+				BasicMenu options_menu = new BasicMenu( eDirection.Vertical );
 				options_menu.AssembleMenu( options_style, options );
 
-				BasicMenu controls_menu = new BasicMenu();
+				BasicMenu controls_menu = new BasicMenu( eDirection.Vertical );
 				controls_menu.AssembleMenu( controls_style, controls );
 
 				// make each menu the width of the max of each

@@ -31,7 +31,7 @@ namespace XNARTS
 			Style menu_style_actual = ui.GetStyle( menu_style );
 			Style placement_style_actual = ui.GetStyle( placement_style );
 
-			BasicMenu m = new BasicMenu();
+			BasicMenu m = new BasicMenu( eDirection.Vertical );
 			m.AssembleMenu( menu_style_actual, texts );
 			m.PlaceMenu( parent, placement_style_actual, new UIPosSpec( placement, m.GetAssembledSize() ) );
 
