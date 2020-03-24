@@ -79,8 +79,8 @@ namespace XNARTS
 		private XListener< XUI.ButtonUpEvent >      mListener_Button;
 		private XListener< XUI.ButtonUpEvent >		mListener_ButtonNew;
 		private XUI.Button							mRegnerateMapButton;
-		private XUI._IButton                        mMapTypeButton;
-		private XUI._IButton                        mMapSizeButton;
+		private XUI.Button							mMapTypeButton;
+		private XUI.Button							mMapSizeButton;
 
 		// private constructor as per XSingleton
 		private XWorld()
@@ -111,10 +111,11 @@ namespace XNARTS
 			mRegnerateMapButton = ui.CreateButton(	button_style, "New Regenerate Map Button", ui.GetScreenWidget(), button_style,
 													new XUI.UIPosSpec( new Vector2( 30, 30 ) ) );
 
-			//mRegnerateMapButton = ui._CreateRectangularButton( new Vector2( 30, 30 ), "Regenerate Map", XUI.eStyle.GameplayUI );
-			mMapTypeButton = ui._CreateRectangularButton( new Vector2( 30, 125 ), "Change Map Type", XUI.eStyle.GameplayUI );
-			mMapSizeButton = ui._CreateRectangularButton( new Vector2( 30, 220 ), "Change Map Size", XUI.eStyle.GameplayUI );
+			mMapTypeButton = ui.CreateButton(	button_style, "Change Map Type", ui.GetScreenWidget(), button_style,
+												new XUI.UIPosSpec( new Vector2( 30, 125 ) ) );
 
+			mMapSizeButton = ui.CreateButton(	button_style, "Change Map Size", ui.GetScreenWidget(), button_style,
+												new XUI.UIPosSpec( new Vector2( 30, 220 ) ) );
 			Generate();
 		}
 
@@ -263,31 +264,21 @@ namespace XNARTS
 				}
 			}
 
-			var button_enumerator = mListener_Button.CreateEnumerator();
+			var button_enumerator = mListener_ButtonNew.CreateEnumerator();
 
-			while( button_enumerator.MoveNext() )
+			while ( button_enumerator.MoveNext() )
 			{
 				if ( button_enumerator.GetCurrent().mID == mRegnerateMapButton.GetUID() )
 				{
 					generate_map = true;
 				}
-				else if ( button_enumerator.GetCurrent().mID == mMapTypeButton.GetID() )
+				else if ( button_enumerator.GetCurrent().mID == mMapTypeButton.GetUID() )
 				{
 					change_map_type = true;
 				}
-				else if ( button_enumerator.GetCurrent().mID == mMapSizeButton.GetID() )
+				else if ( button_enumerator.GetCurrent().mID == mMapSizeButton.GetUID() )
 				{
 					resize_map = true;
-				}
-			}
-
-			var button_enumerator_new = mListener_ButtonNew.CreateEnumerator();
-
-			while ( button_enumerator_new.MoveNext() )
-			{
-				if ( button_enumerator_new.GetCurrent().mID == mRegnerateMapButton.GetUID() )
-				{
-					generate_map = true;
 				}
 			}
 
