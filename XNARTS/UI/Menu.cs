@@ -95,9 +95,9 @@ namespace XNARTS
 				}
 			}
 
-			public float GetButtonWidth()
+			public float GetButtonPerp()
 			{
-				return GetChild( 0 ).GetAssembledSize().X;
+				return Vector2.Dot( GetChild( 0 ).GetAssembledSize(), GetPerp() );
 			}
 
 			private void PlaceButtons()
@@ -163,8 +163,8 @@ namespace XNARTS
 
 				// make each menu the width of the max of each
 				float[] width_arr = {	title_label.GetAssembledSize().X, 
-										options_menu.GetButtonWidth(), 
-										controls_menu.GetButtonWidth() };
+										options_menu.GetButtonPerp(), 
+										controls_menu.GetAssembledSize().X };
 
 				float max_width = XMath.MaxArr( width_arr );
 				options_menu.ReassembleMenu( max_width );
