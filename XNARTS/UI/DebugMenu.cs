@@ -27,72 +27,94 @@ namespace XNARTS
 		// just holds the root of the debug menu.  
 		// individual systems should own the rest of the tree.
 		private XListener< XTouch.FiveContacts >		mListener_FiveContacts;
-		private XListener< XUI.SelectorSelectionEvent > mListener_SelectorSelection;
+		private XListener< XUI.ButtonUpEvent >			mListener_ButtonUp;
 		private XBroadcaster< MenuSelectionEvent >      mBroadcaster_MenuSelection;
-		private XUI._ISelector							mRootSelector;
+		private XUI.FullMenu							mRootSelector;
 		private String[]                                mOptions;
+		private String[]                                mControls;
 
 		private XRootDebugMenu()
 		{
 			mListener_FiveContacts = new XListener<XTouch.FiveContacts>( 1, eEventQueueFullBehaviour.Assert, "5contacts" );
-			mListener_SelectorSelection = new XListener<XUI.SelectorSelectionEvent>( 1, eEventQueueFullBehaviour.Assert, "dmss" );
+			mListener_ButtonUp = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Assert, "XUIRDMBU" );
 			mBroadcaster_MenuSelection = new XBroadcaster<MenuSelectionEvent>();
 			mRootSelector = null;
-			String spacer = XUI.Instance().GetSpacerString();
-
-			mOptions = new String[ 5 ]{ "Map", spacer, "Exit", spacer, "Quit" };
+			String[] options = { "Map" };
+			String[] controls = { "Exit", "Quit" };
+			mOptions = options;
+			mControls = controls;
 		}
 
 		public void Init()
 		{
 			XBulletinBoard.Instance().mBroadcaster_FiveContacts.Subscribe( mListener_FiveContacts );
-			XUI.Instance().GetBroadcaster_SelectorSelectionEvent().Subscribe( mListener_SelectorSelection );
+			XUI.Instance().mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonUp );
 		}
 
 		public void Update()
 		{
 			// check for create menu
 			var enumerator_fiveContacts = mListener_FiveContacts.CreateEnumerator();
+			XUI ui = XUI.Instance();
 
 			if ( enumerator_fiveContacts.MoveNext() )
 			{
 				if( mRootSelector == null )
 				{
-					mRootSelector = XUI.Instance().CreateSelector(	new XUI._Position(), "Debug Menu", 
-																	XUI.eStyle.Frontend, XUI.eStyle.FrontendButton, 
-																	XUI.eStyle.FrontendTitle, mOptions );
+					mRootSelector = ui.CreateFullMenu(	XUI.eStyle.FrontendTitle, "Debug Menu",
+														XUI.eStyle.Frontend, mOptions,
+														XUI.eStyle.Frontend, mControls,
+														XUI.eStyle.Frontend, ui.GetScreenWidget(), XUI.ePlacement.Centered );
 				}
 			}
 
 			// check for menu selection
-			var selection_data = mListener_SelectorSelection.GetMaxOne();
+			var selection_data = mListener_ButtonUp.GetMaxOne();
 
 			if ( selection_data != null )
 			{
-				if( selection_data.mSelectorID == mRootSelector.GetID() )
+				if( selection_data.mID == mRootSelector.GetUID() )
 				{
 					// destroy this selector
-					XUI.Instance().DestroySelector( mRootSelector.GetID() );
+					XUI.Instance().DestroyFullMenu( mRootSelector );
 					mRootSelector = null;
 
-					switch( selection_data.mIndexSelected )
+					int options_index = mRootSelector.GetOptionsInputIndex( selection_data.mID );
+					int controls_index = mRootSelector.GetControlsInputIndex( selection_data.mID );
+
+					if( controls_index > -1 )
 					{
-						case 0:
-							// map selected, sent message for that system to do what it wants
-							Console.WriteLine( "map selected" );
-							mBroadcaster_MenuSelection.Post( new MenuSelectionEvent( selection_data.mSelectorID, mOptions[ 0 ] ) );
-							break;
-						case 2:
-							// exit selected, do nothing, menu will close
-							break;
-						case 4:
-							// quit selected, send message to end program.  this menu will close
-							XBulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
-							break;
-						default:
-							// problem
-							XUtils.Assert( false );
-							break;
+						switch ( controls_index )
+						{
+							case 0:
+								// exit selected, do nothing, menu will close
+								break;
+							case 1:
+								// quit selected, send message to end program.  this menu will close
+								XBulletinBoard.Instance().mBroadcaster_ExitGameEvent.Post( new Game1.ExitGameEvent() );
+								break;
+							default:
+								// problem
+								XUtils.Assert( false );
+								break;
+						}
+					}
+
+					if( options_index > -1 )
+					{
+						switch( options_index )
+						{
+							case 0:
+								// map selected, sent message for that system to do what it wants
+								Console.WriteLine( "map selected" );
+								long TODO_fix_up_output_id = 0;
+								mBroadcaster_MenuSelection.Post( new MenuSelectionEvent( TODO_fix_up_output_id, mOptions[ 0 ] ) );
+								break;
+							default:
+								// problem
+								XUtils.Assert( false );
+								break;
+						}
 					}
 				}
 			}
