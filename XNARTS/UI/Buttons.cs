@@ -16,22 +16,6 @@ namespace XNARTS
 		private SortedList< long, _IButton >		_mButtons;
 		private _IButton							_mCurrentlyPressed;
 
-		public XBroadcaster<ButtonUpEvent> GetBroadcaster_ButtonUpEvent()
-		{
-			return _mBroadcaster_ButtonUpEvent;
-		}
-		public XBroadcaster<ButtonDownEvent> GetBroadcaster_ButtonDownEvent()
-		{
-			return _mBroadcaster_ButtonDownEvent;
-		}
-		public XBroadcaster<ButtonHeldEvent> GetBroadcaster_ButtonHeldEvent()
-		{
-			return _mBroadcaster_ButtonHeldEvent;
-		}
-		public XBroadcaster<ButtonAbortEvent> GetBroadcaster_ButtonAbortEvent()
-		{
-			return _mBroadcaster_ButtonAbortEvent;
-		}
 
 		public interface _IButton
 		{

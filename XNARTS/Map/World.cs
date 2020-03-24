@@ -76,7 +76,6 @@ namespace XNARTS
 		private XWorldGen.eMapType					mMapType;
 		private XSafeGrid< xMapCell >				mMap;
 		private XListener< XKeyInput.KeyUp >        mListenter_KeyUp;
-		private XListener< XUI.ButtonUpEvent >      mListener_Button;
 		private XListener< XUI.ButtonUpEvent >		mListener_ButtonNew;
 		private XUI.Button							mRegnerateMapButton;
 		private XUI.Button							mMapTypeButton;
@@ -99,9 +98,6 @@ namespace XNARTS
 
 			mListenter_KeyUp = new XListener<XKeyInput.KeyUp>( 1, eEventQueueFullBehaviour.Ignore, "WorldKeyUp" );
 			XBulletinBoard.Instance().mBroadcaster_KeyUp.Subscribe( mListenter_KeyUp );
-
-			mListener_Button = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButton" );
-			ui.GetBroadcaster_ButtonUpEvent().Subscribe( mListener_Button );
 
 			mListener_ButtonNew = new XListener<XUI.ButtonUpEvent>( 1, eEventQueueFullBehaviour.Ignore, "WorldButtonNew" );
 			ui.mBroadcaster_ButtonUpEvent.Subscribe( mListener_ButtonNew );
