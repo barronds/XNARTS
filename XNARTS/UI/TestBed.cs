@@ -458,9 +458,13 @@ namespace XNARTS
 				XUI ui = XUI.Instance();
 				String[] texts = { "First", "Another Button", "2nd to Last", " ", "5", "Back" };
 
-				BasicMenu m = ui.CreateBasicMenu(	eStyle.Frontend, texts, ui.GetScreenWidget(), 
+				BasicMenu m1 = ui.CreateBasicMenu(	eStyle.Frontend, texts, ui.GetScreenWidget(), 
 													eStyle.Frontend, ePlacement.TopRight, eDirection.Vertical );
-				mRootBasicMenus.Add( m );
+				mRootBasicMenus.Add( m1 );
+
+				BasicMenu m2 = ui.CreateBasicMenu(  eStyle.Frontend, texts, ui.GetScreenWidget(),
+													eStyle.Frontend, ePlacement.BottomLeft, eDirection.Horizontal );
+				mRootBasicMenus.Add( m2 );
 			}
 
 			private void Test_FullMenu()
