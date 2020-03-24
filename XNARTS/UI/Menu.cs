@@ -54,6 +54,11 @@ namespace XNARTS
 				ReassembleLinearStack();
 			}
 
+			public void ReassembleMenu( Vector2 size )
+			{
+				ReassembleLinearStack( size );
+			}
+
 			private void ReassembleButtons( float button_perp )
 			{
 				Vector2 dir = GetDir();
@@ -126,8 +131,9 @@ namespace XNARTS
 				Title,
 				Spacer1,
 				Options,
-				Controls,
 				Spacer2,
+				Controls,
+				Spacer3,
 			}
 
 			public FullMenu() : base( eDirection.Vertical )
@@ -149,29 +155,32 @@ namespace XNARTS
 				Spacer spacer0 = new Spacer();
 				Spacer spacer1 = new Spacer();
 				Spacer spacer2 = new Spacer();
-				const float kSpacerScalar = 0.4f;
+				Spacer spacer3 = new Spacer();
+				const float kSpacerScalar = 0.3f;
 				Vector2 spacer_size = kSpacerScalar * title_label.GetAssembledSize();
 				spacer0.AssembleSpacer( spacer_size );
 				spacer1.AssembleSpacer( spacer_size );
 				spacer2.AssembleSpacer( spacer_size );
+				spacer3.AssembleSpacer( spacer_size );
 
 				BasicMenu options_menu = new BasicMenu( eDirection.Vertical );
 				options_menu.AssembleMenu( options_style, options );
 
-				BasicMenu controls_menu = new BasicMenu( eDirection.Vertical );
+				BasicMenu controls_menu = new BasicMenu( eDirection.Horizontal );
 				controls_menu.AssembleMenu( controls_style, controls );
+				Vector2 controls_size = controls_menu.GetAssembledSize();
 
 				// make each menu the width of the max of each
 				float[] width_arr = {	title_label.GetAssembledSize().X, 
-										options_menu.GetButtonPerp(), 
-										controls_menu.GetAssembledSize().X };
+										options_menu.GetButtonPerp(),
+										controls_size.X };
 
 				float max_width = XMath.MaxArr( width_arr );
 				options_menu.ReassembleMenu( max_width );
-				controls_menu.ReassembleMenu( max_width );
+				controls_menu.ReassembleMenu( new Vector2( max_width, controls_size.Y ) );
 
 				// order matters here, must correspond to eChild layout
-				Widget[] widgets = { spacer0, title_label, spacer1, options_menu, controls_menu, spacer2 };
+				Widget[] widgets = { spacer0, title_label, spacer1, options_menu, spacer2, controls_menu, spacer3 };
 				AssembleLinearStack( widgets, style );
 			}
 
@@ -202,6 +211,7 @@ namespace XNARTS
 				GetSpacer( eChild.Spacer0 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer0 ) ) );
 				GetSpacer( eChild.Spacer1 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer1 ) ) );
 				GetSpacer( eChild.Spacer2 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer2 ) ) );
+				GetSpacer( eChild.Spacer3 ).PlaceSpacer( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Spacer3 ) ) );
 
 				GetTitle().PlaceLabel( this, mTitleStyle, new UIPosSpec( GetRelativePlacement( (int)eChild.Title ) ) );
 
